@@ -36,7 +36,7 @@ const Navbar = () => {
             response.data.map((file) => {
                 setFiles((files) => [...files, {
                     value: file.fileNumber,
-                    label: `${file.fileNumber} - ${file.seller}, ${file.buyer}`,
+                    label: `${file.fileNumber} - ${file.representing ? `${file.seller} s/t ${file.buyer}` : `${file.buyer} p/f ${file.seller}`}`,
                     ...file
                 }]);
             });
