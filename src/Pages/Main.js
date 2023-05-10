@@ -41,6 +41,7 @@ function Main() {
     const [status, setStatus] = useState('Open');
     const [startDate, setStartDate] = useState('2023-04-19');
     const [endDate, setEndDate] = useState('2023-06-30');
+    const [isClosed, setIsClosed] = useState('false');
     const [prevWhen, setPrevWhen] = useState();
     const [customDates, setCustomDates] = useState();
 
@@ -66,7 +67,7 @@ function Main() {
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&status=${status}`).then((response) => {
+        axios.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}`).then((response) => {
             setCriticalDates([]);
             response.data.dates.map((date) => {
                 setCriticalDates((dates) => [...dates, date]);
@@ -75,7 +76,7 @@ function Main() {
             console.log('Error retrieving dates: ' + error.message);
             console.log(error)
         });
-    }, [startDate, endDate, dateType]);
+    }, [startDate, endDate, dateType, isClosed]);
 
     useEffect(() => {
         const today = new Date();
@@ -103,6 +104,15 @@ function Main() {
             setEndDate(customDates.end);
         }
     }, [when])
+
+    useEffect(() => {
+        if(status === 'Open')
+            setIsClosed(false);
+        else if(status === 'Closed')
+            setIsClosed(true);
+        else
+            setIsClosed('')
+    }, [status])
 
     useEffect(() => {
         console.log(prevWhen);
