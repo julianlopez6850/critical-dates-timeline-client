@@ -66,11 +66,12 @@ export const EditFile = (props) => {
         },
     })
     
+    const [oldFileNo, setOldFileNo] = useState('');
     const [fileNo, setFileNo] = useState('');
     const [displayedFileNo, setDisplayedFileNo] = useState('');
     const [fileRef, setFileRef] = useState('');
-    const [representing, setRepresenting] = useState(true); // true = Seller, false = Buyer
-    const [isPurchase, setIsPurchase] = useState(true); // true = Purchase, false = REFI
+    const [representing, setRepresenting] = useState(''); // true = Seller, false = Buyer
+    const [isPurchase, setIsPurchase] = useState(''); // true = Purchase, false = REFI
     const [buyer, setBuyer] = useState(''); // buyer name
     const [seller, setSeller] = useState(''); // seller name
     const [propertyAddress, setPropertyAddress] = useState(''); // property address
@@ -95,22 +96,35 @@ export const EditFile = (props) => {
     const [isTitleOrdered, setIsTitleOrdered] = useState('');
     const [isClosed, setIsClosed] = useState('');
 
+    const dates = [
+        {label: 'Effective', value: effective, set: setEffective},
+        {label: 'Deposit 1', value: depositInit, set: setDepositInit},
+        {label: 'Deposit 2', value: depositSecond, set: setDepositSecond},
+        {label: 'Deposit 3', value: depositThird, set: setDepositThird},
+        {label: 'Inspection', value: inspection, set: setInspection},
+        {label: 'Closing', value: closing, set: setClosing}
+    ]
+
     useEffect(() => {
         if(props.isOpen && props.fileNo) {
             axios.get(`http://localhost:5000/files?fileNumber=${props.fileNo}`).then((response) => {
-                setFileNo(response.data.fileNumber)
-                setFileRef(response.data.fileRef)
-                setPropertyAddress(response.data.address)
-                setFolioNo(response.data.folioNo)
-                setSeller(response.data.seller)
-                setBuyer(response.data.buyer)
-                setEffective(response.data.effective)
-                setDepositInit(response.data.depositInitial || '')
-                setDepositSecond(response.data.depositSecond || '')
-                setDepositThird(response.data.depositThird || '')
-                setInspection(response.data.inspection || '')
-                setClosing(response.data.closing)
-                setNotes(response.data.notes)
+                setOldFileNo(response.data.fileNumber);
+                setFileNo(response.data.fileNumber);
+                setFileRef(response.data.fileRef);
+                setPropertyAddress(response.data.address);
+                setFolioNo(response.data.folioNo);
+                setSeller(response.data.seller);
+                setBuyer(response.data.buyer);
+                setEffective(response.data.effective);
+                setDepositInit(response.data.depositInitial || '');
+                setDepositSecond(response.data.depositSecond || '');
+                setDepositThird(response.data.depositThird || '');
+                setInspection(response.data.inspection || '');
+                setClosing(response.data.closing);
+                setNotes(response.data.notes);
+                setIsPurchase(response.data.isPurchase);
+                setRepresenting(response.data.representing);
+                setIsClosed(response.data.isClosed);
             }).catch((error) => {
                 console.log('Error retrieving file info: ' + error.message);
             });
@@ -126,8 +140,29 @@ export const EditFile = (props) => {
     }, [fileNo])
 
     const trySaveFile = () => {
-        
-        
+        const file = {
+            oldFileNumber: oldFileNo,
+            fileNumber: fileNo,
+            fileRef: fileRef,
+            address: propertyAddress,
+            folioNo: folioNo,
+            buyer: buyer,
+            seller: seller,
+            effective: effective,
+            depositInitial: depositInit || null,
+            depositSecond: depositSecond || null,
+            depositThird: depositThird || null,
+            inspection: inspection || null,
+            closing: closing,
+            notes: notes,
+            isClosed: isClosed,
+            representing: representing,
+            isPurchase: isPurchase,
+        }
+
+        axios.put(`http://localhost:5000/files`, file).then((response) => {
+            console.log(response)
+        })
     }
     
     return (
@@ -272,34 +307,15 @@ export const EditFile = (props) => {
                                 <Text>
                                     Critical Dates:
                                 </Text>
-                                    {['Effective', 'Deposit 1', 'Deposit 2', 'Deposit 3', 'Inspection', 'Closing'].map((item, index) => {
+                                    {dates.map((item, index) => {
                                         return (
                                             <HStack w='240px' spacing='0' key={index}>
                                                 <Text w='70px'>
-                                                    {item}
+                                                    {item.label}
                                                 </Text>
                                                 <Input w='170px' h='30px' borderRadius='10px' type='date' 
-                                                    value={item === 'Effective' ? effective :
-                                                        item === 'Deposit 1' ? depositInit :
-                                                        item === 'Deposit 2' ? depositSecond :
-                                                        item === 'Deposit 3' ? depositThird :
-                                                        item === 'Inspection' ? inspection :
-                                                        item === 'Closing' ? closing : ''
-                                                    }
-                                                    onChange={(e)=>{switch(item) {
-                                                        case 'Effective':
-                                                            setEffective(e.target.value)
-                                                        case 'Deposit 1':
-                                                            setDepositInit(e.target.value)
-                                                        case 'Deposit 2':
-                                                            setDepositSecond(e.target.value)
-                                                        case 'Deposit 3':
-                                                            setDepositThird(e.target.value)
-                                                        case 'Inspection':
-                                                            setInspection(e.target.value)
-                                                        case 'Closing':
-                                                            setClosing(e.target.value)
-                                                    }}}
+                                                    value={item.value}
+                                                    onChange={(e)=>{item.set(e.target.value)}}
                                                 />
                                             </HStack>
                                         )
