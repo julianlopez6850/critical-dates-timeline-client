@@ -84,7 +84,7 @@ const DatesTable = (props) => {
                         )
                     }) : (
                         <Text>
-                            {`No critical dates found with the given criteria: { type: ${props.type} | when: ${props.when} | status: ${props.status} }`}
+                            {`No critical dates found matching the given criteria: { type: ${props.type} | when: ${props.when} | status: ${props.status} }`}
                         </Text>
                     )
                 }

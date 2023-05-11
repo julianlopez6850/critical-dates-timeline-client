@@ -26,6 +26,7 @@ import {
     Input,
     PopoverCloseButton,
     useDisclosure,
+    Spinner,
     
 } from "@chakra-ui/react"
 import DateFilterButton from "../Components/DateFilterButton";
@@ -35,12 +36,14 @@ import CustomDatePopover from '../Components/CustomDatePopover';
 function Main() {
 
     const {theme, setTheme} = useContext(themeContext);
+
+    const [loading, setLoading] = useState(true);
     const [criticalDates, setCriticalDates] = useState([]);
     const [dateType, setDateType] = useState({label: 'All', value: ''});
-    const [when, setWhen] = useState('Today');
+    const [when, setWhen] = useState('All');
     const [status, setStatus] = useState('Open');
-    const [startDate, setStartDate] = useState('2023-04-19');
-    const [endDate, setEndDate] = useState('2023-06-30');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
     const [isClosed, setIsClosed] = useState('false');
     const [prevWhen, setPrevWhen] = useState();
     const [customDates, setCustomDates] = useState();
@@ -71,6 +74,7 @@ function Main() {
             setCriticalDates([]);
             response.data.dates.map((date) => {
                 setCriticalDates((dates) => [...dates, date]);
+                setLoading(false);
             });
         }).catch((error) => {
             console.log('Error retrieving dates: ' + error.message);
@@ -213,15 +217,22 @@ function Main() {
                 </HStack>
             </HStack>
             
-            {/* Timeline Table Container */}
-            <Box w='1200px'>
-                <DatesTable
-                    type={dateType.label}
-                    when={when}
-                    dates={criticalDates}
-                    status={status}
-                />
-            </Box>
+            <HStack w='full'>
+                {/* Timeline Table Container */}
+                <Box w='1200px'>
+                    {loading && (
+                        <Box h='250px' display='flex' alignItems='center' justifyContent='center'>
+                            <Spinner/>
+                        </Box> ) || (
+                        <DatesTable
+                            type={dateType.label}
+                            when={when}
+                            dates={criticalDates}
+                            status={status}
+                        /> )
+                    }
+                </Box>
+            </HStack>
         </VStack>
     )
 }
