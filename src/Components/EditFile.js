@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import axios from 'axios';
 
@@ -24,47 +24,11 @@ import {
     FormLabel,
     StackDivider,
     Textarea,
-    Toast,
     Menu,
     Box,
   } from '@chakra-ui/react'
 
 export const EditFile = (props) => {
-
-    const [file, setFile] = useState({
-        fileNo: '',
-        displayFileNo: '',
-        fileTitle: '',
-        representing: true,
-        isPurchase: true,
-        buyer: '',
-        seller: '',
-        property: {
-            address: '',
-            folioNo: '',
-        },
-        purchasePrice: '',
-        tasks: {
-            isSellerDocs: false,
-            isBuyerDocs: false,
-            isEscrowAgent: false,
-            isTitleAgent: false,
-            isClosingAgent: false,
-        },
-        dates: {
-            depositInit: '',
-            depositSecond: '',
-            depositThird: '',
-            inspection: '',
-            closing: '',
-        },
-        states: {
-            isEscrowReceived: false,
-            isTitleOrdered: false,
-            isLienRequested: false,
-            isClosed: false,
-        },
-    })
     
     const [oldFileNo, setOldFileNo] = useState('');
     const [fileNo, setFileNo] = useState('');
@@ -77,7 +41,6 @@ export const EditFile = (props) => {
     const [propertyAddress, setPropertyAddress] = useState(''); // property address
     const [folioNo, setFolioNo] = useState('');
     const [notes, setNotes] = useState('');
-    const [purchasePrice, setPurchasePrice] = useState('');
 
     const [isSellerDocs, setIsSellerDocs] = useState(false);
     const [isBuyerDocs, setIsBuyerDocs] = useState(false);
@@ -85,15 +48,25 @@ export const EditFile = (props) => {
     const [isTitleAgent, setIsTitleAgent] = useState(false);
     const [isClosingAgent, setIsClosingAgent] = useState(false);
 
+    const rolesButtons = [
+        { label: 'Seller Docs?', value: isSellerDocs, set: setIsSellerDocs },
+        { label: 'Buyer Docs?', value: isBuyerDocs, set: setIsBuyerDocs },
+        { label: 'Escrow Agent?', value: isEscrowAgent, set: setIsEscrowAgent },
+        { label: 'Title Agent?', value: isTitleAgent, set: setIsTitleAgent },
+        { label: 'Closing Agent?', value: isClosingAgent, set: setIsClosingAgent },
+    ]
+
     const [effective, setEffective] = useState('');
     const [depositInit, setDepositInit] = useState('');
     const [depositSecond, setDepositSecond] = useState('');
     const [depositThird, setDepositThird] = useState('');
     const [inspection, setInspection] = useState('');
     const [closing, setClosing] = useState('');
+
     const [isEscrowReceived, setIsEscrowReceived] = useState('');
     const [isLienRequested, setIsLienRequested] = useState('');
     const [isTitleOrdered, setIsTitleOrdered] = useState('');
+    const [isSellerDocsComplete, setIsSellerDocsComplete] = useState('');
     const [isClosed, setIsClosed] = useState('');
 
     const dates = [
@@ -162,6 +135,7 @@ export const EditFile = (props) => {
 
         axios.put(`http://localhost:5000/files`, file).then((response) => {
             console.log(response)
+            props.onClose();
         })
     }
     
@@ -172,6 +146,7 @@ export const EditFile = (props) => {
             isOpen={props.isOpen}
             motionPreset='slideInBottom'
             size='4xl'
+            closeOnOverlayClick={false}
         >
             <ModalOverlay />
             <ModalContent
@@ -190,6 +165,7 @@ export const EditFile = (props) => {
                             value={fileNo}
                             onChange={(e)=>{setFileNo(e.target.value)}}
                         />
+
                         <Text>Ref:</Text>
                         <Input
                             w='80%'
@@ -218,7 +194,14 @@ export const EditFile = (props) => {
                                     <Text minW='fit-content' fontWeight='bold'>
                                         We represent the ...
                                     </Text>
-                                    <Switch colorScheme='gray' defaultChecked={representing} onChange={() => setRepresenting(!representing)} size='sm' />
+                                    <Switch
+                                        colorScheme='gray'
+                                        defaultChecked={representing}
+                                        onChange={() => {
+                                            setRepresenting(!representing)
+                                        }}
+                                        size='sm'
+                                    />
                                     <Text width='full' fontWeight='bold'>
                                         {representing ? 'Seller' : 'Buyer'}
                                     </Text>
@@ -227,36 +210,23 @@ export const EditFile = (props) => {
                         </HStack>
 
                         <HStack w='full' justify='space-between'>
-                            <HStack>
-                                <Text minW='fit-content' fontWeight='bold'>
-                                    Seller Docs?
-                                </Text>
-                                <Switch colorScheme='gray' defaultChecked={isSellerDocs} onChange={() => setIsSellerDocs(!isSellerDocs)} size='sm' />
-                            </HStack>
-                            <HStack>
-                                <Text minW='fit-content' fontWeight='bold'>
-                                    Buyer Docs?
-                                </Text>
-                                <Switch colorScheme='gray' defaultChecked={isBuyerDocs} onChange={() => setIsBuyerDocs(!isBuyerDocs)} size='sm' />
-                            </HStack>
-                            <HStack>
-                                <Text minW='fit-content' fontWeight='bold'>
-                                    Closing Agent?
-                                </Text>
-                                <Switch colorScheme='gray' defaultChecked={isClosingAgent} onChange={() => setIsClosingAgent(!isClosingAgent)} size='sm' />
-                            </HStack>
-                            <HStack>
-                                <Text minW='fit-content' fontWeight='bold'>
-                                    Escrow Agent?
-                                </Text>
-                                <Switch colorScheme='gray' defaultChecked={isEscrowAgent} onChange={() => setIsEscrowAgent(!isEscrowAgent)} size='sm' />
-                            </HStack>
-                            <HStack>
-                                <Text minW='fit-content' fontWeight='bold'>
-                                    Title Agent?
-                                </Text>
-                                <Switch colorScheme='gray' defaultChecked={isTitleAgent} onChange={() => setIsTitleAgent(!isTitleAgent)} size='sm' />
-                            </HStack>
+                            {
+                                rolesButtons.map((item, index) => {
+                                    return <HStack key={index}>
+                                        <Text minW='fit-content' fontWeight='bold'>
+                                            {item.label}
+                                        </Text>
+                                        <Switch
+                                            colorScheme='gray'
+                                            defaultChecked={item.value}
+                                            onChange={(e) =>{
+                                                item.set((value) => !value)
+                                            }}
+                                            size='sm'
+                                        />
+                                    </HStack>
+                                })
+                            }
                         </HStack>
 
                         <Divider marginBlock='0.2rem !important' />
@@ -265,7 +235,6 @@ export const EditFile = (props) => {
                             <Text minW='35px'>
                                 {representing ? ' Seller' : ' Buyer'}
                             </Text>
-
                             <Input
                                 size='sm' borderRadius='10px'
                                 value={representing ? seller : buyer}
@@ -275,13 +244,13 @@ export const EditFile = (props) => {
                             <Text minW='35px'>
                                 {representing ? 'Buyer' : 'Seller'}
                             </Text>
-
                             <Input
                                 size='sm' borderRadius='10px'
                                 value={representing ? buyer : seller}
-                                onChange={(e) => {representing ? setBuyer(e.target.value) : setSeller   (e.target.value)}}
+                                onChange={(e) => {representing ? setBuyer(e.target.value) : setSeller(e.target.value)}}
                             />
                         </HStack>
+
                         <HStack w='full'>
                             <Text>
                                 Property:
@@ -291,6 +260,7 @@ export const EditFile = (props) => {
                                 value={propertyAddress}
                                 onChange={(e) => {setPropertyAddress(e.target.value)}}
                             />
+
                             <Text>
                                 Folio:
                             </Text>
@@ -302,6 +272,7 @@ export const EditFile = (props) => {
                         </HStack>
 
                         <Divider mt='0.5rem !important' mb='0rem !important' />
+                        
                         <HStack w='100%' h='100%' m='0'>
                             <VStack w='300px' spacing='1.5'>
                                 <Text>
@@ -335,7 +306,6 @@ export const EditFile = (props) => {
                             </VStack>
                         </HStack>
                         
-
                         <Divider marginBlock='0.5rem !important' />
                         
                         <HStack w='full' justifyContent='right' onClick={()=>{trySaveFile()}}>
@@ -348,17 +318,13 @@ export const EditFile = (props) => {
 
                 <ModalFooter width='full' display='flex' justifyContent='space-between'>
                     <Text color='gray.300'>
-                        {displayedFileNo}{fileRef ? ' ' + fileRef : ''}
+                        {displayedFileNo} || {fileRef ? ' ' + fileRef : ''}
                     </Text>
                     <Text color='gray.300'>
                         {process.env.REACT_APP_VERSION}
                     </Text>
                 </ModalFooter>
             </ModalContent>
-
-            <Toast>
-
-            </Toast>
         </Modal>
     )
 }

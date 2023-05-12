@@ -14,13 +14,24 @@ import {
 import { MoonIcon, SunIcon, SettingsIcon, SearchIcon, AddIcon } from "@chakra-ui/icons";
 import NavbarButton from "./NavbarButton";
 import { FileSelect } from "./FileSelect";
+import AddFile from "./AddFile";
 import { EditFile } from "./EditFile";
 
 const Navbar = () => {
     
     const {theme, setTheme} = useContext(themeContext);
-    
-    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const { 
+        isOpen: isOpenFileCreator, 
+        onOpen: onOpenFileCreator, 
+        onClose: onCloseFileCreator 
+    } = useDisclosure()
+
+    const { 
+        isOpen: isOpenFileEditor, 
+        onOpen: onOpenFileEditor, 
+        onClose: onCloseFileEditor 
+    } = useDisclosure()
 
     const [files, setFiles] = useState([]);
     const [selectedFile, setSelectedFile] = useState();
@@ -47,7 +58,7 @@ const Navbar = () => {
 
     const searchFile = () => {
         if(selectedFile) {
-            onOpen();
+            onOpenFileEditor();
         }
     }
 
@@ -70,6 +81,7 @@ const Navbar = () => {
                     />
                     {/* Button: Add New File */}
                     <NavbarButton
+                        onClick={(e) => {onOpenFileCreator()}}
                         icon={<AddIcon/>}
                     />
                 </HStack>
@@ -94,10 +106,13 @@ const Navbar = () => {
             </HStack>
             <Box w='full' h='2px' bgColor='var(--navbar-seperator)' />
 
-            
+            <AddFile
+                onClose={onCloseFileCreator}
+                isOpen={isOpenFileCreator}
+            />
             <EditFile
-                onClose={onClose}
-                isOpen={isOpen}
+                onClose={onCloseFileEditor}
+                isOpen={isOpenFileEditor}
                 fileNo={selectedFile ? selectedFile.value : ''}
             />
         </Box>
