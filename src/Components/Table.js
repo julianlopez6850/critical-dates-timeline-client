@@ -78,7 +78,7 @@ const DatesTable = (props) => {
                     props.dates.length > 0 ? props.dates.map((item, index) => {
                         return (
                             <TableRow
-                                key={item.date + item.prefix + item.type}
+                                key={item.fileNumber + item.prefix + item.type}
                                 dateInfo={item}
                             />
                         )
