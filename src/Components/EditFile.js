@@ -27,6 +27,7 @@ import {
     Menu,
     Box,
   } from '@chakra-ui/react'
+import { LockIcon, UnlockIcon } from '@chakra-ui/icons';
 
 export const EditFile = (props) => {
     
@@ -63,6 +64,13 @@ export const EditFile = (props) => {
     const [inspection, setInspection] = useState('');
     const [closing, setClosing] = useState('');
 
+    const [isClosedEffective, setIsClosedEffective] = useState(false);
+    const [isClosedDepositInit, setIsClosedDepositInit] = useState(false);
+    const [isClosedDepositSecond, setIsClosedDepositSecond] = useState(false);
+    const [isClosedDepositThird, setIsClosedDepositThird] = useState(false);
+    const [isClosedInspection, setIsClosedInspection] = useState(false);
+    const [isClosedClosing, setIsClosedClosing] = useState(false);
+
     const [isEscrowReceived, setIsEscrowReceived] = useState('');
     const [isLienRequested, setIsLienRequested] = useState('');
     const [isTitleOrdered, setIsTitleOrdered] = useState('');
@@ -70,12 +78,48 @@ export const EditFile = (props) => {
     const [isClosed, setIsClosed] = useState('');
 
     const dates = [
-        {label: 'Effective', value: effective, set: setEffective},
-        {label: 'Deposit 1', value: depositInit, set: setDepositInit},
-        {label: 'Deposit 2', value: depositSecond, set: setDepositSecond},
-        {label: 'Deposit 3', value: depositThird, set: setDepositThird},
-        {label: 'Inspection', value: inspection, set: setInspection},
-        {label: 'Closing', value: closing, set: setClosing}
+        {
+            label: 'Effective', 
+            value: effective, 
+            setValue: setEffective, 
+            isClosed: isClosedEffective, 
+            setIsClosed: setIsClosedEffective
+        },
+        {
+            label: 'Deposit 1', 
+            value: depositInit, 
+            setValue: setDepositInit, 
+            isClosed: isClosedDepositInit, 
+            setIsClosed: setIsClosedDepositInit
+        },
+        {
+            label: 'Deposit 2', 
+            value: depositSecond, 
+            setValue: setDepositSecond, 
+            isClosed: isClosedDepositSecond, 
+            setIsClosed: setIsClosedDepositSecond
+        },
+        {
+            label: 'Deposit 3', 
+            value: depositThird, 
+            setValue: setDepositThird, 
+            isClosed: isClosedDepositThird, 
+            setIsClosed: setIsClosedDepositThird
+        },
+        {
+            label: 'Inspection', 
+            value: inspection, 
+            setValue: setInspection, 
+            isClosed: isClosedInspection, 
+            setIsClosed: setIsClosedInspection
+        },
+        {
+            label: 'Closing', 
+            value: closing, 
+            setValue: setClosing, 
+            isClosed: isClosedClosing, 
+            setIsClosed: setIsClosedClosing
+        }
     ]
 
     useEffect(() => {
@@ -98,6 +142,33 @@ export const EditFile = (props) => {
                 setIsPurchase(response.data.isPurchase);
                 setRepresenting(response.data.representing);
                 setIsClosed(response.data.isClosed);
+
+                for(const date of response.data.dates) {
+                    switch(date.type) {
+                        case 'Effective':
+                            setIsClosedEffective(date.isClosed);
+                            break;
+                        case 'Escrow':
+                            switch(date.prefix) {
+                                case 'First ':
+                                    setIsClosedDepositInit(date.isClosed)
+                                    break;
+                                case 'Second ':
+                                    setIsClosedDepositSecond(date.isClosed)
+                                    break;
+                                case 'Third ':
+                                    setIsClosedDepositThird(date.isClosed)
+                                    break;
+                                default:
+                            }
+                        case 'Inspection':
+                            setIsClosedInspection(date.isClosed);
+                            break;
+                        case 'Closing':
+                            setIsClosedClosing(date.isClosed);
+                            break;
+                    }
+                }
             }).catch((error) => {
                 console.log('Error retrieving file info: ' + error.message);
             });
@@ -113,6 +184,7 @@ export const EditFile = (props) => {
     }, [fileNo])
 
     const trySaveFile = () => {
+        
         const file = {
             oldFileNumber: oldFileNo,
             fileNumber: fileNo,
@@ -127,6 +199,12 @@ export const EditFile = (props) => {
             depositThird: depositThird || null,
             inspection: inspection || null,
             closing: closing,
+            isClosedEffective: isClosedEffective,
+            isClosedDepositInitial: isClosedDepositInit,
+            isClosedDepositSecond: isClosedDepositSecond,
+            isClosedDepositThird: isClosedDepositThird,
+            isClosedInspection: isClosedInspection,
+            isClosedClosing: isClosedClosing,
             notes: notes,
             isClosed: isClosed,
             representing: representing,
@@ -280,20 +358,40 @@ export const EditFile = (props) => {
                                 </Text>
                                     {dates.map((item, index) => {
                                         return (
-                                            <HStack w='240px' spacing='0' key={index}>
+                                            <HStack w='265px' spacing='0' key={index}
+                                                color={(isClosed || item.isClosed) ? 'red' : ''}
+                                                borderColor={(isClosed || item.isClosed) ? 'red' : ''}
+                                            >
                                                 <Text w='70px'>
                                                     {item.label}
                                                 </Text>
                                                 <Input w='170px' h='30px' borderRadius='10px' type='date' 
                                                     value={item.value}
-                                                    onChange={(e)=>{item.set(e.target.value)}}
+                                                    onChange={(e)=>{item.setValue(e.target.value)}}
+                                                    transition='0s'
+                                                    isDisabled={isClosed}
+                                                    _hover={{}}
                                                 />
+                                                <Button p='0px !important' size='sm' bgColor='transparent'
+                                                    _hover={{bgColor:'transparent'}}
+                                                    onClick={(e)=>{
+                                                        e.stopPropagation();
+                                                        if(!isClosed)
+                                                            item.setIsClosed((isClosed) => !isClosed);
+                                                    }}
+                                                    isDisabled={isClosed}
+                                                    transition='0s'
+                                                >
+                                                    <Text w='25px' display='flex' textAlign='center' justifyContent='center'>
+                                                        { (isClosed || item.isClosed) && <LockIcon/> || <UnlockIcon/> }
+                                                    </Text>
+                                                </Button>
                                             </HStack>
                                         )
                                     })}
                             </VStack>
 
-                            <Divider orientation='vertical' h='237px' />
+                            <Divider orientation='vertical' h='237px' margin='0px !important' />
 
                             <VStack w='100%' h='237px'>
                                 <Text>
@@ -308,9 +406,21 @@ export const EditFile = (props) => {
                         
                         <Divider marginBlock='0.5rem !important' />
                         
-                        <HStack w='full' justifyContent='right' onClick={()=>{trySaveFile()}}>
-                            <Button w='100px' colorScheme='blue' >
-                                SAVE
+                        <HStack w='full' justifyContent='space-between'>
+                            <HStack>
+                                <Text w='120px'>
+                                    STATUS: {isClosed ? 'CLOSED' : 'OPEN'}
+                                </Text>
+                                {isClosed && <Button w='120px' colorScheme='green' onClick={()=>{setIsClosed(false)}}>
+                                        RE-OPEN FILE
+                                    </Button> ||
+                                    <Button w='120px' colorScheme='red' onClick={()=>{setIsClosed(true)}}>
+                                        CLOSE FILE
+                                    </Button>
+                                }
+                            </HStack>
+                            <Button w='120px' colorScheme='blue' onClick={()=>{trySaveFile()}}>
+                                SAVE & CLOSE
                             </Button>
                         </HStack>
                     </VStack>
