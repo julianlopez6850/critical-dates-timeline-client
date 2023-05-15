@@ -217,7 +217,7 @@ function Main() {
                 </HStack>
             </HStack>
             
-            <HStack w='full'>
+            <HStack w='full' justifyContent='center'>
                 {/* Timeline Table Container */}
                 <Box w='1200px'>
                     {loading && (

@@ -32,7 +32,7 @@ const TableRow = (props) => {
         if(isClosed)
             setDateColor('black');
         else if(props.dateInfo.date === todayString)
-            setDateColor('orange');
+            setDateColor('yellow.500');
         else if(props.dateInfo.date > todayString)
             setDateColor('green.500');
         else
