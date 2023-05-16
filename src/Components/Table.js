@@ -36,12 +36,16 @@ const DatesTable = (props) => {
         {text: <Tooltip borderRadius='5px' mt='-5px' label={
                 <VStack>
                     <HStack w='full'>
+                        <Text mb='2px'><UnlockIcon/></Text>
+                        <Text>: Ongoing</Text>
+                    </HStack>
+                    <HStack w='full'>
                         <Text mb='1px' color='red'><LockIcon/></Text>
                         <Text>: Completed</Text>
                     </HStack>
                     <HStack w='full'>
-                        <Text mb='2px'><UnlockIcon/></Text>
-                        <Text>: Ongoing</Text>
+                        <Text mb='1px' color='red.800'><LockIcon/></Text>
+                        <Text>: File Closed </Text>
                     </HStack>
                 </VStack>
             }>

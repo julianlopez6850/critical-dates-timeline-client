@@ -29,7 +29,7 @@ const TableRow = (props) => {
         const d = new Date();
         const todayString = `${d.getFullYear()}-${leadingZero(d.getMonth() + 1)}-${leadingZero(d.getDate())}`;
 
-        if(isClosed)
+        if(props.dateInfo.isFileClosed || isClosed)
             setDateColor('black');
         else if(props.dateInfo.date === todayString)
             setDateColor('yellow.500');
@@ -98,13 +98,14 @@ const TableRow = (props) => {
 
             <Button m='0px !important' w='59px' h='36px' bgColor='transparent'
                 _hover={{bgColor:'transparent'}}
+                isDisabled={props.dateInfo.isFileClosed}
                 onClick={(e)=>{
                     e.stopPropagation();
                     setIsClosed((isClosed) => !isClosed);
                 }}
             >
                 <Text w='40px' textAlign='center'>
-                    { (isClosed) && <LockIcon color='red'/> || <UnlockIcon/> }
+                    { (props.dateInfo.isFileClosed || isClosed) && <LockIcon color='red'/> || <UnlockIcon/> }
                 </Text>
             </Button>
             
