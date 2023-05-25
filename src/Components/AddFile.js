@@ -87,9 +87,38 @@ const AddFile = (props) => {
     const [isEscrowReceived, setIsEscrowReceived] = useState('');
     const [isLienRequested, setIsLienRequested] = useState('');
     const [isTitleOrdered, setIsTitleOrdered] = useState('');
-    const [isSellerDocsComplete, setIsSellerDocsComplete] = useState('');
-    const [isClosed, setIsClosed] = useState('');
+    const [isLienReceived, setIsLienReceived] = useState('');
+    const [isTitleReceived, setIsTitleReceived] = useState('');
+    const [isSellerDocsDrafted, setIsSellerDocsDrafted] = useState('');
+    const [isSellerDocsApproved, setIsSellerDocsApproved] = useState('');
+    const [isBuyerDocsDrafted, setIsBuyerDocsDrafted] = useState('');
+    const [isBuyerDocsApproved, setIsBuyerDocsApproved] = useState('');
+    
+    const [taskCompleteness, setTaskCompleteness] = useState({
+        isEscrowReceived: false,
+        isLienRequested: false,
+        isTitleOrdered: false,
+        isLienReceived: false,
+        isTitleReceived: false,
+        isSellerDocsDrafted: false,
+        isBuyerDocsDrafted: false,
+        isSellerDocsApproved: false,
+        isBuyerDocsApproved: false,
+    })
 
+    const taskCompletenessChecks = [
+        { label: 'Escrow Fully Received?', role: true, value: isEscrowReceived, set: setIsEscrowReceived },
+        { label: 'Lien Search Requested?', role: isTitleAgent, value: isLienRequested, set: setIsLienRequested },
+        { label: 'Title Work Ordered?', role: isTitleAgent, value: isTitleOrdered, set: setIsTitleOrdered },
+        { label: 'Lien Search Received?', role: isTitleAgent, value: isLienReceived, set: setIsLienReceived },
+        { label: 'Title Work Received?', role: isTitleAgent, value: isTitleReceived, set: setIsTitleReceived },
+        { label: 'Seller Docs Drafted?', role: isSellerDocs, value: isSellerDocsDrafted, set: setIsSellerDocsDrafted },
+        { label: 'Buyer Docs Drafted?', role: isBuyerDocs, value: isBuyerDocsDrafted, set: setIsBuyerDocsDrafted },
+        { label: 'Seller Docs Approved?', role: isSellerDocs, value: isSellerDocsApproved, set: setIsSellerDocsApproved },
+        { label: 'Buyer Docs Approved?', role: isBuyerDocs, value: isBuyerDocsApproved, set: setIsBuyerDocsApproved },
+    ]
+
+    const [isClosed, setIsClosed] = useState('');
     const [isClosedEffective, setIsClosedEffective] = useState(false);
     const [isClosedDepositInit, setIsClosedDepositInit] = useState(false);
     const [isClosedDepositSecond, setIsClosedDepositSecond] = useState(false);
@@ -443,10 +472,30 @@ const AddFile = (props) => {
                                             </Button>
                                         </HStack>
                                     )
-                                    })}
+                                })}
                             </VStack>
 
-                            <Divider orientation='vertical' h='237px' />
+                            <Divider orientation='vertical' h='237px' margin='0px !important'/>
+
+                            <VStack w='200px' h='237px'>
+                                <Text>
+                                    Milestones:
+                                </Text>
+                                <VStack spacing='0'>
+                                    {taskCompletenessChecks.map((item, index) => {
+                                        if(item.role)
+                                            return (
+                                                <HStack w='170px' spacing='0' key={index}>
+                                                    <Checkbox spacing='2' size='sm'>
+                                                        {item.label}
+                                                    </Checkbox>
+                                                </HStack>
+                                            )
+                                    })}
+                                </VStack>
+                            </VStack>
+
+                            <Divider orientation='vertical' h='237px' margin='0px !important'/>
 
                             <VStack w='100%' h='237px'>
                                 <Text>
