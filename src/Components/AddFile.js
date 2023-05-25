@@ -29,8 +29,16 @@ import {
     Box,
     NumberInput,
     NumberInputField,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverArrow,
+    PopoverCloseButton,
+    PopoverHeader,
+    PopoverBody,
+    Checkbox,
   } from '@chakra-ui/react'
-import { LockIcon, UnlockIcon, } from '@chakra-ui/icons';
+import { ChevronDownIcon, LockIcon, UnlockIcon, } from '@chakra-ui/icons';
 
 const AddFile = (props) => {
     
@@ -54,19 +62,19 @@ const AddFile = (props) => {
     const [isClosingAgent, setIsClosingAgent] = useState(false);
 
     const[roles, setRoles] = useState({
-        isSellerDocs: isSellerDocs,
-        isBuyerDocs: isBuyerDocs,
-        isEscrowAgent: isEscrowAgent,
-        isTitleAgent: isTitleAgent,
-        isClosingAgent: isClosingAgent,
+        isSellerDocs: false,
+        isBuyerDocs: false,
+        isEscrowAgent: false,
+        isTitleAgent: false,
+        isClosingAgent: false,
     })
 
     const rolesButtons = [
-        { label: 'Seller Docs?', value: isSellerDocs, set: setIsSellerDocs },
-        { label: 'Buyer Docs?', value: isBuyerDocs, set: setIsBuyerDocs },
-        { label: 'Escrow Agent?', value: isEscrowAgent, set: setIsEscrowAgent },
-        { label: 'Title Agent?', value: isTitleAgent, set: setIsTitleAgent },
-        { label: 'Closing Agent?', value: isClosingAgent, set: setIsClosingAgent },
+        { label: 'Seller Docs', value: isSellerDocs, set: setIsSellerDocs },
+        { label: 'Buyer Docs', value: isBuyerDocs, set: setIsBuyerDocs },
+        { label: 'Escrow Agent', value: isEscrowAgent, set: setIsEscrowAgent },
+        { label: 'Title Agent', value: isTitleAgent, set: setIsTitleAgent },
+        { label: 'Closing Agent', value: isClosingAgent, set: setIsClosingAgent },
     ]
 
     const [effective, setEffective] = useState('');
@@ -337,29 +345,34 @@ const AddFile = (props) => {
                                     </Text>
                                 </HStack>
                             }
+                            <HStack>
+                                    <Text minW='fit-content' fontWeight='bold'>
+                                        Responsibilities:
+                                    </Text>
+                                    <Popover h='30px'>
+                                        <PopoverTrigger>
+                                            <Button h='30px' paddingInline='10px' backgroundColor='transparent' _hover={{backgroundColor:'whiteAlpha.100'}} _active={{backgroundColor:'whiteAlpha.200'}} border='1px solid white' fontWeight='normal' color='whiteAlpha.700'>
+                                                Select... <ChevronDownIcon/>
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent color='white' h='175px' w='175px' backgroundColor='#101622'>
+                                            <PopoverArrow/>
+                                            <PopoverHeader fontSize='16px'>File Responsibilities:</PopoverHeader>
+                                            <PopoverBody>
+                                                {
+                                                    rolesButtons.map((item, index) => {
+                                                        return <Checkbox key={index} onChange={(e)=>{console.log(e.target); item.set(e.target.checked)}} defaultChecked={item.value}>
+                                                            {item.label}
+                                                        </Checkbox>
+                                                    })
+                                                }
+                                            </PopoverBody>
+                                        </PopoverContent>
+                                    </Popover>
+                            </HStack>
                         </HStack>
 
-                        <HStack w='full' justify='space-between'>
-                            {
-                                rolesButtons.map((item, index) => {
-                                    return <HStack key={index}>
-                                        <Text minW='fit-content' fontWeight='bold'>
-                                            {item.label}
-                                        </Text>
-                                        <Switch
-                                            colorScheme='gray'
-                                            defaultChecked={item.value}
-                                            onChange={(e) =>{
-                                                item.set((value) => !value)
-                                            }}
-                                            size='sm'
-                                        />
-                                    </HStack>
-                                })
-                            }
-                        </HStack>
-
-                        <Divider marginBlock='0.2rem !important' />
+                        <Divider marginBlock='0.5rem !important' />
 
                         <HStack w='full'>
                             <Text minW='35px'>
