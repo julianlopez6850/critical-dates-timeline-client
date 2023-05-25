@@ -24,6 +24,7 @@ import {
     FormLabel,
     StackDivider,
     Textarea,
+    useToast,
     Menu,
     Box,
     NumberInput,
@@ -32,6 +33,8 @@ import {
 import { LockIcon, UnlockIcon, } from '@chakra-ui/icons';
 
 const AddFile = (props) => {
+    
+    const toast = useToast();
     
     const [fileNo, setFileNo] = useState('');
     const [displayedFileNo, setDisplayedFileNo] = useState('');
@@ -131,6 +134,11 @@ const AddFile = (props) => {
         }
     ]
 
+    const [isFileNoError, setIsFileNoError] = useState('File Number must be entered.')
+    const [isFileRefError, setIsFileRefError] = useState('File Reference must be entered.')
+    const [isEffectiveError, setIsEffectiveError] = useState('File Effective Date must be entered.')
+    const [isClosingError, setIsClosingError] = useState('File Closing Date must be entered.')
+
     useEffect(() => {
         if(fileNo.length > 2) {
             setDisplayedFileNo(`${fileNo.slice(0,2)} - ${fileNo.slice(2, fileNo.length)}`);
@@ -150,7 +158,45 @@ const AddFile = (props) => {
             })
     }, [isSellerDocs, isBuyerDocs, isEscrowAgent, isTitleAgent, isClosingAgent]);
 
+    const trySetFileNo = (value) => {
+        const isNum = /^\d+$/.test(value);
+        if(value === '')
+            setIsFileNoError('File Number must be entered.')
+        else if(!isNum)
+            setIsFileNoError('File Number must contain only digits.')
+        else if(value.length < 5)
+            setIsFileNoError(`File Number must be 5 digits. ex. ${(new Date().getFullYear()).toString().slice(-2)}001`)
+        else
+            setIsFileNoError(false)
+        
+        setFileNo(value);
+    }
+
+    const trySetFileRef = (value) => {
+        if(value === '')
+            setIsFileRefError('File Reference must be entered')
+        else
+            setIsFileRefError(false);
+        setFileRef(value);
+    }
+
     const trySaveFile = () => {
+        if(isFileNoError || isFileRefError || isEffectiveError || isClosingError) {
+            console.log('ERROR: Missing required data.')
+            toast({
+                title: 'Error.',
+                description: `Missing ${
+                    isFileNoError ? 'File Number' : 
+                        isFileRefError ? 'File Reference' : 
+                            isEffectiveError ? 'Effective Date' : 
+                                'Closing Date'}.`,
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
+            return;
+        }
+
         const file = {
             fileNumber: fileNo,
             fileRef: fileRef,
@@ -172,15 +218,40 @@ const AddFile = (props) => {
         }
 
         axios.post(`http://localhost:5000/files`, file).then((response) => {
-            console.log(response)
+            props.onClose();
         }).catch((err) => {
-            if(err.response.data.message === "This file already exists.") {
-                console.log('ERROR. This file already exists. Cannot save.')
-                // OPEN A TOAST HERE TO WARN THE USER
+            if(err.response && err.response.data.message === "This file already exists.") {
+                console.log('ERROR. This file number already exists.')
+                toast({
+                    title: 'Error.',
+                    description: `${err.response.data.message}`,
+                    status: 'error',
+                    duration: 2000,
+                    isClosable: true,
+                })
+            } else {
+                console.log('ERROR. We encountered a problem while trying to save this file. Please try again later.')
+                toast({
+                    title: 'Error.',
+                    description: `${'An error occurred while trying to save this file. Please try again later.'}`,
+                    status: 'error',
+                    duration: 2500,
+                    isClosable: true,
+                })
             }
-            // HANDLE OTHER ERRORS (i.e. missing effective date)
         })
     }
+
+    useEffect(() => {
+        if(!effective)
+            setIsEffectiveError(true);
+        else
+            setIsEffectiveError(false);
+        if(!closing)
+            setIsClosingError(true);
+        else
+            setIsClosingError(false);
+    }, [effective, closing])
 
     return (
         <Modal
@@ -200,25 +271,34 @@ const AddFile = (props) => {
 
                 <ModalBody >
                     <HStack w='800px'>
-                        <Text w='65px'>File No.</Text>
-                        <Input
-                            w='90px'
-                            size='sm'
-                            borderRadius='5px'
-                            value={fileNo}
-                            onChange={(e)=>{setFileNo(e.target.value)}}
-                        />
+                        <Text w='55px' minW='55px'>File No.</Text>
+                        <Tooltip label={isFileNoError || ''}>
+                            <Input
+                                w='75px'
+                                minW='75px'
+                                size='sm'
+                                borderRadius='5px'
+                                fontSize='16px'
+                                textAlign='center'
+                                value={fileNo}
+                                maxLength='5'
+                                onChange={(e)=>{trySetFileNo(e.target.value)}}
+                                isInvalid={isFileNoError}
+                            />
+                        </Tooltip>
 
                         <Text>Ref:</Text>
-                        <Input
-                            w='80%'
-                            size='sm'
-                            borderRadius='5px'
-                            fontSize='16px'
-                            marginTop='10px'
-                            value={fileRef}
-                            onChange={(e)=>{setFileRef(e.target.value)}}
-                        />
+                        <Tooltip label={isFileRefError || ''}>
+                            <Input
+                                w='full'
+                                size='sm'
+                                borderRadius='5px'
+                                fontSize='16px'
+                                value={fileRef}
+                                onChange={(e)=>{trySetFileRef(e.target.value)}}
+                                isInvalid={isFileRefError}
+                            />
+                        </Tooltip>
                     </HStack>
 
                     <VStack spacing='0.5' fontSize='14px'>
