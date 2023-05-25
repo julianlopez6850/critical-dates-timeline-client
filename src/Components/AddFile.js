@@ -47,7 +47,7 @@ const AddFile = (props) => {
     const [fileNo, setFileNo] = useState('');
     const [displayedFileNo, setDisplayedFileNo] = useState('');
     const [fileRef, setFileRef] = useState('');
-    const [representing, setRepresenting] = useState(false); // true = Seller, false = Buyer
+    const [whoRepresenting, setWhoRepresenting] = useState(false); // true = Seller, false = Buyer
     const [isPurchase, setIsPurchase] = useState(true); // true = Purchase, false = REFI
     const [buyer, setBuyer] = useState(''); // buyer name
     const [seller, setSeller] = useState(''); // seller name
@@ -220,7 +220,7 @@ const AddFile = (props) => {
             closing: closing,
             notes: notes,
             isClosed: isClosed,
-            representing: representing,
+            representing: whoRepresenting,
             isPurchase: isPurchase,
             roles: JSON.stringify(roles),
         }
@@ -313,36 +313,26 @@ const AddFile = (props) => {
                         <HStack width='full' justify='space-between' mt='10px'>
                             <HStack>
                                 <Text minW='fit-content' fontWeight='bold'>
-                                    This is a ...
+                                    File Type:
                                 </Text>
-                                <Switch
-                                    colorScheme='gray'
-                                    defaultChecked={isPurchase}
-                                    onChange={() => {
-                                        setIsPurchase(!isPurchase)
-                                    }}
-                                    size='sm'
-                                />
-                                <Text width='full' fontWeight='bold'>
-                                    {isPurchase ? 'Purchase' : 'REFI'}
-                                </Text>
+                                <Tabs h='25px' variant='enclosed' colorScheme='white' defaultIndex={isPurchase ? 0 : 1}>
+                                    <TabList h='25px' border='none'>
+                                        <Tab paddingInline='5px' w='80px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {setIsPurchase(true)}}>Purchase</Tab>
+                                        <Tab paddingInline='5px' w='80px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {setIsPurchase(false)}}>Refinance</Tab>
+                                    </TabList>
+                                </Tabs>
                             </HStack>
                             {isPurchase &&
                                 <HStack>
                                     <Text minW='fit-content' fontWeight='bold'>
-                                        We represent the ...
+                                        Representing:
                                     </Text>
-                                    <Switch
-                                        colorScheme='gray'
-                                        defaultChecked={representing}
-                                        onChange={() => {
-                                            setRepresenting(!representing)
-                                        }}
-                                        size='sm'
-                                    />
-                                    <Text width='full' fontWeight='bold'>
-                                        {representing ? 'Seller' : 'Buyer'}
-                                    </Text>
+                                    <Tabs h='25px' variant='enclosed' colorScheme='white' defaultIndex={whoRepresenting ? 1 : 0}>
+                                        <TabList h='25px' border='none'>
+                                            <Tab paddingInline='5px' w='50px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {setWhoRepresenting(false)}}>Buyer</Tab>
+                                            <Tab paddingInline='5px' w='50px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {setWhoRepresenting(true)}}>Seller</Tab>
+                                        </TabList>
+                                    </Tabs>
                                 </HStack>
                             }
                             <HStack>
@@ -375,28 +365,28 @@ const AddFile = (props) => {
                         <Divider marginBlock='0.5rem !important' />
 
                         <HStack w='full'>
-                            <Text minW='35px'>
-                                {representing ? ' Seller' : ' Buyer'}
+                            <Text minW='57px'>
+                                {isPurchase ? (whoRepresenting ? ' Seller' : ' Buyer') : 'Borrower'}
                             </Text>
                             <Input
                                 size='sm' borderRadius='10px'
-                                value={representing ? seller : buyer}
-                                onChange={(e) => {representing ? setSeller(e.target.value) : setBuyer(e.target.value)}}
+                                value={whoRepresenting ? seller : buyer}
+                                onChange={(e) => {whoRepresenting ? setSeller(e.target.value) : setBuyer(e.target.value)}}
                             />
                             
-                            <Text minW='35px'>
-                                {representing ? 'Buyer' : 'Seller'}
+                            <Text minW='43px'>
+                                {isPurchase ? (whoRepresenting ? 'Buyer' : 'Seller') : 'Lender'}
                             </Text>
                             <Input
                                 size='sm' borderRadius='10px'
-                                value={representing ? buyer : seller}
-                                onChange={(e) => {representing ? setBuyer(e.target.value) : setSeller   (e.target.value)}}
+                                value={whoRepresenting ? buyer : seller}
+                                onChange={(e) => {whoRepresenting ? setBuyer(e.target.value) : setSeller   (e.target.value)}}
                             />
                         </HStack>
 
                         <HStack w='full'>
-                            <Text>
-                                Property:
+                            <Text minW='57px'>
+                                Property
                             </Text>
                             <Input
                                 size='sm' borderRadius='10px'
@@ -405,7 +395,7 @@ const AddFile = (props) => {
                             />
 
                             <Text>
-                                Folio:
+                                Folio
                             </Text>
                             <Input
                                 w='300px' size='sm' borderRadius='10px'
