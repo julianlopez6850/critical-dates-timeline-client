@@ -29,6 +29,7 @@ import {
     NumberInput,
     NumberInputField,
   } from '@chakra-ui/react'
+import { LockIcon, UnlockIcon, } from '@chakra-ui/icons';
 
 const AddFile = (props) => {
     
@@ -78,13 +79,56 @@ const AddFile = (props) => {
     const [isSellerDocsComplete, setIsSellerDocsComplete] = useState('');
     const [isClosed, setIsClosed] = useState('');
 
+    const [isClosedEffective, setIsClosedEffective] = useState(false);
+    const [isClosedDepositInit, setIsClosedDepositInit] = useState(false);
+    const [isClosedDepositSecond, setIsClosedDepositSecond] = useState(false);
+    const [isClosedDepositThird, setIsClosedDepositThird] = useState(false);
+    const [isClosedInspection, setIsClosedInspection] = useState(false);
+    const [isClosedClosing, setIsClosedClosing] = useState(false);
+
     const dates = [
-        {label: 'Effective', value: effective, set: setEffective},
-        {label: 'Deposit 1', value: depositInit, set: setDepositInit},
-        {label: 'Deposit 2', value: depositSecond, set: setDepositSecond},
-        {label: 'Deposit 3', value: depositThird, set: setDepositThird},
-        {label: 'Inspection', value: inspection, set: setInspection},
-        {label: 'Closing', value: closing, set: setClosing}
+        {
+            label: 'Effective', 
+            value: effective, 
+            setValue: setEffective, 
+            isClosed: isClosedEffective, 
+            setIsClosed: setIsClosedEffective
+        },
+        {
+            label: 'Deposit 1', 
+            value: depositInit, 
+            setValue: setDepositInit, 
+            isClosed: isClosedDepositInit, 
+            setIsClosed: setIsClosedDepositInit
+        },
+        {
+            label: 'Deposit 2', 
+            value: depositSecond, 
+            setValue: setDepositSecond, 
+            isClosed: isClosedDepositSecond, 
+            setIsClosed: setIsClosedDepositSecond
+        },
+        {
+            label: 'Deposit 3', 
+            value: depositThird, 
+            setValue: setDepositThird, 
+            isClosed: isClosedDepositThird, 
+            setIsClosed: setIsClosedDepositThird
+        },
+        {
+            label: 'Inspection', 
+            value: inspection, 
+            setValue: setInspection, 
+            isClosed: isClosedInspection, 
+            setIsClosed: setIsClosedInspection
+        },
+        {
+            label: 'Closing', 
+            value: closing, 
+            setValue: setClosing, 
+            isClosed: isClosedClosing, 
+            setIsClosed: setIsClosedClosing
+        }
     ]
 
     useEffect(() => {
@@ -284,18 +328,38 @@ const AddFile = (props) => {
                                 <Text>
                                     Critical Dates:
                                 </Text>
-                                    {dates.map((item, index) => {
-                                        return (
-                                            <HStack w='240px' spacing='0' key={index}>
-                                                <Text w='70px'>
-                                                    {item.label}
+                                {dates.map((item, index) => {
+                                    return (
+                                        <HStack w='250px' spacing='0' key={index}
+                                            color={(isClosed || item.isClosed) ? 'red' : ''}
+                                            borderColor={(isClosed || item.isClosed) ? 'red' : ''}
+                                        >
+                                            <Text w='68px'>
+                                                {item.label}
+                                            </Text>
+                                            <Input w='150px' h='30px' paddingInline='8px' borderRadius='10px' type='date' 
+                                                value={item.value}
+                                                onChange={(e)=>{item.setValue(e.target.value)}}
+                                                transition='0s'
+                                                isDisabled={isClosed}
+                                                _hover={{}}
+                                            />
+                                            <Button p='0px !important' size='sm' bgColor='transparent'
+                                                _hover={{bgColor:'transparent'}}
+                                                onClick={(e)=>{
+                                                    e.stopPropagation();
+                                                    if(!isClosed)
+                                                        item.setIsClosed((isClosed) => !isClosed);
+                                                }}
+                                                isDisabled={isClosed}
+                                                transition='0s'
+                                            >
+                                                <Text display='flex'>
+                                                    { (isClosed || item.isClosed) && <LockIcon/> || <UnlockIcon/> }
                                                 </Text>
-                                                <Input w='170px' h='30px' borderRadius='10px' type='date' 
-                                                    value={item.value}
-                                                    onChange={(e)=>{item.set(e.target.value)}}
-                                                />
-                                            </HStack>
-                                        )
+                                            </Button>
+                                        </HStack>
+                                    )
                                     })}
                             </VStack>
 
@@ -313,22 +377,35 @@ const AddFile = (props) => {
                         </HStack>
                         
                         <Divider marginBlock='0.5rem !important' />
-                        
-                        <HStack w='full' justifyContent='right' onClick={()=>{trySaveFile()}}>
-                            <Button w='100px' colorScheme='blue' >
-                                SAVE
-                            </Button>
-                        </HStack>
                     </VStack>
                 </ModalBody>
-
-                <ModalFooter width='full' display='flex' justifyContent='space-between'>
-                    <Text color='gray.300'>
-                        {displayedFileNo} || {fileRef ? ' ' + fileRef : ''}
-                    </Text>
-                    <Text color='gray.300'>
-                        {process.env.REACT_APP_VERSION}
-                    </Text>
+                <ModalFooter justifyContent='space-between' alignItems='start' m='0'paddingTop='0'>
+                    <VStack align='left' h='100%'>
+                        <Tooltip
+                            maxW='800px'
+                            placement='top-start'
+                            label={(displayedFileNo && fileRef) && `${displayedFileNo} || ${fileRef}`}
+                        >
+                            <Text color='gray.300' maxW='600px' h='24px' overflow='hidden' whiteSpace='nowrap' textOverflow='ellipsis'>
+                                {displayedFileNo || '## - ###'} || {fileRef || '{File Reference}'}
+                            </Text>
+                        </Tooltip>
+                        <Text color={isClosed ? 'red' : ''}>
+                            STATUS: {isClosed ? 'CLOSED/CANCELLED' : 'OPEN'}
+                        </Text>
+                    </VStack>
+                    <HStack h='40px'>
+                        {isClosed && <Button w='120px' colorScheme='green' onClick={()=>{setIsClosed(false)}}>
+                                RE-OPEN FILE
+                            </Button> ||
+                            <Button w='120px' colorScheme='red' onClick={()=>{setIsClosed(true)}}>
+                                CLOSE FILE
+                            </Button>
+                        }
+                        <Button w='100px' colorScheme='blue' onClick={()=>{trySaveFile()}}>
+                            SAVE
+                        </Button>
+                    </HStack>
                 </ModalFooter>
             </ModalContent>
         </Modal>
