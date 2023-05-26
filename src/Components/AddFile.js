@@ -217,6 +217,88 @@ const AddFile = (props) => {
         setFileRef(value);
     }
 
+    const resetAllValues = () => {
+        setFileNo('');
+        setDisplayedFileNo('');
+        setFileRef('');
+        setWhoRepresenting(false);
+        setIsPurchase(true);
+        setBuyer('')
+        setSeller('')
+        setPropertyAddress('')
+        setFolioNo('');
+        setNotes('');
+        setIsSellerDocs(false);
+        setIsBuyerDocs(false);
+        setIsEscrowAgent(false);
+        setIsTitleAgent(false);
+        setIsClosingAgent(false);
+        setRoles({
+            isSellerDocs: false,
+            isBuyerDocs: false,
+            isEscrowAgent: false,
+            isTitleAgent: false,
+            isClosingAgent: false,
+        });
+        setEffective('00-00-0000');
+        setDepositInit('00-00-0000');
+        setDepositSecond('00-00-0000');
+        setDepositThird('00-00-0000');
+        setInspection('00-00-0000');
+        setClosing('00-00-0000');
+        setIsEscrowReceived('');
+        setIsLienRequested('');
+        setIsTitleOrdered('');
+        setIsLienReceived('');
+        setIsTitleReceived('');
+        setIsSellerDocsDrafted('');
+        setIsSellerDocsApproved('');
+        setIsBuyerDocsDrafted('');
+        setIsBuyerDocsApproved('');
+        setIsClosed('');
+        setIsFileNoError('File Number must be entered.')
+        setIsFileRefError('File Reference must be entered.')
+        setIsEffectiveError('File Effective Date must be entered.')
+        setIsClosingError('File Closing Date must be entered.')
+    }
+
+    useEffect(() => {
+        if(effective === '00-00-0000') {
+            setEffective('')
+        }
+    }, [effective])
+    useEffect(() => {
+        if(depositInit === '00-00-0000') {
+            setDepositInit('')
+        }
+    }, [depositInit])
+    useEffect(() => {
+        if(depositSecond === '00-00-0000') {
+            setDepositSecond('')
+        }
+    }, [depositSecond])
+    useEffect(() => {
+        if(depositThird === '00-00-0000') {
+            setDepositThird('')
+        }
+    }, [depositThird])
+    useEffect(() => {
+        if(inspection === '00-00-0000') {
+            setInspection('')
+        }
+    }, [inspection])
+    useEffect(() => {
+        if(closing === '00-00-0000') {
+            setClosing('')
+        }
+    }, [closing])
+
+    const forceResetDate = (value, setValue) => {
+        if(value === '') {
+            setValue('00-00-0000')
+        }
+    }
+
     const trySaveFile = () => {
         if(isFileNoError || isFileRefError || isEffectiveError || isClosingError) {
             console.log('ERROR: Missing required data.')
@@ -256,6 +338,7 @@ const AddFile = (props) => {
 
         axios.post(`http://localhost:5000/files`, file).then((response) => {
             props.onClose();
+            resetAllValues();
         }).catch((err) => {
             if(err.response && err.response.data.message === "This file already exists.") {
                 console.log('ERROR. This file number already exists.')
@@ -380,7 +463,7 @@ const AddFile = (props) => {
                                             <PopoverBody>
                                                 {
                                                     rolesButtons.map((item, index) => {
-                                                        return <Checkbox key={index} onChange={(e)=>{console.log(e.target); item.set(e.target.checked)}} defaultChecked={item.value}>
+                                                        return <Checkbox key={index} onChange={(e)=>{item.set(e.target.checked)}} defaultChecked={item.value} isChecked={item.value}>
                                                             {item.label}
                                                         </Checkbox>
                                                     })
@@ -455,6 +538,7 @@ const AddFile = (props) => {
                                                 transition='0s'
                                                 isDisabled={isClosed}
                                                 _hover={{}}
+                                                onBlur={(e)=>{forceResetDate(e.target.value, item.setValue)}}
                                             />
                                             <Button p='0px !important' size='sm' bgColor='transparent'
                                                 _hover={{bgColor:'transparent'}}
@@ -486,7 +570,7 @@ const AddFile = (props) => {
                                         if(item.role)
                                             return (
                                                 <HStack w='170px' spacing='0' key={index}>
-                                                    <Checkbox spacing='2' size='sm'>
+                                                    <Checkbox spacing='2' size='sm' onChange={(e)=>{item.set(e.target.checked)}} defaultChecked={item.value} isChecked={item.value}>
                                                         {item.label}
                                                     </Checkbox>
                                                 </HStack>
@@ -512,32 +596,40 @@ const AddFile = (props) => {
                     </VStack>
                 </ModalBody>
                 <ModalFooter justifyContent='space-between' alignItems='start' m='0'paddingTop='0'>
-                    <VStack align='left' h='100%'>
+                    <VStack w='100%' h='100%' align='left'>
+                        <HStack w='100%' justifyContent='space-between'>
+                            <HStack>
+                                {isClosed && <Button w='120px' colorScheme='green' onClick={()=>{setIsClosed(false)}}>
+                                        RE-OPEN FILE
+                                    </Button> ||
+                                    <Button w='120px' colorScheme='red' onClick={()=>{setIsClosed(true)}}>
+                                        CLOSE FILE
+                                    </Button>
+                                }
+                                <Text color={isClosed ? 'red' : ''}>
+                                    STATUS: {isClosed ? 'CLOSED/CANCELLED' : 'OPEN'}
+                                </Text>
+                            </HStack>
+                            <HStack h='40px'>
+                                <Button w='120px' colorScheme='red' onClick={()=>{resetAllValues()}}>
+                                    CLEAR FIELDS
+                                </Button>
+                                <Button w='100px' colorScheme='blue' onClick={()=>{trySaveFile()}}>
+                                    SAVE
+                                </Button>
+                            </HStack>
+                        </HStack>
                         <Tooltip
-                            maxW='800px'
-                            placement='top-start'
+                            maxW='848px'
+                            placement='bottom-start'
                             label={(displayedFileNo && fileRef) && `${displayedFileNo} || ${fileRef}`}
+                            textAlign='justify'
                         >
-                            <Text color='gray.300' maxW='600px' h='24px' overflow='hidden' whiteSpace='nowrap' textOverflow='ellipsis'>
+                            <Text color='gray.300' maxW='100%' h='24px' overflow='hidden' whiteSpace='nowrap' textOverflow='ellipsis'>
                                 {displayedFileNo || '## - ###'} || {fileRef || '{File Reference}'}
                             </Text>
                         </Tooltip>
-                        <Text color={isClosed ? 'red' : ''}>
-                            STATUS: {isClosed ? 'CLOSED/CANCELLED' : 'OPEN'}
-                        </Text>
                     </VStack>
-                    <HStack h='40px'>
-                        {isClosed && <Button w='120px' colorScheme='green' onClick={()=>{setIsClosed(false)}}>
-                                RE-OPEN FILE
-                            </Button> ||
-                            <Button w='120px' colorScheme='red' onClick={()=>{setIsClosed(true)}}>
-                                CLOSE FILE
-                            </Button>
-                        }
-                        <Button w='100px' colorScheme='blue' onClick={()=>{trySaveFile()}}>
-                            SAVE
-                        </Button>
-                    </HStack>
                 </ModalFooter>
             </ModalContent>
         </Modal>
