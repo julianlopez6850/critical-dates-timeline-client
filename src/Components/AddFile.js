@@ -173,6 +173,9 @@ const AddFile = (props) => {
 
     const [isFileNoError, setIsFileNoError] = useState('File Number must be entered.')
     const [isFileRefError, setIsFileRefError] = useState('File Reference must be entered.')
+    const [isBuyerError, setIsBuyerError] = useState('Buyer/Borrower must be entered.')
+    const [isSellerError, setIsSellerError] = useState('Seller/Lender must be entered.')
+    const [isPropertyError, setIsPropertyError] = useState('Property Address must be entered.')
     const [isEffectiveError, setIsEffectiveError] = useState('File Effective Date must be entered.')
     const [isClosingError, setIsClosingError] = useState('File Closing Date must be entered.')
 
@@ -195,27 +198,59 @@ const AddFile = (props) => {
             })
     }, [isSellerDocs, isBuyerDocs, isEscrowAgent, isTitleAgent, isClosingAgent]);
 
-    const trySetFileNo = (value) => {
-        const isNum = /^\d+$/.test(value);
-        if(value === '')
+    useEffect(() => {
+        const isNum = /^\d+$/.test(fileNo);
+        if(fileNo === '')
             setIsFileNoError('File Number must be entered.')
         else if(!isNum)
             setIsFileNoError('File Number must contain only digits.')
-        else if(value.length < 5)
+        else if(fileNo.length < 5)
             setIsFileNoError(`File Number must be 5 digits. ex. ${(new Date().getFullYear()).toString().slice(-2)}001`)
         else
             setIsFileNoError(false)
-        
-        setFileNo(value);
-    }
+    }, [fileNo])
 
-    const trySetFileRef = (value) => {
-        if(value === '')
+    useEffect(() => {
+        if(fileRef === '')
             setIsFileRefError('File Reference must be entered')
         else
             setIsFileRefError(false);
-        setFileRef(value);
-    }
+    }, [fileRef])
+
+    useEffect(() => {
+        if(!effective)
+            setIsEffectiveError('File Effective Date must be entered.');
+        else
+            setIsEffectiveError(false);
+    }, [effective])
+
+    useEffect(() => {
+        if(!closing)
+            setIsClosingError('File Closing Date must be entered.');
+        else
+            setIsClosingError(false);
+    }, [closing])
+
+    useEffect(() => {
+        if(!buyer)
+            setIsBuyerError('Buyer/Borrower must be entered.');
+        else
+            setIsBuyerError(false);
+    }, [buyer])
+
+    useEffect(() => {
+        if(!seller)
+            setIsSellerError('Seller/Lender must be entered.');
+        else
+            setIsSellerError(false);
+    }, [seller])
+
+    useEffect(() => {
+        if(!propertyAddress)
+            setIsPropertyError('Property Address must be entered.');
+        else
+            setIsPropertyError(false);
+    }, [propertyAddress])
 
     const resetAllValues = () => {
         setFileNo('');
@@ -256,10 +291,6 @@ const AddFile = (props) => {
         setIsBuyerDocsDrafted('');
         setIsBuyerDocsApproved('');
         setIsClosed('');
-        setIsFileNoError('File Number must be entered.')
-        setIsFileRefError('File Reference must be entered.')
-        setIsEffectiveError('File Effective Date must be entered.')
-        setIsClosingError('File Closing Date must be entered.')
     }
 
     useEffect(() => {
@@ -300,15 +331,12 @@ const AddFile = (props) => {
     }
 
     const trySaveFile = () => {
-        if(isFileNoError || isFileRefError || isEffectiveError || isClosingError) {
-            console.log('ERROR: Missing required data.')
+        var error = isFileNoError || isFileRefError || isBuyerError || isSellerError || isPropertyError || isEffectiveError || isClosingError
+        if(error) {
+            console.log('ERROR: Invalid or Missing Input.')
             toast({
                 title: 'Error.',
-                description: `Missing ${
-                    isFileNoError ? 'File Number' : 
-                        isFileRefError ? 'File Reference' : 
-                            isEffectiveError ? 'Effective Date' : 
-                                'Closing Date'}.`,
+                description: error,
                 status: 'error',
                 duration: 2000,
                 isClosable: true,
@@ -362,17 +390,6 @@ const AddFile = (props) => {
         })
     }
 
-    useEffect(() => {
-        if(!effective)
-            setIsEffectiveError(true);
-        else
-            setIsEffectiveError(false);
-        if(!closing)
-            setIsClosingError(true);
-        else
-            setIsClosingError(false);
-    }, [effective, closing])
-
     return (
         <Modal
             closeOnOverlayClick={false}
@@ -402,7 +419,7 @@ const AddFile = (props) => {
                                 textAlign='center'
                                 value={fileNo}
                                 maxLength='5'
-                                onChange={(e)=>{trySetFileNo(e.target.value)}}
+                                onChange={(e)=>{setFileNo(e.target.value)}}
                                 isInvalid={isFileNoError}
                             />
                         </Tooltip>
@@ -415,7 +432,7 @@ const AddFile = (props) => {
                                 borderRadius='5px'
                                 fontSize='16px'
                                 value={fileRef}
-                                onChange={(e)=>{trySetFileRef(e.target.value)}}
+                                onChange={(e)=>{setFileRef(e.target.value)}}
                                 isInvalid={isFileRefError}
                             />
                         </Tooltip>
@@ -480,31 +497,40 @@ const AddFile = (props) => {
                             <Text minW='57px'>
                                 {isPurchase ? (whoRepresenting ? ' Seller' : ' Buyer') : 'Borrower'}
                             </Text>
-                            <Input
-                                size='sm' borderRadius='10px'
-                                value={whoRepresenting ? seller : buyer}
-                                onChange={(e) => {whoRepresenting ? setSeller(e.target.value) : setBuyer(e.target.value)}}
-                            />
+                            <Tooltip label={whoRepresenting ? isSellerError || '' : isBuyerError || ''}>
+                                <Input
+                                    size='sm' borderRadius='10px'
+                                    value={whoRepresenting ? seller : buyer}
+                                    onChange={(e) => {whoRepresenting ? setSeller(e.target.value) : setBuyer(e.target.value)}}
+                                    isInvalid={whoRepresenting ? isSellerError : isBuyerError}
+                                />
+                            </Tooltip>
                             
                             <Text minW='43px'>
                                 {isPurchase ? (whoRepresenting ? 'Buyer' : 'Seller') : 'Lender'}
                             </Text>
-                            <Input
-                                size='sm' borderRadius='10px'
-                                value={whoRepresenting ? buyer : seller}
-                                onChange={(e) => {whoRepresenting ? setBuyer(e.target.value) : setSeller   (e.target.value)}}
-                            />
+                            <Tooltip label={whoRepresenting ? isBuyerError || '' : isSellerError || ''}>
+                                <Input
+                                    size='sm' borderRadius='10px'
+                                    value={whoRepresenting ? buyer : seller}
+                                    onChange={(e) => {whoRepresenting ? setBuyer(e.target.value) : setSeller   (e.target.value)}}
+                                    isInvalid={whoRepresenting ? isBuyerError : isSellerError}
+                                />
+                            </Tooltip>
                         </HStack>
 
-                        <HStack w='full'>
+                        <HStack w='full' mt='5px !important'>
                             <Text minW='57px'>
                                 Property
                             </Text>
-                            <Input
-                                size='sm' borderRadius='10px'
-                                value={propertyAddress}
-                                onChange={(e) => {setPropertyAddress(e.target.value)}}
-                            />
+                            <Tooltip label={isPropertyError || ''}>
+                                <Input
+                                    size='sm' borderRadius='10px'
+                                    value={propertyAddress}
+                                    onChange={(e) => {setPropertyAddress(e.target.value)}}
+                                    isInvalid={isPropertyError}
+                                />
+                            </Tooltip>
 
                             <Text>
                                 Folio
@@ -532,14 +558,17 @@ const AddFile = (props) => {
                                             <Text w='68px'>
                                                 {item.label}
                                             </Text>
-                                            <Input w='150px' h='30px' paddingInline='8px' borderRadius='10px' type='date' 
-                                                value={item.value}
-                                                onChange={(e)=>{item.setValue(e.target.value)}}
-                                                transition='0s'
-                                                isDisabled={isClosed}
-                                                _hover={{}}
-                                                onBlur={(e)=>{forceResetDate(e.target.value, item.setValue)}}
-                                            />
+                                            <Tooltip label={item.label === 'Effective' ? isEffectiveError || '' : item.label === 'Closing' ? isClosingError || '' : ''}>
+                                                <Input w='150px' h='30px' paddingInline='8px' borderRadius='10px' type='date' 
+                                                    value={item.value}
+                                                    onChange={(e)=>{item.setValue(e.target.value)}}
+                                                    transition='0s'
+                                                    isDisabled={isClosed}
+                                                    _hover={{}}
+                                                    onBlur={(e)=>{forceResetDate(e.target.value, item.setValue)}}
+                                                    isInvalid={item.label === 'Effective' && isEffectiveError || item.label === 'Closing' && isClosingError}
+                                                />
+                                            </Tooltip>
                                             <Button p='0px !important' size='sm' bgColor='transparent'
                                                 _hover={{bgColor:'transparent'}}
                                                 onClick={(e)=>{
