@@ -7,33 +7,24 @@ import {
     Modal,
     ModalOverlay,
     ModalContent,
-    ModalHeader,
     ModalFooter,
     ModalBody,
     ModalCloseButton,
     HStack,
     VStack,
     Text,
-    Switch,
     Divider,
     Tabs,
     TabList,
     Tab,
     Tooltip,
     Input,
-    FormLabel,
-    StackDivider,
     Textarea,
     useToast,
-    Menu,
-    Box,
-    NumberInput,
-    NumberInputField,
     Popover,
     PopoverTrigger,
     PopoverContent,
     PopoverArrow,
-    PopoverCloseButton,
     PopoverHeader,
     PopoverBody,
     Checkbox,
@@ -80,21 +71,21 @@ const AddFile = (props) => {
     const [effective, setEffective] = useState('');
     const [depositInit, setDepositInit] = useState('');
     const [depositSecond, setDepositSecond] = useState('');
-    const [depositThird, setDepositThird] = useState('');
+    const [loanApproval, setLoanApproval] = useState('');
     const [inspection, setInspection] = useState('');
     const [closing, setClosing] = useState('');
 
-    const [isEscrowReceived, setIsEscrowReceived] = useState('');
-    const [isLienRequested, setIsLienRequested] = useState('');
-    const [isTitleOrdered, setIsTitleOrdered] = useState('');
-    const [isLienReceived, setIsLienReceived] = useState('');
-    const [isTitleReceived, setIsTitleReceived] = useState('');
-    const [isSellerDocsDrafted, setIsSellerDocsDrafted] = useState('');
-    const [isSellerDocsApproved, setIsSellerDocsApproved] = useState('');
-    const [isBuyerDocsDrafted, setIsBuyerDocsDrafted] = useState('');
-    const [isBuyerDocsApproved, setIsBuyerDocsApproved] = useState('');
+    const [isEscrowReceived, setIsEscrowReceived] = useState(false);
+    const [isLienRequested, setIsLienRequested] = useState(false);
+    const [isTitleOrdered, setIsTitleOrdered] = useState(false);
+    const [isLienReceived, setIsLienReceived] = useState(false);
+    const [isTitleReceived, setIsTitleReceived] = useState(false);
+    const [isSellerDocsDrafted, setIsSellerDocsDrafted] = useState(false);
+    const [isSellerDocsApproved, setIsSellerDocsApproved] = useState(false);
+    const [isBuyerDocsDrafted, setIsBuyerDocsDrafted] = useState(false);
+    const [isBuyerDocsApproved, setIsBuyerDocsApproved] = useState(false);
     
-    const [taskCompleteness, setTaskCompleteness] = useState({
+    const [milestones, setMilestones] = useState({
         isEscrowReceived: false,
         isLienRequested: false,
         isTitleOrdered: false,
@@ -106,7 +97,7 @@ const AddFile = (props) => {
         isBuyerDocsApproved: false,
     })
 
-    const taskCompletenessChecks = [
+    const milestonesChecks = [
         { label: 'Escrow Fully Received?', role: true, value: isEscrowReceived, set: setIsEscrowReceived },
         { label: 'Lien Search Requested?', role: isTitleAgent, value: isLienRequested, set: setIsLienRequested },
         { label: 'Title Work Ordered?', role: isTitleAgent, value: isTitleOrdered, set: setIsTitleOrdered },
@@ -118,11 +109,11 @@ const AddFile = (props) => {
         { label: 'Buyer Docs Approved?', role: isBuyerDocs, value: isBuyerDocsApproved, set: setIsBuyerDocsApproved },
     ]
 
-    const [isClosed, setIsClosed] = useState('');
+    const [isClosed, setIsClosed] = useState(false);
     const [isClosedEffective, setIsClosedEffective] = useState(false);
     const [isClosedDepositInit, setIsClosedDepositInit] = useState(false);
     const [isClosedDepositSecond, setIsClosedDepositSecond] = useState(false);
-    const [isClosedDepositThird, setIsClosedDepositThird] = useState(false);
+    const [isClosedLoanApproval, setIsClosedLoanApproval] = useState(false);
     const [isClosedInspection, setIsClosedInspection] = useState(false);
     const [isClosedClosing, setIsClosedClosing] = useState(false);
 
@@ -149,11 +140,11 @@ const AddFile = (props) => {
             setIsClosed: setIsClosedDepositSecond
         },
         {
-            label: 'Deposit 3', 
-            value: depositThird, 
-            setValue: setDepositThird, 
-            isClosed: isClosedDepositThird, 
-            setIsClosed: setIsClosedDepositThird
+            label: 'Loan ✓', 
+            value: loanApproval, 
+            setValue: setLoanApproval, 
+            isClosed: isClosedLoanApproval, 
+            setIsClosed: setIsClosedLoanApproval
         },
         {
             label: 'Inspection', 
@@ -197,6 +188,21 @@ const AddFile = (props) => {
                 isClosingAgent: isClosingAgent,
             })
     }, [isSellerDocs, isBuyerDocs, isEscrowAgent, isTitleAgent, isClosingAgent]);
+
+    useEffect(() => {
+        setMilestones({
+                isEscrowReceived: isEscrowReceived,
+                isLienRequested: isLienRequested,
+                isTitleOrdered: isTitleOrdered,
+                isLienReceived: isLienReceived,
+                isTitleReceived: isTitleReceived,
+                isSellerDocsDrafted: isSellerDocsDrafted,
+                isBuyerDocsDrafted: isBuyerDocsDrafted,
+                isSellerDocsApproved: isSellerDocsApproved,
+                isBuyerDocsApproved: isBuyerDocsApproved,
+            })
+    }, [isEscrowReceived, isLienRequested, isTitleOrdered, isLienReceived, isTitleReceived, 
+        isSellerDocsDrafted, isBuyerDocsDrafted, isSellerDocsApproved, isBuyerDocsApproved,]);
 
     useEffect(() => {
         const isNum = /^\d+$/.test(fileNo);
@@ -254,7 +260,6 @@ const AddFile = (props) => {
 
     const resetAllValues = () => {
         setFileNo('');
-        setDisplayedFileNo('');
         setFileRef('');
         setWhoRepresenting(false);
         setIsPurchase(true);
@@ -268,29 +273,28 @@ const AddFile = (props) => {
         setIsEscrowAgent(false);
         setIsTitleAgent(false);
         setIsClosingAgent(false);
-        setRoles({
-            isSellerDocs: false,
-            isBuyerDocs: false,
-            isEscrowAgent: false,
-            isTitleAgent: false,
-            isClosingAgent: false,
-        });
         setEffective('00-00-0000');
         setDepositInit('00-00-0000');
         setDepositSecond('00-00-0000');
-        setDepositThird('00-00-0000');
+        setLoanApproval('00-00-0000');
         setInspection('00-00-0000');
         setClosing('00-00-0000');
-        setIsEscrowReceived('');
-        setIsLienRequested('');
-        setIsTitleOrdered('');
-        setIsLienReceived('');
-        setIsTitleReceived('');
-        setIsSellerDocsDrafted('');
-        setIsSellerDocsApproved('');
-        setIsBuyerDocsDrafted('');
-        setIsBuyerDocsApproved('');
-        setIsClosed('');
+        setIsClosedEffective(false);
+        setIsClosedDepositInit(false);
+        setIsClosedDepositSecond(false);
+        setIsClosedLoanApproval(false);
+        setIsClosedInspection(false);
+        setIsClosedClosing(false);
+        setIsEscrowReceived(false);
+        setIsLienRequested(false);
+        setIsTitleOrdered(false);
+        setIsLienReceived(false);
+        setIsTitleReceived(false);
+        setIsSellerDocsDrafted(false);
+        setIsSellerDocsApproved(false);
+        setIsBuyerDocsDrafted(false);
+        setIsBuyerDocsApproved(false);
+        setIsClosed(false);
     }
 
     useEffect(() => {
@@ -309,10 +313,10 @@ const AddFile = (props) => {
         }
     }, [depositSecond])
     useEffect(() => {
-        if(depositThird === '00-00-0000') {
-            setDepositThird('')
+        if(loanApproval === '00-00-0000') {
+            setLoanApproval('')
         }
-    }, [depositThird])
+    }, [loanApproval])
     useEffect(() => {
         if(inspection === '00-00-0000') {
             setInspection('')
@@ -354,14 +358,21 @@ const AddFile = (props) => {
             effective: effective,
             depositInitial: depositInit || null,
             depositSecond: depositSecond || null,
-            depositThird: depositThird || null,
+            loanApproval: loanApproval || null,
             inspection: inspection || null,
             closing: closing,
-            notes: notes,
+            isClosedEffective: isClosedEffective,
+            isClosedDepositInitial: isClosedDepositInit,
+            isClosedDepositSecond: isClosedDepositSecond,
+            isClosedLoanApproval: isClosedLoanApproval,
+            isClosedInspection: isClosedInspection,
+            isClosedClosing: isClosedClosing,
             isClosed: isClosed,
-            representing: whoRepresenting,
+            notes: notes,
+            whoRepresenting: whoRepresenting,
             isPurchase: isPurchase,
             roles: JSON.stringify(roles),
+            milestones: JSON.stringify(milestones),
         }
 
         axios.post(`http://localhost:5000/files`, file).then((response) => {
@@ -505,7 +516,7 @@ const AddFile = (props) => {
                                     isInvalid={whoRepresenting ? isSellerError : isBuyerError}
                                 />
                             </Tooltip>
-                            
+
                             <Text minW='43px'>
                                 {isPurchase ? (whoRepresenting ? 'Buyer' : 'Seller') : 'Lender'}
                             </Text>
@@ -595,7 +606,7 @@ const AddFile = (props) => {
                                     Milestones:
                                 </Text>
                                 <VStack spacing='0'>
-                                    {taskCompletenessChecks.map((item, index) => {
+                                    {milestonesChecks.map((item, index) => {
                                         if(item.role)
                                             return (
                                                 <HStack w='170px' spacing='0' key={index}>
@@ -614,7 +625,7 @@ const AddFile = (props) => {
                                 <Text>
                                     Notes:
                                 </Text>
-                                <Textarea h='100%' fontSize='12px'
+                                <Textarea h='100%' fontSize='12px' resize='none'
                                     value={notes}
                                     onChange={(e) => {setNotes(e.target.value)}}
                                 />
