@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import axios from 'axios';
-
 import {
-    Button,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -12,24 +9,20 @@ import {
     ModalCloseButton,
     HStack,
     VStack,
-    Text,
     Divider,
-    Tabs,
-    TabList,
-    Tab,
-    Tooltip,
-    Input,
-    Textarea,
     useToast,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverArrow,
-    PopoverHeader,
-    PopoverBody,
-    Checkbox,
   } from '@chakra-ui/react'
-import { ChevronDownIcon, LockIcon, UnlockIcon, } from '@chakra-ui/icons';
+
+import FileNoAndRefInput from './File Modal Components/FileNoAndRefInput';
+import FileTaskInfo from './File Modal Components/FileTaskInfo';
+import FileBuyerAndSeller from './File Modal Components/FileBuyerAndSeller';
+import FilePropertyInfo from './File Modal Components/FilePropertyInfo';
+import FileDates from './File Modal Components/FileDates';
+import FileMilestones from './File Modal Components/FileMilestones';
+import FileNotes from './File Modal Components/FileNotes';
+import FileStatus from './File Modal Components/FileStatus';
+import FileClearAndSave from './File Modal Components/FileClearAndSave';
+import FileFooter from './File Modal Components/FileFooter';
 
 const AddFile = (props) => {
     
@@ -169,6 +162,7 @@ const AddFile = (props) => {
     const [isPropertyError, setIsPropertyError] = useState('Property Address must be entered.')
     const [isEffectiveError, setIsEffectiveError] = useState('File Effective Date must be entered.')
     const [isClosingError, setIsClosingError] = useState('File Closing Date must be entered.')
+    const [isError, setIsError] = useState();
 
     useEffect(() => {
         if(fileNo.length > 2) {
@@ -258,6 +252,10 @@ const AddFile = (props) => {
             setIsPropertyError(false);
     }, [propertyAddress])
 
+    useEffect(() => {
+        setIsError(isFileNoError || isFileRefError || isBuyerError || isSellerError || isPropertyError || isClosingError || false)
+    }, [isFileNoError, isFileRefError, isBuyerError, isSellerError, isPropertyError, isEffectiveError, isClosingError])
+
     const resetAllValues = () => {
         setFileNo('');
         setFileRef('');
@@ -328,79 +326,6 @@ const AddFile = (props) => {
         }
     }, [closing])
 
-    const forceResetDate = (value, setValue) => {
-        if(value === '') {
-            setValue('00-00-0000')
-        }
-    }
-
-    const trySaveFile = () => {
-        var error = isFileNoError || isFileRefError || isBuyerError || isSellerError || isPropertyError || isEffectiveError || isClosingError
-        if(error) {
-            console.log('ERROR: Invalid or Missing Input.')
-            toast({
-                title: 'Error.',
-                description: error,
-                status: 'error',
-                duration: 2000,
-                isClosable: true,
-            })
-            return;
-        }
-
-        const file = {
-            fileNumber: fileNo,
-            fileRef: fileRef,
-            address: propertyAddress,
-            folioNo: folioNo,
-            buyer: buyer,
-            seller: seller,
-            effective: effective,
-            depositInitial: depositInit || null,
-            depositSecond: depositSecond || null,
-            loanApproval: loanApproval || null,
-            inspection: inspection || null,
-            closing: closing,
-            isClosedEffective: isClosedEffective,
-            isClosedDepositInitial: isClosedDepositInit,
-            isClosedDepositSecond: isClosedDepositSecond,
-            isClosedLoanApproval: isClosedLoanApproval,
-            isClosedInspection: isClosedInspection,
-            isClosedClosing: isClosedClosing,
-            isClosed: isClosed,
-            notes: notes,
-            whoRepresenting: whoRepresenting,
-            isPurchase: isPurchase,
-            roles: JSON.stringify(roles),
-            milestones: JSON.stringify(milestones),
-        }
-
-        axios.post(`http://localhost:5000/files`, file).then((response) => {
-            props.onClose();
-            resetAllValues();
-        }).catch((err) => {
-            if(err.response && err.response.data.message === "This file already exists.") {
-                console.log('ERROR. This file number already exists.')
-                toast({
-                    title: 'Error.',
-                    description: `${err.response.data.message}`,
-                    status: 'error',
-                    duration: 2000,
-                    isClosable: true,
-                })
-            } else {
-                console.log('ERROR. We encountered a problem while trying to save this file. Please try again later.')
-                toast({
-                    title: 'Error.',
-                    description: `${'An error occurred while trying to save this file. Please try again later.'}`,
-                    status: 'error',
-                    duration: 2500,
-                    isClosable: true,
-                })
-            }
-        })
-    }
-
     return (
         <Modal
             closeOnOverlayClick={false}
@@ -418,218 +343,67 @@ const AddFile = (props) => {
                 <ModalCloseButton />
 
                 <ModalBody >
-                    <HStack w='800px'>
-                        <Text w='55px' minW='55px'>File No.</Text>
-                        <Tooltip label={isFileNoError || ''}>
-                            <Input
-                                w='75px'
-                                minW='75px'
-                                size='sm'
-                                borderRadius='5px'
-                                fontSize='16px'
-                                textAlign='center'
-                                value={fileNo}
-                                maxLength='5'
-                                onChange={(e)=>{setFileNo(e.target.value)}}
-                                isInvalid={isFileNoError}
-                            />
-                        </Tooltip>
-
-                        <Text>Ref:</Text>
-                        <Tooltip label={isFileRefError || ''}>
-                            <Input
-                                w='full'
-                                size='sm'
-                                borderRadius='5px'
-                                fontSize='16px'
-                                value={fileRef}
-                                onChange={(e)=>{setFileRef(e.target.value)}}
-                                isInvalid={isFileRefError}
-                            />
-                        </Tooltip>
-                    </HStack>
+                    <FileNoAndRefInput
+                        fileNo={fileNo}
+                        setFileNo={setFileNo}
+                        isFileNoError={isFileNoError}
+                        fileRef={fileRef}
+                        setFileRef={setFileRef}
+                        isFileRefError={isFileRefError}
+                    />
 
                     <VStack spacing='0.5' fontSize='14px'>
-                        <HStack width='full' justify='space-between' mt='10px'>
-                            <HStack>
-                                <Text minW='fit-content' fontWeight='bold'>
-                                    File Type:
-                                </Text>
-                                <Tabs h='25px' variant='enclosed' colorScheme='white' defaultIndex={isPurchase ? 0 : 1}>
-                                    <TabList h='25px' border='none'>
-                                        <Tab paddingInline='5px' w='80px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {setIsPurchase(true)}}>Purchase</Tab>
-                                        <Tab paddingInline='5px' w='80px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {setIsPurchase(false)}}>Refinance</Tab>
-                                    </TabList>
-                                </Tabs>
-                            </HStack>
-                            {isPurchase &&
-                                <HStack>
-                                    <Text minW='fit-content' fontWeight='bold'>
-                                        Representing:
-                                    </Text>
-                                    <Tabs h='25px' variant='enclosed' colorScheme='white' defaultIndex={whoRepresenting ? 1 : 0}>
-                                        <TabList h='25px' border='none'>
-                                            <Tab paddingInline='5px' w='50px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {setWhoRepresenting(false)}}>Buyer</Tab>
-                                            <Tab paddingInline='5px' w='50px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {setWhoRepresenting(true)}}>Seller</Tab>
-                                        </TabList>
-                                    </Tabs>
-                                </HStack>
-                            }
-                            <HStack>
-                                    <Text minW='fit-content' fontWeight='bold'>
-                                        Responsibilities:
-                                    </Text>
-                                    <Popover h='30px'>
-                                        <PopoverTrigger>
-                                            <Button h='30px' paddingInline='10px' backgroundColor='transparent' _hover={{backgroundColor:'whiteAlpha.100'}} _active={{backgroundColor:'whiteAlpha.200'}} border='1px solid white' fontWeight='normal' color='whiteAlpha.700'>
-                                                Select... <ChevronDownIcon/>
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent color='white' h='175px' w='175px' backgroundColor='#101622'>
-                                            <PopoverArrow/>
-                                            <PopoverHeader fontSize='16px'>File Responsibilities:</PopoverHeader>
-                                            <PopoverBody>
-                                                {
-                                                    rolesButtons.map((item, index) => {
-                                                        return <Checkbox key={index} onChange={(e)=>{item.set(e.target.checked)}} defaultChecked={item.value} isChecked={item.value}>
-                                                            {item.label}
-                                                        </Checkbox>
-                                                    })
-                                                }
-                                            </PopoverBody>
-                                        </PopoverContent>
-                                    </Popover>
-                            </HStack>
-                        </HStack>
+                        <FileTaskInfo
+                            isPurchase={isPurchase}
+                            setIsPurchase={setIsPurchase}
+                            whoRepresenting={whoRepresenting}
+                            setWhoRepresenting={setWhoRepresenting}
+                            rolesButtons={rolesButtons}
+                        />
 
                         <Divider marginBlock='0.5rem !important' />
 
-                        <HStack w='full'>
-                            <Text minW='57px'>
-                                {isPurchase ? (whoRepresenting ? ' Seller' : ' Buyer') : 'Borrower'}
-                            </Text>
-                            <Tooltip label={whoRepresenting ? isSellerError || '' : isBuyerError || ''}>
-                                <Input
-                                    size='sm' borderRadius='10px'
-                                    value={whoRepresenting ? seller : buyer}
-                                    onChange={(e) => {whoRepresenting ? setSeller(e.target.value) : setBuyer(e.target.value)}}
-                                    isInvalid={whoRepresenting ? isSellerError : isBuyerError}
-                                />
-                            </Tooltip>
-
-                            <Text minW='43px'>
-                                {isPurchase ? (whoRepresenting ? 'Buyer' : 'Seller') : 'Lender'}
-                            </Text>
-                            <Tooltip label={whoRepresenting ? isBuyerError || '' : isSellerError || ''}>
-                                <Input
-                                    size='sm' borderRadius='10px'
-                                    value={whoRepresenting ? buyer : seller}
-                                    onChange={(e) => {whoRepresenting ? setBuyer(e.target.value) : setSeller   (e.target.value)}}
-                                    isInvalid={whoRepresenting ? isBuyerError : isSellerError}
-                                />
-                            </Tooltip>
-                        </HStack>
-
-                        <HStack w='full' mt='5px !important'>
-                            <Text minW='57px'>
-                                Property
-                            </Text>
-                            <Tooltip label={isPropertyError || ''}>
-                                <Input
-                                    size='sm' borderRadius='10px'
-                                    value={propertyAddress}
-                                    onChange={(e) => {setPropertyAddress(e.target.value)}}
-                                    isInvalid={isPropertyError}
-                                />
-                            </Tooltip>
-
-                            <Text>
-                                Folio
-                            </Text>
-                            <Input
-                                w='300px' size='sm' borderRadius='10px'
-                                value={folioNo}
-                                onChange={(e) => {setFolioNo(e.target.value)}}
-                            />
-                        </HStack>
+                        <FileBuyerAndSeller
+                            isPurchase={isPurchase}
+                            whoRepresenting={whoRepresenting}
+                            buyer={buyer}
+                            setBuyer={setBuyer}
+                            isBuyerError={isBuyerError}
+                            seller={seller}
+                            setSeller={setSeller}
+                            isSellerError={isSellerError}
+                        />
+                        
+                        <FilePropertyInfo
+                            propertyAddress={propertyAddress}
+                            setPropertyAddress={setPropertyAddress}
+                            isPropertyError={isPropertyError}
+                            folioNo={folioNo}
+                            setFolioNo={setFolioNo}
+                        />
 
                         <Divider mt='0.5rem !important' mb='0rem !important' />
 
                         <HStack w='100%' h='100%' m='0'>
-                            <VStack w='300px' spacing='1.5'>
-                                <Text>
-                                    Critical Dates:
-                                </Text>
-                                {dates.map((item, index) => {
-                                    return (
-                                        <HStack w='250px' spacing='0' key={index}
-                                            color={(isClosed || item.isClosed) ? 'red' : ''}
-                                            borderColor={(isClosed || item.isClosed) ? 'red' : ''}
-                                        >
-                                            <Text w='68px'>
-                                                {item.label}
-                                            </Text>
-                                            <Tooltip label={item.label === 'Effective' ? isEffectiveError || '' : item.label === 'Closing' ? isClosingError || '' : ''}>
-                                                <Input w='150px' h='30px' paddingInline='8px' borderRadius='10px' type='date' 
-                                                    value={item.value}
-                                                    onChange={(e)=>{item.setValue(e.target.value)}}
-                                                    transition='0s'
-                                                    isDisabled={isClosed}
-                                                    _hover={{}}
-                                                    onBlur={(e)=>{forceResetDate(e.target.value, item.setValue)}}
-                                                    isInvalid={item.label === 'Effective' && isEffectiveError || item.label === 'Closing' && isClosingError}
-                                                />
-                                            </Tooltip>
-                                            <Button p='0px !important' size='sm' bgColor='transparent'
-                                                _hover={{bgColor:'transparent'}}
-                                                onClick={(e)=>{
-                                                    e.stopPropagation();
-                                                    if(!isClosed)
-                                                        item.setIsClosed((isClosed) => !isClosed);
-                                                }}
-                                                isDisabled={isClosed}
-                                                transition='0s'
-                                            >
-                                                <Text display='flex'>
-                                                    { (isClosed || item.isClosed) && <LockIcon/> || <UnlockIcon/> }
-                                                </Text>
-                                            </Button>
-                                        </HStack>
-                                    )
-                                })}
-                            </VStack>
+                            <FileDates
+                                dates={dates}
+                                isEffectiveError={isEffectiveError}
+                                isClosingError={isClosingError}
+                                isClosed={isClosed}
+                            />
 
                             <Divider orientation='vertical' h='237px' margin='0px !important'/>
 
-                            <VStack w='200px' h='237px'>
-                                <Text>
-                                    Milestones:
-                                </Text>
-                                <VStack spacing='0'>
-                                    {milestonesChecks.map((item, index) => {
-                                        if(item.role)
-                                            return (
-                                                <HStack w='170px' spacing='0' key={index}>
-                                                    <Checkbox spacing='2' size='sm' onChange={(e)=>{item.set(e.target.checked)}} defaultChecked={item.value} isChecked={item.value}>
-                                                        {item.label}
-                                                    </Checkbox>
-                                                </HStack>
-                                            )
-                                    })}
-                                </VStack>
-                            </VStack>
+                            <FileMilestones
+                                milestonesChecks={milestonesChecks}
+                            />
 
                             <Divider orientation='vertical' h='237px' margin='0px !important'/>
 
-                            <VStack w='100%' h='237px'>
-                                <Text>
-                                    Notes:
-                                </Text>
-                                <Textarea h='100%' fontSize='12px' resize='none'
-                                    value={notes}
-                                    onChange={(e) => {setNotes(e.target.value)}}
-                                />
-                            </VStack>
+                            <FileNotes
+                                notes={notes}
+                                setNotes={setNotes}
+                            />
                         </HStack>
                         
                         <Divider marginBlock='0.5rem !important' />
@@ -638,37 +412,45 @@ const AddFile = (props) => {
                 <ModalFooter justifyContent='space-between' alignItems='start' m='0'paddingTop='0'>
                     <VStack w='100%' h='100%' align='left'>
                         <HStack w='100%' justifyContent='space-between'>
-                            <HStack>
-                                {isClosed && <Button w='120px' colorScheme='green' onClick={()=>{setIsClosed(false)}}>
-                                        RE-OPEN FILE
-                                    </Button> ||
-                                    <Button w='120px' colorScheme='red' onClick={()=>{setIsClosed(true)}}>
-                                        CLOSE FILE
-                                    </Button>
-                                }
-                                <Text color={isClosed ? 'red' : ''}>
-                                    STATUS: {isClosed ? 'CLOSED/CANCELLED' : 'OPEN'}
-                                </Text>
-                            </HStack>
-                            <HStack h='40px'>
-                                <Button w='120px' colorScheme='red' onClick={()=>{resetAllValues()}}>
-                                    CLEAR FIELDS
-                                </Button>
-                                <Button w='100px' colorScheme='blue' onClick={()=>{trySaveFile()}}>
-                                    SAVE
-                                </Button>
-                            </HStack>
+                            <FileStatus
+                                isClosed={isClosed}
+                                setIsClosed={setIsClosed}
+                            />
+                            <FileClearAndSave
+                                fileNo={fileNo}
+                                fileRef={fileRef}
+                                isPurchase={isPurchase}
+                                whoRepresenting={whoRepresenting}
+                                propertyAddress={propertyAddress}
+                                folioNo={folioNo}
+                                buyer={buyer}
+                                seller={seller}
+                                effective={effective}
+                                depositInit={depositInit}
+                                depositSecond={depositSecond}
+                                loanApproval={loanApproval}
+                                inspection={inspection}
+                                closing={closing}
+                                isClosedEffective={isClosedEffective}
+                                isClosedDepositInit={isClosedDepositInit}
+                                isClosedDepositSecond={isClosedDepositSecond}
+                                isClosedLoanApproval={isClosedLoanApproval}
+                                isClosedInspection={isClosedInspection}
+                                isClosedClosing={isClosedClosing}
+                                isClosed={isClosed}
+                                roles={roles}
+                                milestones={milestones}
+                                notes={notes}
+                                isError={isError}
+                                toast={toast}
+                                onClose={props.onClose}
+                                resetAllValues={resetAllValues}
+                            />
                         </HStack>
-                        <Tooltip
-                            maxW='848px'
-                            placement='bottom-start'
-                            label={(displayedFileNo && fileRef) && `${displayedFileNo} || ${fileRef}`}
-                            textAlign='justify'
-                        >
-                            <Text color='gray.300' maxW='100%' h='24px' overflow='hidden' whiteSpace='nowrap' textOverflow='ellipsis'>
-                                {displayedFileNo || '## - ###'} || {fileRef || '{File Reference}'}
-                            </Text>
-                        </Tooltip>
+                        <FileFooter
+                            displayedFileNo={displayedFileNo}
+                            fileRef={fileRef}
+                        />
                     </VStack>
                 </ModalFooter>
             </ModalContent>
