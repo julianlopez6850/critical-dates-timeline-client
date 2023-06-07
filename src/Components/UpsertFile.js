@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import axios from 'axios';
+
 import {
     Modal,
     ModalOverlay,
@@ -28,6 +30,7 @@ const AddFile = (props) => {
     
     const toast = useToast();
     
+    const [oldFileNo, setOldFileNo] = useState('');
     const [fileNo, setFileNo] = useState('');
     const [displayedFileNo, setDisplayedFileNo] = useState('');
     const [fileRef, setFileRef] = useState('');
@@ -163,6 +166,77 @@ const AddFile = (props) => {
     const [isEffectiveError, setIsEffectiveError] = useState('File Effective Date must be entered.')
     const [isClosingError, setIsClosingError] = useState('File Closing Date must be entered.')
     const [isError, setIsError] = useState();
+
+    useEffect(() => {
+        if(!props.new && props.isOpen && props.fileNo) {
+            axios.get(`http://localhost:5000/files?fileNumber=${props.fileNo}`).then((response) => {
+                setOldFileNo(response.data.fileNumber);
+                setFileNo(response.data.fileNumber);
+                setFileRef(response.data.fileRef);
+                setPropertyAddress(response.data.address);
+                setFolioNo(response.data.folioNo);
+                setSeller(response.data.seller);
+                setBuyer(response.data.buyer);
+                setIsPurchase(response.data.isPurchase);
+                setWhoRepresenting(response.data.whoRepresenting);
+                setNotes(response.data.notes);
+                setIsClosed(response.data.isClosed);
+
+                const responseRoles = JSON.parse(response.data.roles);
+                setIsSellerDocs(responseRoles.isSellerDocs);
+                setIsBuyerDocs(responseRoles.isBuyerDocs);
+                setIsEscrowAgent(responseRoles.isEscrowAgent);
+                setIsTitleAgent(responseRoles.isTitleAgent);
+                setIsClosingAgent(responseRoles.isClosingAgent);
+
+                const responseMilestones = JSON.parse(response.data.milestones);
+                setIsEscrowReceived(responseMilestones.isEscrowReceived);
+                setIsLienRequested(responseMilestones.isLienRequested);
+                setIsTitleOrdered(responseMilestones.isTitleOrdered);
+                setIsLienReceived(responseMilestones.isLienReceived);
+                setIsTitleReceived(responseMilestones.isTitleReceived);
+                setIsSellerDocsDrafted(responseMilestones.isSellerDocsDrafted);
+                setIsSellerDocsApproved(responseMilestones.isSellerDocsApproved);
+                setIsBuyerDocsDrafted(responseMilestones.isBuyerDocsDrafted);
+                setIsBuyerDocsApproved(responseMilestones.isBuyerDocsApproved);
+
+                for(const date of response.data.dates) {
+                    switch(date.type) {
+                        case 'Effective':
+                            setEffective(date.date);
+                            setIsClosedEffective(date.isClosed);
+                            break;
+                        case 'Escrow':
+                            switch(date.prefix) {
+                                case 'First ':
+                                    setDepositInit(date.date);
+                                    setIsClosedDepositInit(date.isClosed)
+                                    break;
+                                case 'Second ':
+                                    setDepositSecond(date.date);
+                                    setIsClosedDepositSecond(date.isClosed)
+                                    break;
+                                default:
+                            }
+                        case 'Loan ✓':
+                            setLoanApproval(date.date);
+                            setIsClosedLoanApproval(date.isClosed);
+                            break;
+                        case 'Inspection':
+                            setInspection(date.date);
+                            setIsClosedInspection(date.isClosed);
+                            break;
+                        case 'Closing':
+                            setClosing(date.date);
+                            setIsClosedClosing(date.isClosed);
+                            break;
+                    }
+                }
+            }).catch((error) => {
+                console.log('Error retrieving file info: ' + error.message);
+            });
+        }
+    }, [props.isOpen])
 
     useEffect(() => {
         if(fileNo.length > 2) {
@@ -417,6 +491,7 @@ const AddFile = (props) => {
                                 setIsClosed={setIsClosed}
                             />
                             <FileClearAndSave
+                                new={props.new}
                                 fileNo={fileNo}
                                 fileRef={fileRef}
                                 isPurchase={isPurchase}

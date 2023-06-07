@@ -14,8 +14,7 @@ import {
 import { MoonIcon, SunIcon, SettingsIcon, SearchIcon, AddIcon } from "@chakra-ui/icons";
 import NavbarButton from "./NavbarButton";
 import { FileSelect } from "./FileSelect";
-import AddFile from "./AddFile";
-import { EditFile } from "./EditFile";
+import UpsertFile from "./UpsertFile";
 
 const Navbar = () => {
     
@@ -106,11 +105,13 @@ const Navbar = () => {
             </HStack>
             <Box w='full' h='2px' bgColor='var(--navbar-seperator)' />
 
-            <AddFile
+            <UpsertFile
+                new={true}
                 onClose={onCloseFileCreator}
                 isOpen={isOpenFileCreator}
             />
-            <EditFile
+            <UpsertFile
+                new={false}
                 onClose={onCloseFileEditor}
                 isOpen={isOpenFileEditor}
                 fileNo={selectedFile ? selectedFile.value : ''}

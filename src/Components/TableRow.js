@@ -1,9 +1,8 @@
 import React, { useEffect, useState, Fragment } from "react"
 import { Box, Button, Divider, HStack, Text, Tooltip, useDisclosure } from "@chakra-ui/react"
-import { EditFile } from "./EditFile";
 import { CheckIcon, CloseIcon, LockIcon, UnlockIcon } from '@chakra-ui/icons';
 import axios from 'axios';
-
+import UpsertFile from './UpsertFile';
 
 const TableRow = (props) => {
     
@@ -109,7 +108,8 @@ const TableRow = (props) => {
                 </Text>
             </Button>
             
-            <EditFile
+            <UpsertFile
+                new={false}
                 onClose={onClose}
                 isOpen={isOpen}
                 fileNo={props.dateInfo.fileNumber}

@@ -5,9 +5,41 @@ import axios from 'axios';
 import {
     HStack,
     Button,
+    useDisclosure,
   } from '@chakra-ui/react'
+import FileDeleteDialog from './FileDeleteDialog';
 
 const FileClearAndSaveButtons = (props) => {
+
+    const {
+        isOpen: isOpenDeleteFile, 
+        onOpen: onOpenDeleteFile,
+        onClose: onCloseDeleteFile
+    } = useDisclosure()
+
+    const deleteFile = () => {
+        axios.delete(`http://localhost:5000/files`, { data: {fileNumber: props.fileNo}}).then((response) => {
+            console.log(`Successfully deleted file ${props.fileNo}`);
+            props.toast({
+                title: 'Success!',
+                description: `Successfully deleted file ${props.fileNo}`,
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+            })
+            props.onClose();
+        }).catch((err) => {
+            console.log(err);
+            console.log('ERROR. We encountered a problem while trying to delete this file. Please try again later.');
+            props.toast({
+                title: 'Error.',
+                description: `An error occurred while trying to delete this file. Try again later`,
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
+        })
+    }
 
     const trySaveFile = () => {
         var error = props.isError
@@ -24,6 +56,7 @@ const FileClearAndSaveButtons = (props) => {
         }
 
         const file = {
+            oldFileNumber: props.oldFileNo,
             fileNumber: props.fileNo,
             fileRef: props.fileRef,
             address: props.propertyAddress,
@@ -50,42 +83,64 @@ const FileClearAndSaveButtons = (props) => {
             milestones: JSON.stringify(props.milestones),
         }
 
-        axios.post(`http://localhost:5000/files`, file).then((response) => {
-            console.log(response);
-            props.onClose();
-            props.resetAllValues();
-        }).catch((err) => {
-            if(err.response && err.response.data.message === "This file already exists.") {
-                console.log('ERROR. This file number already exists.')
-                props.toast({
-                    title: 'Error.',
-                    description: `${err.response.data.message}`,
-                    status: 'error',
-                    duration: 2000,
-                    isClosable: true,
-                })
-            } else {
-                console.log(err);
-                console.log('ERROR. We encountered a problem while trying to save this file. Please try again later.')
-                props.toast({
-                    title: 'Error.',
-                    description: `${'An error occurred while trying to save this file. Please try again later.'}`,
-                    status: 'error',
-                    duration: 2500,
-                    isClosable: true,
-                })
-            }
-        })
+        // if new file, POST to database.
+        if(props.new) {
+            axios.post(`http://localhost:5000/files`, file).then((response) => {
+                console.log(response);
+                props.onClose();
+                props.resetAllValues();
+            }).catch((err) => {
+                if(err.response && err.response.data.message === "This file already exists.") {
+                    console.log('ERROR. This file number already exists.');
+                    props.toast({
+                        title: 'Error.',
+                        description: `${err.response.data.message}`,
+                        status: 'error',
+                        duration: 2000,
+                        isClosable: true,
+                    })
+                } else {
+                    console.log(err);
+                    console.log('ERROR. We encountered a problem while trying to save this file. Please try again later.');
+                    props.toast({
+                        title: 'Error.',
+                        description: `${'An error occurred while trying to save this file. Try again later.'}`,
+                        status: 'error',
+                        duration: 2500,
+                        isClosable: true,
+                    })
+                }
+            })
+        } else { // else (if old file), PUT (update) file in database.
+            axios.put(`http://localhost:5000/files`, file).then((response) => {
+                console.log(response)
+                props.onClose();
+            })
+        }
     }
     
     return (
         <HStack h='40px'>
-            <Button w='120px' colorScheme='red' onClick={()=>{props.resetAllValues()}}>
-                CLEAR FIELDS
-            </Button>
+            {/* If adding a new file, show Clear Fields Button. If updating an existing file, show Delete File Button */}
+            {props.new &&
+                <Button w='120px' colorScheme='red' onClick={()=>{props.resetAllValues()}}>
+                    CLEAR FIELDS
+                </Button> ||
+                <Button w='120px' colorScheme='red' onClick={()=>{onOpenDeleteFile()}}>
+                    DELETE FILE
+                </Button>
+            }
             <Button w='100px' colorScheme='blue' onClick={()=>{trySaveFile()}}>
                 SAVE
             </Button>
+
+            <FileDeleteDialog
+                isOpen={isOpenDeleteFile}
+                onOpen={onOpenDeleteFile}
+                onClose={onCloseDeleteFile}
+                fileNo={props.fileNo}
+                deleteFile={deleteFile}
+            />
         </HStack>
     )
 }
