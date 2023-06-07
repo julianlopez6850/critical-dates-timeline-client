@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react"
 import { Box, Button, Divider, HStack, Text, Tooltip, useDisclosure } from "@chakra-ui/react"
-import { CheckIcon, CloseIcon, LockIcon, UnlockIcon } from '@chakra-ui/icons';
+import { LockIcon, UnlockIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import UpsertFile from './UpsertFile';
 
@@ -71,8 +71,10 @@ const TableRow = (props) => {
 
             <Text w='81px'  textAlign='center'>
                 {
-                    props.dateInfo.prefix && (props.dateInfo.prefix === 'First ' && '1st ' || 
-                    props.dateInfo.prefix === 'Second ' && '2nd ' || '3rd ')
+                    props.dateInfo.prefix && (
+                        props.dateInfo.prefix === 'First ' && '1st ' || 
+                        props.dateInfo.prefix === 'Second ' && '2nd '
+                    )
                 }
                 {props.dateInfo.type}
             </Text>

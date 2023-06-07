@@ -9,7 +9,6 @@ import {
     VStack,
     HStack,
     Text,
-    Input,
     Button,
 } from '@chakra-ui/react';
 

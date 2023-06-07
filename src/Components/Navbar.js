@@ -5,10 +5,8 @@ import { themeContext } from "../Helpers/themeContext";
 
 import {
     useDisclosure,
-    Box, 
-    Button, 
-    HStack, 
-    Input, 
+    Box,
+    HStack,
     Text,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon, SettingsIcon, SearchIcon, AddIcon } from "@chakra-ui/icons";

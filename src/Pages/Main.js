@@ -1,30 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { themeContext } from "../Helpers/themeContext";
 
 import {
     Box,
-    Button,
     Text,
-    Table,
-    TableContainer,
-    Th,
-    Td,
-    Tr,
-    Thead,
-    TableCaption,
-    Tbody,
-    Tfoot,
     VStack,
     HStack,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverHeader,
-    PopoverArrow,
-    PopoverBody,
-    Input,
-    PopoverCloseButton,
     useDisclosure,
     Spinner,
     
@@ -34,9 +15,6 @@ import DatesTable from "../Components/Table";
 import CustomDatePopover from '../Components/CustomDatePopover';
 
 function Main() {
-
-    const {theme, setTheme} = useContext(themeContext);
-
     const [loading, setLoading] = useState(true);
     const [criticalDates, setCriticalDates] = useState([]);
     const [dateType, setDateType] = useState({label: 'All', value: ''});
