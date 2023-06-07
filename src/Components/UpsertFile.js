@@ -492,6 +492,7 @@ const AddFile = (props) => {
                             />
                             <FileClearAndSave
                                 new={props.new}
+                                oldFileNo={oldFileNo}
                                 fileNo={fileNo}
                                 fileRef={fileRef}
                                 isPurchase={isPurchase}
