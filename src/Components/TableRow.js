@@ -9,6 +9,7 @@ const TableRow = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [isClosed, setIsClosed] = useState(props.dateInfo.isClosed);
+    const [update, setUpdate] = useState(false);
     const [dateColor, setDateColor] = useState('');
 
     // Update the isClosed property of date in database whenever the value is updated by the user &
@@ -37,20 +38,21 @@ const TableRow = (props) => {
         else
             setDateColor('red.500');
 
-        const dateInfo = {
-            fileNumber: props.dateInfo.fileNumber,
-            type: props.dateInfo.type,
-            prefix: props.dateInfo.prefix,
-            isClosed: isClosed
+        if(update) {
+            const dateInfo = {
+                fileNumber: props.dateInfo.fileNumber,
+                type: props.dateInfo.type,
+                prefix: props.dateInfo.prefix,
+                isClosed: isClosed
+            }
+            
+            axios.put(`http://localhost:5000/dates`, dateInfo).then(() => {
+                console.log(`Updated Status of ${dateInfo.fileNumber} ${dateInfo.prefix}${dateInfo.type} to ${dateInfo.isClosed ? `CLOSED` : `OPEN`}`)
+            }).catch((error) => {
+                console.log('Error updating date: ' + error.message);
+            });
         }
-        
-        axios.put(`http://localhost:5000/dates`, dateInfo).then((response) => {
-
-        }).catch((error) => {
-            console.log('Error updating date: ' + error.message);
-        });
-
-    }, [isClosed])      
+    }, [isClosed, update]);
 
     return (
         <HStack w='1060px' h='30px' borderRadius='10px' textAlign='left' bgColor='#0077cc' color='white'
@@ -103,6 +105,7 @@ const TableRow = (props) => {
                 onClick={(e)=>{
                     e.stopPropagation();
                     setIsClosed((isClosed) => !isClosed);
+                    setUpdate(true);
                 }}
             >
                 <Text w='40px' textAlign='center'>
