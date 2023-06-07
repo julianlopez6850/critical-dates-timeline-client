@@ -50,9 +50,9 @@ function Main() {
     useEffect(() => {
         axios.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}`).then((response) => {
             setCriticalDates([]);
+            setLoading(false);
             response.data.dates.map((date) => {
                 setCriticalDates((dates) => [...dates, date]);
-                setLoading(false);
             });
         }).catch((error) => {
             console.log('Error retrieving dates: ' + error.message);
