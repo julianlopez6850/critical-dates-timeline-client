@@ -49,7 +49,7 @@ const Navbar = () => {
                 }]);
             });
         }).catch((error) => {
-            console.log('Error retrieving dates: ' + error.message);
+            console.log('Error retrieving files: ' + error.message);
         });
     }, []);
 
@@ -63,7 +63,7 @@ const Navbar = () => {
         <Box w='full'>
             <HStack h='60px' w='full' bgColor='var(--navbar-color)' textColor='white' display='flex' justifyContent='space-between' paddingInline='10px'>
                 {/* Navbar, Left Side */}
-                <HStack display='flex' maxW='prose' justifyContent='left' w='320px' minW='320px'>
+                <HStack display='flex' justifyContent='left' w='320px' minW='320px'>
                     {/* Search for Specific File */}
                     <FileSelect
                         options={files}
@@ -83,13 +83,13 @@ const Navbar = () => {
                     />
                 </HStack>
                 {/* Navbar, Center */}
-                <HStack display='flex' justifyContent='center' w='80%' minW='218px'>                
+                <HStack display='flex' justifyContent='center' minW='218px'>                
                     <Text fontSize='20px' fontWeight='bold'>
                         Critical Times Schedule
                     </Text>
                 </HStack>
                 {/* Navbar, Right Side */}
-                <HStack display='flex' justifyContent='right' w='20%'>
+                <HStack display='flex' justifyContent='right' w='320px' minW='120px'>
                     {/* Button: Switch between light and dark background theme */}
                     <NavbarButton
                         onClick={(e) => {updateTheme(e)}}

@@ -8,6 +8,7 @@ const DateFilterButton = forwardRef(function DateTypeButton(props, ref) {
 
     return (
         <Button ref={ref}
+            fontSize={props.fontSize || 16}
             variant='link'
             color={(theme) ? 
                 (props.active) ? 'black' : 'gray.500' :

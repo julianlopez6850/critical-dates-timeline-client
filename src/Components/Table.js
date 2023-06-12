@@ -110,6 +110,7 @@ const DatesTable = (props) => {
                                     text={'Login'}
                                     onClick={() => {navigate('/login')}}
                                     active={false}
+                                    fontSize={'24'}
                                 />
                             </>
                         )
