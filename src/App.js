@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import { 
@@ -18,6 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { themeContext } from './Helpers/themeContext';
 import Navbar from './Components/Navbar';
 import Main from './Pages/Main';
+import Login from './Pages/Login';
 
 const chakraTheme = chakraExtendTheme();
 const materialTheme = muiCreateTheme();
@@ -36,7 +38,12 @@ function App() {
               textColor={theme ? 'var(--text-color-light)' : 'var(--text-color-dark)'}
             >
               <Navbar/>
-              <Main/>
+              <Router>
+                  <Routes>
+                    <Route exact path="/" element={<Main/>} />
+                    <Route exact path="/login" element={<Login/>} />
+                </Routes>
+              </Router>
             </Box>
           </themeContext.Provider>
         </LocalizationProvider>

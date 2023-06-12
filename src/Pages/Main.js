@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
+import { axiosInstance } from "../Helpers/axiosInstance"
 
 import {
     Box,
@@ -15,6 +15,8 @@ import DatesTable from "../Components/Table";
 import CustomDatePopover from '../Components/CustomDatePopover';
 
 function Main() {
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [error, setError] = useState(false);
     const [loading, setLoading] = useState(true);
     const [criticalDates, setCriticalDates] = useState([]);
     const [dateType, setDateType] = useState({label: 'All', value: ''});
@@ -48,15 +50,31 @@ function Main() {
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}`).then((response) => {
-            setCriticalDates([]);
-            setLoading(false);
-            response.data.dates.map((date) => {
-                setCriticalDates((dates) => [...dates, date]);
+        axiosInstance.get(`http://localhost:5000/auth/profile`).then((response) => {
+            if(loggedIn === false) {
+                console.log(`User [${response.data.username}] logged in.`)
+                setLoggedIn(true);
+            }
+            axiosInstance.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}`).then((response) => {
+                setCriticalDates([]);
+                setLoading(false);
+                response.data.dates.map((date) => {
+                    setCriticalDates((dates) => [...dates, date]);
+                });
+            }).catch((error) => {
+                setCriticalDates([]);
+                setError(true);
+                setLoading(false);
+                console.log('Error retrieving dates: ' + error.message);
             });
-        }).catch((error) => {
-            console.log('Error retrieving dates: ' + error.message);
-            console.log(error)
+        }).catch(function (error) {
+            setCriticalDates([]);
+            setLoggedIn(false);
+            setLoading(false);
+            if (error.response)
+                console.log(error.response.data);
+            else
+                console.log(error.message);
         });
     }, [startDate, endDate, dateType, isClosed]);
 
@@ -99,15 +117,13 @@ function Main() {
     const doSetWhen = (newWhen) => {
         if(when !== 'Custom')
             setPrevWhen(when)
-        if(when === 'Custom') {
+        if(when === 'Custom')
             setCustomDates({start: startDate, end: endDate});
-        }
         setWhen(newWhen);
     }
         
     return (
         <VStack w='full' h='max-content' alignItems='center' marginBlock='25px'>
-
             {/* Filter Buttons */}
             <HStack w='1200px' justifyContent='space-between'>
                 {/* Type Filter */}
@@ -190,6 +206,8 @@ function Main() {
                             <Spinner/>
                         </Box> ) || (
                         <DatesTable
+                            loggedIn={loggedIn}
+                            error={error}
                             type={dateType.label}
                             when={when}
                             dates={criticalDates}

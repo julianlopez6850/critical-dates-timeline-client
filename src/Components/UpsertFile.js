@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-import axios from 'axios';
+import { axiosInstance } from "../Helpers/axiosInstance"
 
 import {
     Modal,
@@ -169,7 +168,7 @@ const AddFile = (props) => {
 
     useEffect(() => {
         if(!props.new && props.isOpen && props.fileNo) {
-            axios.get(`http://localhost:5000/files?fileNumber=${props.fileNo}`).then((response) => {
+            axiosInstance.get(`http://localhost:5000/files?fileNumber=${props.fileNo}`).then((response) => {
                 setOldFileNo(response.data.fileNumber);
                 setFileNo(response.data.fileNumber);
                 setFileRef(response.data.fileRef);

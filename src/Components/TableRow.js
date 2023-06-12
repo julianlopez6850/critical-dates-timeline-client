@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react"
 import { Box, Button, Divider, HStack, Text, Tooltip, useDisclosure } from "@chakra-ui/react"
 import { LockIcon, UnlockIcon } from '@chakra-ui/icons';
-import axios from 'axios';
+import { axiosInstance } from "../Helpers/axiosInstance"
 import UpsertFile from './UpsertFile';
 
 const TableRow = (props) => {
@@ -46,7 +46,7 @@ const TableRow = (props) => {
                 isClosed: isClosed
             }
             
-            axios.put(`http://localhost:5000/dates`, dateInfo).then(() => {
+            axiosInstance.put(`http://localhost:5000/dates`, dateInfo).then(() => {
                 console.log(`Updated Status of ${dateInfo.fileNumber} ${dateInfo.prefix}${dateInfo.type} to ${dateInfo.isClosed ? `CLOSED` : `OPEN`}`)
             }).catch((error) => {
                 console.log('Error updating date: ' + error.message);

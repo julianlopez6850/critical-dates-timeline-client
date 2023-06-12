@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import { axiosInstance } from "../Helpers/axiosInstance"
 
 import { themeContext } from "../Helpers/themeContext";
 
@@ -39,7 +39,7 @@ const Navbar = () => {
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/files/all`).then((response) => {
+        axiosInstance.get(`http://localhost:5000/files/all`).then((response) => {
             setFiles([]);
             response.data.map((file) => {
                 setFiles((files) => [...files, {

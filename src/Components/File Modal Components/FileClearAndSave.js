@@ -1,6 +1,5 @@
 import React from 'react';
-
-import axios from 'axios';
+import { axiosInstance } from "../../Helpers/axiosInstance"
 
 import {
     HStack,
@@ -18,7 +17,7 @@ const FileClearAndSaveButtons = (props) => {
     } = useDisclosure()
 
     const deleteFile = () => {
-        axios.delete(`http://localhost:5000/files`, { data: {fileNumber: props.fileNo}}).then((response) => {
+        axiosInstance.delete(`http://localhost:5000/files`, { data: {fileNumber: props.fileNo}}).then((response) => {
             console.log(`Successfully deleted file ${props.fileNo}`);
             props.toast({
                 title: 'Success!',
@@ -85,7 +84,7 @@ const FileClearAndSaveButtons = (props) => {
 
         // if new file, POST to database.
         if(props.new) {
-            axios.post(`http://localhost:5000/files`, file).then((response) => {
+            axiosInstance.post(`http://localhost:5000/files`, file).then((response) => {
                 console.log(response);
                 props.onClose();
                 props.resetAllValues();
@@ -112,7 +111,7 @@ const FileClearAndSaveButtons = (props) => {
                 }
             })
         } else { // else (if old file), PUT (update) file in database.
-            axios.put(`http://localhost:5000/files`, file).then((response) => {
+            axiosInstance.put(`http://localhost:5000/files`, file).then((response) => {
                 console.log(response)
                 props.onClose();
             })

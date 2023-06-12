@@ -1,8 +1,12 @@
-import { Box, Divider, HStack, Text, Tooltip, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, HStack, Text, Tooltip, VStack } from "@chakra-ui/react";
 import TableRow from "./TableRow";
 import { InfoIcon, LockIcon, UnlockIcon } from '@chakra-ui/icons';
+import DateFilterButton from './DateFilterButton';
+import { useNavigate } from 'react-router-dom';
 
 const DatesTable = (props) => {
+    
+    const navigate = useNavigate();
     
     const columnHeaders = [
         {text: <Tooltip borderRadius='5px' mt='-5px' label={
@@ -87,9 +91,28 @@ const DatesTable = (props) => {
                             />
                         )
                     }) : (
-                        <Text>
-                            {`No critical dates found matching the given criteria: { type: ${props.type} | when: ${props.when} | status: ${props.status} }`}
-                        </Text>
+                        props.loggedIn ? (
+                            props.error ? (
+                                <Text>
+                                    {`There was an error processing this request. Please try again later.`}
+                                </Text>
+                            ) : (
+                                <Text>
+                                    {`No critical dates found matching the given criteria: { type: ${props.type} | when: ${props.when} | status: ${props.status} }`}
+                                </Text>
+                            )
+                        ) : (
+                            <>
+                                <Text>
+                                    {`Please log in to access this data.`}
+                                </Text>
+                                <DateFilterButton
+                                    text={'Login'}
+                                    onClick={() => {navigate('/login')}}
+                                    active={false}
+                                />
+                            </>
+                        )
                     )
                 }
             </VStack>
