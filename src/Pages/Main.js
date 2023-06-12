@@ -96,19 +96,6 @@ function Main() {
             setIsClosed('')
     }, [status])
 
-    useEffect(() => {
-        console.log(prevWhen);
-    }, [prevWhen])
-
-    useEffect(() => {
-        console.log(`start: ${startDate}`);
-        console.log(`end: ${endDate}`);
-    }, [startDate, endDate])
-
-    useEffect(() => {
-        console.log(customDates);
-    }, [customDates])
-
     const doSetWhen = (newWhen) => {
         if(when !== 'Custom')
             setPrevWhen(when)
