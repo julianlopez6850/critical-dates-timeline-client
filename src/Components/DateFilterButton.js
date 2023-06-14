@@ -1,27 +1,27 @@
 import React, { forwardRef, useContext } from "react";
 import { Button, } from "@chakra-ui/react";
-import { themeContext } from "../Helpers/themeContext";
+import { profileContext } from "../Helpers/profileContext";
 
 const DateFilterButton = forwardRef(function DateTypeButton(props, ref) {
 
-    const { theme, setTheme } = useContext(themeContext);
+    const { profile } = useContext(profileContext);
 
     return (
         <Button ref={ref}
             fontSize={props.fontSize || 16}
             variant='link'
-            color={(theme) ? 
+            color={(profile.lightTheme) ? 
                 (props.active) ? 'black' : 'gray.500' :
                 (props.active) ? 'white' : 'gray.400'
             }
-            borderBottom={(theme) ? 
+            borderBottom={(profile.lightTheme) ? 
                 (props.active) ? '2px solid black' : '2px solid transparent' :
                 (props.active) ? '2px solid white' : '2px solid transparent'
             }
             borderRadius='0'
             textShadow={(props.active) ? '0px 0px 1px' : ''}
             _hover={(props.active) ? {
-                cursor:'default'} : theme ?
+                cursor:'default'} : profile.lightTheme ?
                 {
                     textShadow:'0px 0px 1px',
                     cursor:'pointer'

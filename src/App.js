@@ -16,7 +16,7 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-import { themeContext } from './Helpers/themeContext';
+import { profileContext } from './Helpers/profileContext';
 import Navbar from './Components/Navbar';
 import Main from './Pages/Main';
 import Login from './Pages/Login';
@@ -26,26 +26,26 @@ const materialTheme = muiCreateTheme();
 
 function App() {
 
-  const [theme, setTheme] =  useState(true);
+  const [profile, setProfile] =  useState({ loggedIn: false, user: '', lightTheme: true});
 
   return (
     <ChakraProvider theme={chakraTheme} resetCSS>
       <MaterialThemeProvider theme={{ [THEME_ID]: materialTheme }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <themeContext.Provider value = {{ theme, setTheme }}>
+          <profileContext.Provider value = {{ profile, setProfile }}>
             <Box className='App' w='full'
-              bgColor={theme ? 'var(--background-light)' : 'var(--background-dark)'}
-              textColor={theme ? 'var(--text-color-light)' : 'var(--text-color-dark)'}
+              bgColor={profile.lightTheme ? 'var(--background-light)' : 'var(--background-dark)'}
+              textColor={profile.lightTheme ? 'var(--text-color-light)' : 'var(--text-color-dark)'}
             >
-              <Navbar/>
               <Router>
-                  <Routes>
-                    <Route exact path="/" element={<Main/>} />
-                    <Route exact path="/login" element={<Login/>} />
+                <Navbar/>
+                <Routes>
+                  <Route exact path="/" element={<Main/>} />
+                  <Route exact path="/login" element={<Login/>} />
                 </Routes>
               </Router>
             </Box>
-          </themeContext.Provider>
+          </profileContext.Provider>
         </LocalizationProvider>
       </MaterialThemeProvider>
     </ChakraProvider>

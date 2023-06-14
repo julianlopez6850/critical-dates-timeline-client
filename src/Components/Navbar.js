@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
+import { profileContext } from "../Helpers/profileContext";
 import { axiosInstance } from "../Helpers/axiosInstance"
-
-import { themeContext } from "../Helpers/themeContext";
 
 import {
     useDisclosure,
@@ -9,14 +8,15 @@ import {
     HStack,
     Text,
 } from "@chakra-ui/react";
-import { MoonIcon, SunIcon, SettingsIcon, SearchIcon, AddIcon } from "@chakra-ui/icons";
+import { MoonIcon, SunIcon, SearchIcon, AddIcon } from "@chakra-ui/icons";
+
 import NavbarButton from "./NavbarButton";
 import { FileSelect } from "./FileSelect";
 import UpsertFile from "./UpsertFile";
 
 const Navbar = () => {
-    
-    const {theme, setTheme} = useContext(themeContext);
+
+    const {profile, setProfile} = useContext(profileContext);
 
     const { 
         isOpen: isOpenFileCreator, 
@@ -35,10 +35,22 @@ const Navbar = () => {
 
     const updateTheme = (e) => {
         e.preventDefault();
-        setTheme(theme => !theme);
+        setProfile(profile => {
+            return { ...profile, lightTheme: !profile.lightTheme }
+        });
     }
 
     useEffect(() => {
+        console.log(profile);
+    }, [profile.user])
+
+    useEffect(() => {
+        if(profile.loggedIn === false) {
+            setFiles([]);
+            setSelectedFile('')
+            return;
+        }
+
         axiosInstance.get(`http://localhost:5000/files/all`).then((response) => {
             setFiles([]);
             response.data.map((file) => {
@@ -51,7 +63,7 @@ const Navbar = () => {
         }).catch((error) => {
             console.log('Error retrieving files: ' + error.message);
         });
-    }, []);
+    }, [profile]);
 
     const searchFile = () => {
         if(selectedFile) {
@@ -93,7 +105,7 @@ const Navbar = () => {
                     {/* Button: Switch between light and dark background theme */}
                     <NavbarButton
                         onClick={(e) => {updateTheme(e)}}
-                        icon={theme ? <MoonIcon/> : <SunIcon/>} 
+                        icon={profile.lightTheme ? <MoonIcon/> : <SunIcon/>} 
                     />
                     {/* Button: Open Settings */}
                     <NavbarButton

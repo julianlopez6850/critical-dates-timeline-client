@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { axiosInstance } from "../Helpers/axiosInstance"
 
 import {
@@ -12,7 +12,11 @@ import {
     VStack,
     Divider,
     useToast,
+    Spinner,
+    Text,
   } from '@chakra-ui/react'
+  
+import { profileContext } from '../Helpers/profileContext';
 
 import FileNoAndRefInput from './File Modal Components/FileNoAndRefInput';
 import FileTaskInfo from './File Modal Components/FileTaskInfo';
@@ -26,6 +30,8 @@ import FileClearAndSave from './File Modal Components/FileClearAndSave';
 import FileFooter from './File Modal Components/FileFooter';
 
 const AddFile = (props) => {
+
+    const { profile, setProfile } = useContext(profileContext);
     
     const toast = useToast();
     
@@ -167,74 +173,94 @@ const AddFile = (props) => {
     const [isError, setIsError] = useState();
 
     useEffect(() => {
-        if(!props.new && props.isOpen && props.fileNo) {
-            axiosInstance.get(`http://localhost:5000/files?fileNumber=${props.fileNo}`).then((response) => {
-                setOldFileNo(response.data.fileNumber);
-                setFileNo(response.data.fileNumber);
-                setFileRef(response.data.fileRef);
-                setPropertyAddress(response.data.address);
-                setFolioNo(response.data.folioNo);
-                setSeller(response.data.seller);
-                setBuyer(response.data.buyer);
-                setIsPurchase(response.data.isPurchase);
-                setWhoRepresenting(response.data.whoRepresenting);
-                setNotes(response.data.notes);
-                setIsClosed(response.data.isClosed);
-
-                const responseRoles = JSON.parse(response.data.roles);
-                setIsSellerDocs(responseRoles.isSellerDocs);
-                setIsBuyerDocs(responseRoles.isBuyerDocs);
-                setIsEscrowAgent(responseRoles.isEscrowAgent);
-                setIsTitleAgent(responseRoles.isTitleAgent);
-                setIsClosingAgent(responseRoles.isClosingAgent);
-
-                const responseMilestones = JSON.parse(response.data.milestones);
-                setIsEscrowReceived(responseMilestones.isEscrowReceived);
-                setIsLienRequested(responseMilestones.isLienRequested);
-                setIsTitleOrdered(responseMilestones.isTitleOrdered);
-                setIsLienReceived(responseMilestones.isLienReceived);
-                setIsTitleReceived(responseMilestones.isTitleReceived);
-                setIsSellerDocsDrafted(responseMilestones.isSellerDocsDrafted);
-                setIsSellerDocsApproved(responseMilestones.isSellerDocsApproved);
-                setIsBuyerDocsDrafted(responseMilestones.isBuyerDocsDrafted);
-                setIsBuyerDocsApproved(responseMilestones.isBuyerDocsApproved);
-
-                for(const date of response.data.dates) {
-                    switch(date.type) {
-                        case 'Effective':
-                            setEffective(date.date);
-                            setIsClosedEffective(date.isClosed);
-                            break;
-                        case 'Escrow':
-                            switch(date.prefix) {
-                                case 'First ':
-                                    setDepositInit(date.date);
-                                    setIsClosedDepositInit(date.isClosed)
-                                    break;
-                                case 'Second ':
-                                    setDepositSecond(date.date);
-                                    setIsClosedDepositSecond(date.isClosed)
-                                    break;
-                                default:
-                            }
-                        case 'Loan ✓':
-                            setLoanApproval(date.date);
-                            setIsClosedLoanApproval(date.isClosed);
-                            break;
-                        case 'Inspection':
-                            setInspection(date.date);
-                            setIsClosedInspection(date.isClosed);
-                            break;
-                        case 'Closing':
-                            setClosing(date.date);
-                            setIsClosedClosing(date.isClosed);
-                            break;
-                    }
-                }
-            }).catch((error) => {
-                console.log('Error retrieving file info: ' + error.message);
-            });
+        if(!props.isOpen) {
+            resetAllValues();
+            return;
         }
+
+        axiosInstance.get(`http://localhost:5000/auth/profile`).then((response) => {
+            setProfile(profile => {
+                return {...profile, loggedIn: true, user: response.data.username }
+            })
+
+            if(!props.new && props.fileNo) {
+                axiosInstance.get(`http://localhost:5000/files?fileNumber=${props.fileNo}`).then((response) => {
+                    setOldFileNo(response.data.fileNumber);
+                    setFileNo(response.data.fileNumber);
+                    setFileRef(response.data.fileRef);
+                    setPropertyAddress(response.data.address);
+                    setFolioNo(response.data.folioNo);
+                    setSeller(response.data.seller);
+                    setBuyer(response.data.buyer);
+                    setIsPurchase(response.data.isPurchase);
+                    setWhoRepresenting(response.data.whoRepresenting);
+                    setNotes(response.data.notes);
+                    setIsClosed(response.data.isClosed);
+    
+                    const responseRoles = JSON.parse(response.data.roles);
+                    setIsSellerDocs(responseRoles.isSellerDocs);
+                    setIsBuyerDocs(responseRoles.isBuyerDocs);
+                    setIsEscrowAgent(responseRoles.isEscrowAgent);
+                    setIsTitleAgent(responseRoles.isTitleAgent);
+                    setIsClosingAgent(responseRoles.isClosingAgent);
+    
+                    const responseMilestones = JSON.parse(response.data.milestones);
+                    setIsEscrowReceived(responseMilestones.isEscrowReceived);
+                    setIsLienRequested(responseMilestones.isLienRequested);
+                    setIsTitleOrdered(responseMilestones.isTitleOrdered);
+                    setIsLienReceived(responseMilestones.isLienReceived);
+                    setIsTitleReceived(responseMilestones.isTitleReceived);
+                    setIsSellerDocsDrafted(responseMilestones.isSellerDocsDrafted);
+                    setIsSellerDocsApproved(responseMilestones.isSellerDocsApproved);
+                    setIsBuyerDocsDrafted(responseMilestones.isBuyerDocsDrafted);
+                    setIsBuyerDocsApproved(responseMilestones.isBuyerDocsApproved);
+    
+                    for(const date of response.data.dates) {
+                        switch(date.type) {
+                            case 'Effective':
+                                setEffective(date.date);
+                                setIsClosedEffective(date.isClosed);
+                                break;
+                            case 'Escrow':
+                                switch(date.prefix) {
+                                    case 'First ':
+                                        setDepositInit(date.date);
+                                        setIsClosedDepositInit(date.isClosed)
+                                        break;
+                                    case 'Second ':
+                                        setDepositSecond(date.date);
+                                        setIsClosedDepositSecond(date.isClosed)
+                                        break;
+                                    default:
+                                }
+                            case 'Loan ✓':
+                                setLoanApproval(date.date);
+                                setIsClosedLoanApproval(date.isClosed);
+                                break;
+                            case 'Inspection':
+                                setInspection(date.date);
+                                setIsClosedInspection(date.isClosed);
+                                break;
+                            case 'Closing':
+                                setClosing(date.date);
+                                setIsClosedClosing(date.isClosed);
+                                break;
+                        }
+                    }
+                }).catch((error) => {
+                    console.log('Error retrieving file info: ' + error.message);
+                });
+            }            
+        }).catch(function (error) {
+            setProfile(profile => {
+                return {...profile, loggedIn: false, user: '' }
+            })
+            if (error.response)
+                console.log(error.response.data);
+            else
+                console.log(error.message);
+        });
+
     }, [props.isOpen])
 
     useEffect(() => {
@@ -412,122 +438,137 @@ const AddFile = (props) => {
             <ModalContent
                 color='white'
                 bgColor='gray.800'
+                h='540px'
             >
                 <ModalCloseButton />
 
-                <ModalBody >
-                    <FileNoAndRefInput
-                        fileNo={fileNo}
-                        setFileNo={setFileNo}
-                        isFileNoError={isFileNoError}
-                        fileRef={fileRef}
-                        setFileRef={setFileRef}
-                        isFileRefError={isFileRefError}
-                    />
+                {!profile.loggedIn ? 
+                    <ModalBody display='flex' justifyContent='center' alignItems='center'>
+                        <Text>
+                            You must be logged in to view, edit, or create Files.
+                        </Text>
+                    </ModalBody> : 
+                    (!props.new && fileNo === '') ? 
+                        <ModalBody display='flex' justifyContent='center' alignItems='center'>
+                            <Spinner/>
+                        </ModalBody> : 
+                        <>
+                            <ModalBody>
+                                <FileNoAndRefInput
+                                    fileNo={fileNo}
+                                    setFileNo={setFileNo}
+                                    isFileNoError={isFileNoError}
+                                    fileRef={fileRef}
+                                    setFileRef={setFileRef}
+                                    isFileRefError={isFileRefError}
+                                />
 
-                    <VStack spacing='0.5' fontSize='14px'>
-                        <FileTaskInfo
-                            isPurchase={isPurchase}
-                            setIsPurchase={setIsPurchase}
-                            whoRepresenting={whoRepresenting}
-                            setWhoRepresenting={setWhoRepresenting}
-                            rolesButtons={rolesButtons}
-                        />
+                                <VStack spacing='0.5' fontSize='14px'>
+                                    <FileTaskInfo
+                                        isPurchase={isPurchase}
+                                        setIsPurchase={setIsPurchase}
+                                        whoRepresenting={whoRepresenting}
+                                        setWhoRepresenting={setWhoRepresenting}
+                                        rolesButtons={rolesButtons}
+                                    />
 
-                        <Divider marginBlock='0.5rem !important' />
+                                    <Divider marginBlock='0.5rem !important' />
 
-                        <FileBuyerAndSeller
-                            isPurchase={isPurchase}
-                            whoRepresenting={whoRepresenting}
-                            buyer={buyer}
-                            setBuyer={setBuyer}
-                            isBuyerError={isBuyerError}
-                            seller={seller}
-                            setSeller={setSeller}
-                            isSellerError={isSellerError}
-                        />
-                        
-                        <FilePropertyInfo
-                            propertyAddress={propertyAddress}
-                            setPropertyAddress={setPropertyAddress}
-                            isPropertyError={isPropertyError}
-                            folioNo={folioNo}
-                            setFolioNo={setFolioNo}
-                        />
+                                    <FileBuyerAndSeller
+                                        isPurchase={isPurchase}
+                                        whoRepresenting={whoRepresenting}
+                                        buyer={buyer}
+                                        setBuyer={setBuyer}
+                                        isBuyerError={isBuyerError}
+                                        seller={seller}
+                                        setSeller={setSeller}
+                                        isSellerError={isSellerError}
+                                    />
+                                    
+                                    <FilePropertyInfo
+                                        propertyAddress={propertyAddress}
+                                        setPropertyAddress={setPropertyAddress}
+                                        isPropertyError={isPropertyError}
+                                        folioNo={folioNo}
+                                        setFolioNo={setFolioNo}
+                                    />
 
-                        <Divider mt='0.5rem !important' mb='0rem !important' />
+                                    <Divider mt='0.5rem !important' mb='0rem !important' />
 
-                        <HStack w='100%' h='100%' m='0'>
-                            <FileDates
-                                dates={dates}
-                                isEffectiveError={isEffectiveError}
-                                isClosingError={isClosingError}
-                                isClosed={isClosed}
-                            />
+                                    <HStack w='100%' h='100%' m='0'>
+                                        <FileDates
+                                            dates={dates}
+                                            isEffectiveError={isEffectiveError}
+                                            isClosingError={isClosingError}
+                                            isClosed={isClosed}
+                                        />
 
-                            <Divider orientation='vertical' h='237px' margin='0px !important'/>
+                                        <Divider orientation='vertical' h='237px' margin='0px !important'/>
 
-                            <FileMilestones
-                                milestonesChecks={milestonesChecks}
-                            />
+                                        <FileMilestones
+                                            milestonesChecks={milestonesChecks}
+                                        />
 
-                            <Divider orientation='vertical' h='237px' margin='0px !important'/>
+                                        <Divider orientation='vertical' h='237px' margin='0px !important'/>
 
-                            <FileNotes
-                                notes={notes}
-                                setNotes={setNotes}
-                            />
-                        </HStack>
-                        
-                        <Divider marginBlock='0.5rem !important' />
-                    </VStack>
-                </ModalBody>
-                <ModalFooter justifyContent='space-between' alignItems='start' m='0'paddingTop='0'>
-                    <VStack w='100%' h='100%' align='left'>
-                        <HStack w='100%' justifyContent='space-between'>
-                            <FileStatus
-                                isClosed={isClosed}
-                                setIsClosed={setIsClosed}
-                            />
-                            <FileClearAndSave
-                                new={props.new}
-                                oldFileNo={oldFileNo}
-                                fileNo={fileNo}
-                                fileRef={fileRef}
-                                isPurchase={isPurchase}
-                                whoRepresenting={whoRepresenting}
-                                propertyAddress={propertyAddress}
-                                folioNo={folioNo}
-                                buyer={buyer}
-                                seller={seller}
-                                effective={effective}
-                                depositInit={depositInit}
-                                depositSecond={depositSecond}
-                                loanApproval={loanApproval}
-                                inspection={inspection}
-                                closing={closing}
-                                isClosedEffective={isClosedEffective}
-                                isClosedDepositInit={isClosedDepositInit}
-                                isClosedDepositSecond={isClosedDepositSecond}
-                                isClosedLoanApproval={isClosedLoanApproval}
-                                isClosedInspection={isClosedInspection}
-                                isClosedClosing={isClosedClosing}
-                                isClosed={isClosed}
-                                roles={roles}
-                                milestones={milestones}
-                                notes={notes}
-                                isError={isError}
-                                toast={toast}
-                                onClose={props.onClose}
-                                resetAllValues={resetAllValues}
-                            />
-                        </HStack>
-                        <FileFooter
-                            displayedFileNo={displayedFileNo}
-                            fileRef={fileRef}
-                        />
-                    </VStack>
-                </ModalFooter>
+                                        <FileNotes
+                                            notes={notes}
+                                            setNotes={setNotes}
+                                        />
+                                    </HStack>
+                                    
+                                    <Divider marginBlock='0.5rem !important' />
+                                </VStack>
+                            </ModalBody>
+
+                            <ModalFooter justifyContent='space-between' alignItems='start' m='0'paddingTop='0'>
+                                <VStack w='100%' h='100%' align='left'>
+                                    <HStack w='100%' justifyContent='space-between'>
+                                        <FileStatus
+                                            isClosed={isClosed}
+                                            setIsClosed={setIsClosed}
+                                        />
+                                        <FileClearAndSave
+                                            new={props.new}
+                                            oldFileNo={oldFileNo}
+                                            fileNo={fileNo}
+                                            fileRef={fileRef}
+                                            isPurchase={isPurchase}
+                                            whoRepresenting={whoRepresenting}
+                                            propertyAddress={propertyAddress}
+                                            folioNo={folioNo}
+                                            buyer={buyer}
+                                            seller={seller}
+                                            effective={effective}
+                                            depositInit={depositInit}
+                                            depositSecond={depositSecond}
+                                            loanApproval={loanApproval}
+                                            inspection={inspection}
+                                            closing={closing}
+                                            isClosedEffective={isClosedEffective}
+                                            isClosedDepositInit={isClosedDepositInit}
+                                            isClosedDepositSecond={isClosedDepositSecond}
+                                            isClosedLoanApproval={isClosedLoanApproval}
+                                            isClosedInspection={isClosedInspection}
+                                            isClosedClosing={isClosedClosing}
+                                            isClosed={isClosed}
+                                            roles={roles}
+                                            milestones={milestones}
+                                            notes={notes}
+                                            isError={isError}
+                                            toast={toast}
+                                            onClose={props.onClose}
+                                            resetAllValues={resetAllValues}
+                                        />
+                                    </HStack>
+                                    <FileFooter
+                                        displayedFileNo={displayedFileNo}
+                                        fileRef={fileRef}
+                                    />
+                                </VStack>
+                            </ModalFooter>
+                        </>
+                }
             </ModalContent>
         </Modal>
     )

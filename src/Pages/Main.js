@@ -13,9 +13,12 @@ import {
 import DateFilterButton from "../Components/DateFilterButton";
 import DatesTable from "../Components/Table";
 import CustomDatePopover from '../Components/CustomDatePopover';
+import { profileContext } from '../Helpers/profileContext';
 
 function Main() {
-    const [loggedIn, setLoggedIn] = useState(false);
+
+    const { profile, setProfile } = useContext(profileContext);
+
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(true);
     const [criticalDates, setCriticalDates] = useState([]);
@@ -51,10 +54,9 @@ function Main() {
 
     useEffect(() => {
         axiosInstance.get(`http://localhost:5000/auth/profile`).then((response) => {
-            if(loggedIn === false) {
-                console.log(`User [${response.data.username}] logged in.`)
-                setLoggedIn(true);
-            }
+            setProfile(profile => {
+                return {...profile, loggedIn: true, user: response.data.username }
+            })
             axiosInstance.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}`).then((response) => {
                 setCriticalDates([]);
                 setLoading(false);
@@ -68,8 +70,10 @@ function Main() {
                 console.log('Error retrieving dates: ' + error.message);
             });
         }).catch(function (error) {
+            setProfile(profile => {
+                return {...profile, loggedIn: false, user: '' }
+            })
             setCriticalDates([]);
-            setLoggedIn(false);
             setLoading(false);
             if (error.response)
                 console.log(error.response.data);
@@ -77,6 +81,12 @@ function Main() {
                 console.log(error.message);
         });
     }, [startDate, endDate, dateType, isClosed]);
+
+    useEffect(() => {
+        if(!profile.loggedIn) {
+            setCriticalDates([]);
+        }
+    }, [profile])
 
     useEffect(() => {
         const today = new Date();
@@ -206,7 +216,7 @@ function Main() {
                             <Spinner/>
                         </Box> ) || (
                         <DatesTable
-                            loggedIn={loggedIn}
+                            loggedIn={profile.loggedIn}
                             error={error}
                             type={dateType.label}
                             when={when}
