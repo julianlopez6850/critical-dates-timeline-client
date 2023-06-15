@@ -26,7 +26,7 @@ const Settings = () => {
         axiosInstance.post("http://localhost:5000/auth/logout").then((response) => {
             console.log(response.data);
             setProfile(profile => {
-                return {...profile, loggedIn: false, user: '' }
+                return {...profile, loggedIn: false, user: undefined }
             })
         })
     }
@@ -40,7 +40,7 @@ const Settings = () => {
                 />
                 <MenuList bgColor={'gray.800'}>
                     <Text>
-                        HELLO, {(profile.user).toUpperCase() || 'GUEST'}
+                        HELLO, {profile.user ? profile.user.toUpperCase() : 'GUEST'}
                     </Text>
                     <MenuDivider/>
                     {profile.loggedIn ? 

@@ -42,18 +42,13 @@ const Navbar = () => {
     }
 
     useEffect(() => {
-        console.log(profile);
-    }, [profile.user])
+        setFiles([]);
+        setSelectedFile('')
 
-    useEffect(() => {
-        if(profile.loggedIn === false) {
-            setFiles([]);
-            setSelectedFile('')
+        if(profile.loggedIn === false)
             return;
-        }
 
         axiosInstance.get(`http://localhost:5000/files/all`).then((response) => {
-            setFiles([]);
             response.data.map((file) => {
                 setFiles((files) => [...files, {
                     value: file.fileNumber,
@@ -64,7 +59,7 @@ const Navbar = () => {
         }).catch((error) => {
             console.log('Error retrieving files: ' + error.message);
         });
-    }, [profile]);
+    }, [profile.loggedIn, profile.actions]);
 
     const searchFile = () => {
         if(selectedFile) {

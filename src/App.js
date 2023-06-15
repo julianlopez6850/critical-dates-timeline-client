@@ -26,7 +26,7 @@ const materialTheme = muiCreateTheme();
 
 function App() {
 
-  const [profile, setProfile] =  useState({ loggedIn: false, user: '', lightTheme: true});
+  const [profile, setProfile] =  useState({ loggedIn: false, user: undefined, lightTheme: true, actions: 0 });
 
   return (
     <ChakraProvider theme={chakraTheme} resetCSS>

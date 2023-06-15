@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { profileContext } from '../../Helpers/profileContext';
 import { axiosInstance } from "../../Helpers/axiosInstance"
 
 import {
@@ -10,6 +11,8 @@ import FileDeleteDialog from './FileDeleteDialog';
 
 const FileClearAndSaveButtons = (props) => {
 
+    const { profile, setProfile } = useContext(profileContext);
+
     const {
         isOpen: isOpenDeleteFile, 
         onOpen: onOpenDeleteFile,
@@ -18,6 +21,9 @@ const FileClearAndSaveButtons = (props) => {
 
     const deleteFile = () => {
         axiosInstance.delete(`http://localhost:5000/files`, { data: {fileNumber: props.fileNo}}).then((response) => {
+            setProfile(profile => {
+                return {...profile, actions: profile.actions + 1 }
+            })
             console.log(`Successfully deleted file ${props.fileNo}`);
             props.toast({
                 title: 'Success!',
@@ -86,6 +92,9 @@ const FileClearAndSaveButtons = (props) => {
         if(props.new) {
             axiosInstance.post(`http://localhost:5000/files`, file).then((response) => {
                 console.log(response);
+                setProfile(profile => {
+                    return {...profile, actions: profile.actions + 1 }
+                })
                 props.onClose();
                 props.resetAllValues();
             }).catch((err) => {
@@ -111,8 +120,11 @@ const FileClearAndSaveButtons = (props) => {
                 }
             })
         } else { // else (if old file), PUT (update) file in database.
-            axiosInstance.put(`http://localhost:5000/files`, file).then((response) => {
-                console.log(response)
+            axiosInstance.put(`http://localhost:5000/files`, file).then(() => {
+                setProfile(profile => {
+                    return {...profile, actions: profile.actions + 1 }
+                })
+                console.log(`Successfully updated file ${props.fileNo}`);
                 props.onClose();
             })
         }

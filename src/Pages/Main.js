@@ -85,8 +85,21 @@ function Main() {
     useEffect(() => {
         if(!profile.loggedIn) {
             setCriticalDates([]);
+        } else {
+            axiosInstance.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}`).then((response) => {
+                setCriticalDates([]);
+                setLoading(false);
+                response.data.dates.map((date) => {
+                    setCriticalDates((dates) => [...dates, date]);
+                });
+            }).catch((error) => {
+                setCriticalDates([]);
+                setError(true);
+                setLoading(false);
+                console.log('Error retrieving dates: ' + error.message);
+            });
         }
-    }, [profile])
+    }, [profile.loggedIn, profile.actions])
 
     useEffect(() => {
         const today = new Date();
