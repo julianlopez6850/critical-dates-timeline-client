@@ -1,9 +1,12 @@
+import { forwardRef } from 'react';
+
 import { Button } from "@chakra-ui/react";
 
-const NavbarButton = (props) => {
+const NavbarButton = forwardRef((props, ref) => {
 
     return (
         <Button
+            ref={ref}
             border='2px solid'
             borderColor={'var(--navbar-seperator)'}
             bgColor='black'
@@ -17,6 +20,6 @@ const NavbarButton = (props) => {
             {props.text}
         </Button>
     )
-}
+})
 
 export default NavbarButton;
