@@ -61,11 +61,8 @@ function Main() {
                 return {...profile, loggedIn: true, user: response.data.username }
             })
             axiosInstance.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}`).then((response) => {
-                setCriticalDates([]);
+                setCriticalDates(response.data.dates);
                 setLoading(false);
-                response.data.dates.map((date) => {
-                    setCriticalDates((dates) => [...dates, date]);
-                });
             }).catch(() => {
                 setCriticalDates([]);
                 setError(true);
@@ -97,11 +94,8 @@ function Main() {
             setCriticalDates([]);
         } else {
             axiosInstance.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}`).then((response) => {
-                setCriticalDates([]);
+                setCriticalDates(response.data.dates);
                 setLoading(false);
-                response.data.dates.map((date) => {
-                    setCriticalDates((dates) => [...dates, date]);
-                });
             }).catch(() => {
                 setCriticalDates([]);
                 setError(true);
