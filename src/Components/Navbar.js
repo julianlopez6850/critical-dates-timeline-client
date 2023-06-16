@@ -7,6 +7,7 @@ import {
     Box,
     HStack,
     Text,
+    useToast,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon, SearchIcon, AddIcon } from "@chakra-ui/icons";
 
@@ -18,6 +19,8 @@ import Settings from './Settings';
 const Navbar = () => {
 
     const {profile, setProfile} = useContext(profileContext);
+
+    const toast = useToast();
 
     const { 
         isOpen: isOpenFileCreator, 
@@ -56,8 +59,15 @@ const Navbar = () => {
                     ...file
                 }]);
             });
-        }).catch((error) => {
-            console.log('Error retrieving files: ' + error.message);
+        }).catch(() => {
+            console.warn('ERROR: A problem occurred while trying to retrieve file info. Please try again later.');
+            toast({
+                title: 'Error.',
+                description: 'An error occurred while trying to retrieve file info. Try again later',
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
         });
     }, [profile.loggedIn, profile.actions]);
 

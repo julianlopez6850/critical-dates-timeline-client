@@ -47,9 +47,16 @@ const TableRow = (props) => {
             }
             
             axiosInstance.put(`http://localhost:5000/dates`, dateInfo).then(() => {
-                console.log(`Updated Status of ${dateInfo.fileNumber} ${dateInfo.prefix}${dateInfo.type} to ${dateInfo.isClosed ? `CLOSED` : `OPEN`}`)
-            }).catch((error) => {
-                console.log('Error updating date: ' + error.message);
+                console.info(`Updated Status of ${dateInfo.fileNumber} ${dateInfo.prefix}${dateInfo.type} to ${dateInfo.isClosed ? `CLOSED` : `OPEN`}`);
+            }).catch(() => {
+                console.warn('ERROR. We encountered a problem while trying to update this date. Please try again later.');
+                props.toast({
+                    title: 'Error.',
+                    description: `An error occurred while trying to update this date's status. Try again later.`,
+                    status: 'error',
+                    duration: 2500,
+                    isClosable: true,
+                })
             });
         }
     }, [isClosed, update]);

@@ -8,6 +8,7 @@ import {
     HStack,
     useDisclosure,
     Spinner,
+    useToast,
     
 } from "@chakra-ui/react"
 import DateFilterButton from "../Components/DateFilterButton";
@@ -18,6 +19,8 @@ import { profileContext } from '../Helpers/profileContext';
 function Main() {
 
     const { profile, setProfile } = useContext(profileContext);
+
+    const toast = useToast();
 
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -63,22 +66,29 @@ function Main() {
                 response.data.dates.map((date) => {
                     setCriticalDates((dates) => [...dates, date]);
                 });
-            }).catch((error) => {
+            }).catch(() => {
                 setCriticalDates([]);
                 setError(true);
                 setLoading(false);
-                console.log('Error retrieving dates: ' + error.message);
+                console.warn('ERROR: A problem occurred while trying to retrieve dates. Please try again later.');
+                toast({
+                    title: 'Error.',
+                    description: 'An error occurred while trying to retrieve dates. Try again later',
+                    status: 'error',
+                    duration: 2000,
+                    isClosable: true,
+                })
             });
-        }).catch(function (error) {
+        }).catch((error) => {
             setProfile(profile => {
                 return {...profile, loggedIn: false, user: '' }
             })
             setCriticalDates([]);
             setLoading(false);
             if (error.response)
-                console.log(error.response.data);
+                console.warn('You are not logged in. Please log in to view this content.');
             else
-                console.log(error.message);
+                console.warn('ERROR: Server is currently unavailable. Please try again later.');
         });
     }, [startDate, endDate, dateType, isClosed]);
 
@@ -92,11 +102,18 @@ function Main() {
                 response.data.dates.map((date) => {
                     setCriticalDates((dates) => [...dates, date]);
                 });
-            }).catch((error) => {
+            }).catch(() => {
                 setCriticalDates([]);
                 setError(true);
                 setLoading(false);
-                console.log('Error retrieving dates: ' + error.message);
+                console.warn('ERROR: A problem occurred while trying to retrieve dates. Please try again later.');
+                toast({
+                    title: 'Error.',
+                    description: 'An error occurred while trying to retrieve dates. Try again later',
+                    status: 'error',
+                    duration: 2000,
+                    isClosable: true,
+                })
             });
         }
     }, [profile.loggedIn, profile.actions])

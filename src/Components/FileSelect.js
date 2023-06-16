@@ -16,9 +16,9 @@ export const FileSelect = (props) => {
                 return {...profile, loggedIn: false, user: '' }
             })
             if (error.response)
-                console.log(error.response.data);
+                console.warn('You are not logged in. Please log in to view this content.');
             else
-                console.log(error.message);
+                console.warn('ERROR: Server is currently unavailable. Please try again later.');
         });
     }
 

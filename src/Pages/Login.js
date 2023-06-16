@@ -29,19 +29,18 @@ const Login = () => {
  
     // If a user is already authenticated, navigate to the main page.
     useEffect(() => {
-        axiosInstance.get(`http://localhost:5000/auth/profile`).then((response) => {
+        axiosInstance.get(`http://localhost:5000/auth/profile`).then(() => {
             setTimeout(() => navigate('/'), 100);
         }).catch(function (error) {
-            if (error.response)
-                console.log(error.response.data);
-            else
-                console.log(error.message);
+            if (!error.response)
+                console.warn('ERROR: Server is currently unavailable. Please try again later.');
         });
     }, [])
 
     // Call the login API endpoint with the user-given credentials to attempt to authenticate the user.
     const tryLogin = () => {
         axiosInstance.post(`http://localhost:5000/auth/login`, { username: username, password: password}).then(() => {
+            console.info(`You are now logged in as ${username.toUpperCase()}`);
             setTimeout(() => navigate('/'), 1500);
             if(!toast.isActive(''))
                 toast({

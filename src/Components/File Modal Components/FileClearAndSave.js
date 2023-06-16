@@ -20,25 +20,24 @@ const FileClearAndSaveButtons = (props) => {
     } = useDisclosure()
 
     const deleteFile = () => {
-        axiosInstance.delete(`http://localhost:5000/files`, { data: {fileNumber: props.fileNo}}).then((response) => {
+        axiosInstance.delete(`http://localhost:5000/files`, { data: {fileNumber: props.fileNo}}).then(() => {
             setProfile(profile => {
                 return {...profile, actions: profile.actions + 1 }
             })
-            console.log(`Successfully deleted file ${props.fileNo}`);
+            console.info(`Successfully deleted file ${props.fileNo}`);
             props.toast({
                 title: 'Success!',
-                description: `Successfully deleted file ${props.fileNo}`,
+                description: 'Successfully deleted file ${props.fileNo}',
                 status: 'success',
                 duration: 2000,
                 isClosable: true,
             })
             props.onClose();
-        }).catch((err) => {
-            console.log(err);
-            console.log('ERROR. We encountered a problem while trying to delete this file. Please try again later.');
+        }).catch(() => {
+            console.warn('ERROR: A problem occurred while trying to delete this file. Please try again later.');
             props.toast({
                 title: 'Error.',
-                description: `An error occurred while trying to delete this file. Try again later`,
+                description: 'An error occurred while trying to delete this file. Try again later',
                 status: 'error',
                 duration: 2000,
                 isClosable: true,
@@ -49,7 +48,7 @@ const FileClearAndSaveButtons = (props) => {
     const trySaveFile = () => {
         var error = props.isError
         if(error) {
-            console.log('ERROR: Invalid or Missing Input.')
+            console.warn('ERROR: Invalid or Missing Input.')
             props.toast({
                 title: 'Error.',
                 description: error,
@@ -90,29 +89,35 @@ const FileClearAndSaveButtons = (props) => {
 
         // if new file, POST to database.
         if(props.new) {
-            axiosInstance.post(`http://localhost:5000/files`, file).then((response) => {
-                console.log(response);
+            axiosInstance.post(`http://localhost:5000/files`, file).then(() => {
                 setProfile(profile => {
                     return {...profile, actions: profile.actions + 1 }
+                })
+                console.info(`Successfully created file ${props.fileNo}`);
+                props.toast({
+                    title: 'Success!',
+                    description: `Successfully created file ${props.fileNo}`,
+                    status: 'success',
+                    duration: 2000,
+                    isClosable: true,
                 })
                 props.onClose();
                 props.resetAllValues();
             }).catch((err) => {
                 if(err.response && err.response.data.message === "This file already exists.") {
-                    console.log('ERROR. This file number already exists.');
+                    console.warn('ERROR: This file number is already in use.');
                     props.toast({
                         title: 'Error.',
-                        description: `${err.response.data.message}`,
+                        description: 'This file number is already in use.',
                         status: 'error',
                         duration: 2000,
                         isClosable: true,
                     })
                 } else {
-                    console.log(err);
-                    console.log('ERROR. We encountered a problem while trying to save this file. Please try again later.');
+                    console.warn('ERROR: A problem occurred while trying to save this file. Please try again later.');
                     props.toast({
                         title: 'Error.',
-                        description: `${'An error occurred while trying to save this file. Try again later.'}`,
+                        description: 'An error occurred while trying to save this file. Try again later.',
                         status: 'error',
                         duration: 2500,
                         isClosable: true,
@@ -124,7 +129,14 @@ const FileClearAndSaveButtons = (props) => {
                 setProfile(profile => {
                     return {...profile, actions: profile.actions + 1 }
                 })
-                console.log(`Successfully updated file ${props.fileNo}`);
+                console.info(`Successfully updated file ${props.fileNo}`);
+                props.toast({
+                    title: 'Success!',
+                    description: `Successfully updated file ${props.fileNo}`,
+                    status: 'success',
+                    duration: 2000,
+                    isClosable: true,
+                })
                 props.onClose();
             })
         }

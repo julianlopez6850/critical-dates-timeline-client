@@ -23,8 +23,8 @@ const Settings = () => {
     const navigate = useNavigate();
 
     const logoutUser = () => {
-        axiosInstance.post("http://localhost:5000/auth/logout").then((response) => {
-            console.log(response.data);
+        axiosInstance.post("http://localhost:5000/auth/logout").then(() => {
+            console.info('You have been logged out successfully.');
             setProfile(profile => {
                 return {...profile, loggedIn: false, user: undefined }
             })

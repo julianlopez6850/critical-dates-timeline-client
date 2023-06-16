@@ -247,8 +247,15 @@ const AddFile = (props) => {
                                 break;
                         }
                     }
-                }).catch((error) => {
-                    console.log('Error retrieving file info: ' + error.message);
+                }).catch(() => {
+                    console.warn('ERROR: A problem occurred while trying to retrieve file info. Please try again later.');
+                    toast({
+                        title: 'Error.',
+                        description: 'An error occurred while trying to retrieve file info. Try again later',
+                        status: 'error',
+                        duration: 2000,
+                        isClosable: true,
+                    })
                 });
             }            
         }).catch(function (error) {
@@ -256,9 +263,9 @@ const AddFile = (props) => {
                 return {...profile, loggedIn: false, user: '' }
             })
             if (error.response)
-                console.log(error.response.data);
+                console.warn('You are not logged in. Please log in to view this content.');
             else
-                console.log(error.message);
+                console.warn('ERROR: Server is currently unavailable. Please try again later.');
         });
 
     }, [props.isOpen])
