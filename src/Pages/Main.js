@@ -30,7 +30,7 @@ function Main() {
     const [status, setStatus] = useState('Open');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [isClosed, setIsClosed] = useState('false');
+    const [isClosed, setIsClosed] = useState(false);
     const [prevWhen, setPrevWhen] = useState();
     const [customDates, setCustomDates] = useState();
 
