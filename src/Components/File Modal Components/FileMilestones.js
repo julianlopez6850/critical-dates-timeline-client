@@ -1,11 +1,9 @@
-import React from 'react';
-
 import {
     HStack,
     VStack,
     Text,
     Checkbox,
-  } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 
 const FileMilestones = (props) => {
     return (

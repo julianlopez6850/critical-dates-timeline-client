@@ -1,12 +1,13 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { profileContext } from '../../Helpers/profileContext';
-import { axiosInstance } from "../../Helpers/axiosInstance"
+import { axiosInstance } from '../../Helpers/axiosInstance'
 
 import {
     HStack,
     Button,
     useDisclosure,
-  } from '@chakra-ui/react'
+} from '@chakra-ui/react'
+
 import FileDeleteDialog from './FileDeleteDialog';
 
 const FileClearAndSaveButtons = (props) => {
@@ -104,7 +105,7 @@ const FileClearAndSaveButtons = (props) => {
                 props.onClose();
                 props.resetAllValues();
             }).catch((err) => {
-                if(err.response && err.response.data.message === "This file already exists.") {
+                if(err.response && err.response.data.message === 'This file already exists.') {
                     console.warn('ERROR: This file number is already in use.');
                     props.toast({
                         title: 'Error.',

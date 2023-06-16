@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
     Button,
     HStack,
@@ -14,7 +12,7 @@ import {
     PopoverHeader,
     PopoverBody,
     Checkbox,
-  } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 import { ChevronDownIcon, } from '@chakra-ui/icons';
 
 const FileTaskInfo = (props) => {

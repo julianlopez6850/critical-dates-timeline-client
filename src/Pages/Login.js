@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from "react-router-dom";
-import { axiosInstance } from "../Helpers/axiosInstance"
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { axiosInstance } from '../Helpers/axiosInstance'
 
 import {
     FormControl,
@@ -11,18 +11,17 @@ import {
     InputRightElement,
     Button,
     useToast,
-    Box,
     VStack,
     Text,
 } from '@chakra-ui/react'
 
 const Login = () => {
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const [show, setShow] = useState(false);
     const [error, setError] = useState(0)
-    const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState('');
 
     const navigate = useNavigate();
     const toast = useToast();
@@ -101,7 +100,7 @@ const Login = () => {
                 LOGIN
             </Text>
             <VStack justifyContent='center' alignItems='center'>
-                <FormControl style={{width:"300px"}}>
+                <FormControl style={{width:'300px'}}>
 
                     <FormLabel>Username</FormLabel>
                     <Input
@@ -110,7 +109,7 @@ const Login = () => {
                         _hover={{}}
                         type='text'
                         isRequired={true}
-                        placeholder="Username"
+                        placeholder='Username'
                         onChange={(e) => {setUsername(e.target.value)}}
                         autoFocus
                     />
@@ -133,15 +132,15 @@ const Login = () => {
                             <Button 
                                 h='1.75rem'
                                 size='sm'
-                                bgColor="blue.500"
-                                color="white"
+                                bgColor='blue.500'
+                                color='white'
                                 _hover={{
-                                bg: "blue.600",
-                                color: "white"
+                                    bg:'blue.600',
+                                    color:'white'
                                 }}
                                 _active={{
-                                bg: "blue.600",
-                                color: "gray.200"
+                                    bg:'blue.600',
+                                    color:'gray.200'
                                 }}
                                 onClick={() => {setShow(!show)}}
                             >
@@ -153,15 +152,15 @@ const Login = () => {
                     <Button
                         mt={50}
                         type='submit'
-                        bgColor="blue.500"
-                        color="white"
+                        bgColor='blue.500'
+                        color='white'
                         _hover={{
-                        bg: "blue.600",
-                        color: "white"
+                            bg: 'blue.600',
+                            color: 'white'
                         }}
                         _active={{
-                        bg: "blue.600",
-                        color: "gray.200"
+                            bg: 'blue.600',
+                            color: 'gray.200'
                         }}
                         onClick={() => {tryLogin()}}
                     >

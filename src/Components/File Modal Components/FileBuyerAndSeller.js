@@ -1,11 +1,9 @@
-import React from 'react';
-
 import {
     HStack,
     Text,
     Tooltip,
     Input,
-  } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 
 const FileBuyerAndSeller = (props) => {
     return (

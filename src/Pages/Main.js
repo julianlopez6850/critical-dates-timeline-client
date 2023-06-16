@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useContext } from "react";
-import { axiosInstance } from "../Helpers/axiosInstance"
+import { useEffect, useState, useContext } from 'react'
+import { profileContext } from '../Helpers/profileContext'
+import { axiosInstance } from '../Helpers/axiosInstance'
 
 import {
     Box,
@@ -9,12 +10,11 @@ import {
     useDisclosure,
     Spinner,
     useToast,
-    
-} from "@chakra-ui/react"
-import DateFilterButton from "../Components/DateFilterButton";
-import DatesTable from "../Components/Table";
-import CustomDatePopover from '../Components/CustomDatePopover';
-import { profileContext } from '../Helpers/profileContext';
+} from '@chakra-ui/react'
+
+import DateFilterButton from '../Components/DateFilterButton'
+import CustomDatePopover from '../Components/CustomDatePopover'
+import DatesTable from '../Components/Table'
 
 function Main() {
 

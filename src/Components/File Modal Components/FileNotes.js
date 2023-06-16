@@ -1,10 +1,8 @@
-import React from 'react';
-
 import {
     VStack,
     Text,
     Textarea,
-  } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 
 const FileNotes = (props) => {
     return (

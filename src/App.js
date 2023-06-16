@@ -40,8 +40,8 @@ function App() {
               <Router>
                 <Navbar/>
                 <Routes>
-                  <Route exact path="/" element={<Main/>} />
-                  <Route exact path="/login" element={<Login/>} />
+                  <Route exact path='/' element={<Main/>} />
+                  <Route exact path='/login' element={<Login/>} />
                 </Routes>
               </Router>
             </Box>

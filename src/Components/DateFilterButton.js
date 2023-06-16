@@ -1,6 +1,7 @@
-import React, { forwardRef, useContext } from "react";
-import { Button, } from "@chakra-ui/react";
-import { profileContext } from "../Helpers/profileContext";
+import React, { forwardRef, useContext } from 'react';
+import { profileContext } from '../Helpers/profileContext';
+
+import { Button } from '@chakra-ui/react';
 
 const DateFilterButton = forwardRef(function DateTypeButton(props, ref) {
 

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { profileContext } from '../Helpers/profileContext';
 import { axiosInstance } from '../Helpers/axiosInstance';
@@ -23,7 +23,7 @@ const Settings = () => {
     const navigate = useNavigate();
 
     const logoutUser = () => {
-        axiosInstance.post("http://localhost:5000/auth/logout").then(() => {
+        axiosInstance.post('http://localhost:5000/auth/logout').then(() => {
             console.info('You have been logged out successfully.');
             setProfile(profile => {
                 return {...profile, loggedIn: false, user: undefined }

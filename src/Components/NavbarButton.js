@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { Button } from "@chakra-ui/react";
+import { Button } from '@chakra-ui/react';
 
 const NavbarButton = forwardRef((props, ref) => {
 

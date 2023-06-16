@@ -1,10 +1,10 @@
 import { useContext } from 'react';
-import Select from "react-select";
+import Select from 'react-select';
 import { profileContext } from '../Helpers/profileContext';
 import { axiosInstance } from '../Helpers/axiosInstance';
 
-export const FileSelect = (props) => {
-    const {profile, setProfile} = useContext(profileContext);
+const FileSelect = (props) => {
+    const {setProfile} = useContext(profileContext);
 
     const validateUser = () => {
         axiosInstance.get(`http://localhost:5000/auth/profile`).then((response) => {
@@ -90,4 +90,6 @@ export const FileSelect = (props) => {
             }}
         />
     )
-  }
+}
+
+export default FileSelect;

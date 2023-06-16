@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
     Button,
     HStack,
@@ -7,7 +5,7 @@ import {
     Text,
     Tooltip,
     Input,
-  } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 import { LockIcon, UnlockIcon, } from '@chakra-ui/icons';
 
 const FileDates = (props) => {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import { profileContext } from "../Helpers/profileContext";
-import { axiosInstance } from "../Helpers/axiosInstance"
+import { useState, useEffect, useContext } from 'react';
+import { profileContext } from '../Helpers/profileContext';
+import { axiosInstance } from '../Helpers/axiosInstance'
 
 import {
     useDisclosure,
@@ -8,12 +8,12 @@ import {
     HStack,
     Text,
     useToast,
-} from "@chakra-ui/react";
-import { MoonIcon, SunIcon, SearchIcon, AddIcon } from "@chakra-ui/icons";
+} from '@chakra-ui/react';
+import { SearchIcon, AddIcon, SunIcon, MoonIcon } from '@chakra-ui/icons';
 
-import NavbarButton from "./NavbarButton";
-import { FileSelect } from "./FileSelect";
-import UpsertFile from "./UpsertFile";
+import NavbarButton from './NavbarButton';
+import FileSelect from './FileSelect';
+import UpsertFile from './UpsertFile';
 import Settings from './Settings';
 
 const Navbar = () => {

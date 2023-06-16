@@ -1,7 +1,17 @@
-import React, { useEffect, useState, Fragment } from "react"
-import { Box, Button, Divider, HStack, Text, Tooltip, useDisclosure } from "@chakra-ui/react"
-import { LockIcon, UnlockIcon } from '@chakra-ui/icons';
-import { axiosInstance } from "../Helpers/axiosInstance"
+import React, { useEffect, useState, Fragment } from 'react'
+import { axiosInstance } from '../Helpers/axiosInstance'
+
+import {
+    Box,
+    Button,
+    Divider,
+    HStack,
+    Text,
+    Tooltip,
+    useDisclosure
+} from '@chakra-ui/react'
+import { LockIcon, UnlockIcon } from '@chakra-ui/icons'
+
 import UpsertFile from './UpsertFile';
 
 const TableRow = (props) => {

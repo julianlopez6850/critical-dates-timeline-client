@@ -1,8 +1,17 @@
-import { Box, Button, Divider, HStack, Text, Tooltip, VStack } from "@chakra-ui/react";
-import TableRow from "./TableRow";
-import { InfoIcon, LockIcon, UnlockIcon } from '@chakra-ui/icons';
-import DateFilterButton from './DateFilterButton';
 import { useNavigate } from 'react-router-dom';
+
+import {
+    Box,
+    Divider,
+    HStack,
+    Text,
+    Tooltip,
+    VStack
+} from '@chakra-ui/react';
+import { InfoIcon, LockIcon, UnlockIcon } from '@chakra-ui/icons';
+
+import TableRow from './TableRow';
+import DateFilterButton from './DateFilterButton';
 
 const DatesTable = (props) => {
     

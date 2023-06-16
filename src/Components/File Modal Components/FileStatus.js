@@ -1,10 +1,8 @@
-import React from 'react';
-
 import {
     Button,
     HStack,
     Text,
-  } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 
 const FileStatus = (props) => {
     return (

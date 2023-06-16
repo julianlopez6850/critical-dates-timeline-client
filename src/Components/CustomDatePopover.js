@@ -16,7 +16,6 @@ import DateTypeButton from './DateFilterButton';
 import DateInput from './DateInput';
 
 const CustomDatePopover = (props) => {
-
     return (
         <Popover
             isOpen={props.isOpen}

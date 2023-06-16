@@ -1,9 +1,7 @@
-import React from 'react';
-
 import {
     Text,
     Tooltip,
-  } from '@chakra-ui/react'
+} from '@chakra-ui/react'
 
 const FileFooter = (props) => {
     return (
