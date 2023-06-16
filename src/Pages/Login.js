@@ -105,6 +105,9 @@ const Login = () => {
 
                     <FormLabel>Username</FormLabel>
                     <Input
+                        border='2px solid'
+                        borderColor='gray.500'
+                        _hover={{}}
                         type='text'
                         isRequired={true}
                         placeholder="Username"
@@ -117,11 +120,14 @@ const Login = () => {
                     <FormLabel>Password</FormLabel>
                     <InputGroup size='md'>
                         <Input
-                        pr='4.5rem'
-                        type={show ? 'text' : 'password'}
-                        isRequired={true}
-                        onChange={(e) => {setPassword(e.target.value)}}
-                        placeholder='Password'
+                            border='2px solid'
+                            borderColor='gray.500'
+                            _hover={{}}
+                            pr='4.5rem'
+                            type={show ? 'text' : 'password'}
+                            isRequired={true}
+                            onChange={(e) => {setPassword(e.target.value)}}
+                            placeholder='Password'
                         />
                         <InputRightElement width='4.5rem'>
                             <Button 
