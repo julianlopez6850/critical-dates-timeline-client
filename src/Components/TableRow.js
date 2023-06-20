@@ -18,9 +18,14 @@ const TableRow = (props) => {
     
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const [isClosed, setIsClosed] = useState(props.dateInfo.isClosed);
+    const [isClosed, setIsClosed] = useState(props.dateInfo.isClosed === 1 ? true : false);
     const [update, setUpdate] = useState(false);
     const [dateColor, setDateColor] = useState('');
+
+    // If the Date's status is changed within its File's Modal, update the isClosed hook to reflect that change.
+    useEffect(() => {
+        setIsClosed(props.dateInfo.isClosed === 1 ? true : false);
+    }, [props.dateInfo])
 
     // Update the isClosed property of date in database whenever the value is updated by the user &
     // Update the color of a row's Date column depending on its status. i.e.
@@ -29,7 +34,6 @@ const TableRow = (props) => {
     // Upcoming => green
     // Completed => black
     useEffect(() => {
-
         const leadingZero = (num) => {
             if(num < 10)
                 return '0' + num;
@@ -135,6 +139,7 @@ const TableRow = (props) => {
                 onClose={onClose}
                 isOpen={isOpen}
                 fileNo={props.dateInfo.fileNumber}
+                setUpdate={setUpdate}
             />
         </HStack>
     )
