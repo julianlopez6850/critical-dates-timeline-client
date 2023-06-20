@@ -58,24 +58,8 @@ function Main() {
     useEffect(() => {
         axiosInstance.get(`http://localhost:5000/auth/profile`).then((response) => {
             setProfile(profile => {
-                return {...profile, loggedIn: true, user: response.data.username }
+                return {...profile, loggedIn: true, user: response.data.username, actions: profile.actions + 1 }
             })
-            axiosInstance.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}`).then((response) => {
-                setCriticalDates(response.data.dates);
-                setLoading(false);
-            }).catch(() => {
-                setCriticalDates([]);
-                setError(true);
-                setLoading(false);
-                console.warn('ERROR: A problem occurred while trying to retrieve dates. Please try again later.');
-                toast({
-                    title: 'Error.',
-                    description: 'An error occurred while trying to retrieve dates. Try again later',
-                    status: 'error',
-                    duration: 2000,
-                    isClosable: true,
-                })
-            });
         }).catch((error) => {
             setProfile(profile => {
                 return {...profile, loggedIn: false, user: '' }
