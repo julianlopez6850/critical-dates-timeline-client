@@ -11,16 +11,24 @@ import {
     Text,
     MenuDivider,
     Box,
+    useDisclosure,
 } from '@chakra-ui/react'
 import { SettingsIcon } from '@chakra-ui/icons';
 
 import NavbarButton from './NavbarButton';
+import SettingsModal from './SettingsModal';
 
-const Settings = () => {
+const SettingsMenu = () => {
     
     const { profile, setProfile } = useContext(profileContext);
 
     const navigate = useNavigate();
+
+    const { 
+        isOpen: isOpenSettingsModal, 
+        onOpen: onOpenSettingsModal, 
+        onClose: onCloseSettingsModal 
+    } = useDisclosure()
 
     const logoutUser = () => {
         axiosInstance.post('http://localhost:5000/auth/logout').then(() => {
@@ -45,7 +53,7 @@ const Settings = () => {
                     <MenuDivider/>
                     {profile.loggedIn ? 
                         <>
-                            <MenuItem bgColor={'gray.800'} _hover={{bgColor:'gray.600'}}>
+                            <MenuItem bgColor={'gray.800'} _hover={{bgColor:'gray.600'}} onClick={onOpenSettingsModal}>
                                 Settings
                             </MenuItem>
                             <MenuDivider/>
@@ -61,8 +69,13 @@ const Settings = () => {
                     }
                 </MenuList>
             </Menu>
+
+            <SettingsModal
+                isOpen={isOpenSettingsModal}
+                onClose={onCloseSettingsModal}
+            />
         </Box>
     )
 }
 
-export default Settings;
+export default SettingsMenu;

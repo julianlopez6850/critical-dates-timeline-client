@@ -14,7 +14,7 @@ import { SearchIcon, AddIcon, SunIcon, MoonIcon } from '@chakra-ui/icons';
 import NavbarButton from './NavbarButton';
 import FileSelect from './FileSelect';
 import UpsertFile from './UpsertFile';
-import Settings from './Settings';
+import SettingsMenu from './SettingsMenu';
 
 const Navbar = () => {
 
@@ -114,7 +114,7 @@ const Navbar = () => {
                         icon={profile.lightTheme ? <MoonIcon/> : <SunIcon/>} 
                     />
                     {/* Button: Open Settings */}
-                    <Settings/>
+                    <SettingsMenu/>
                 </HStack>
             </HStack>
             <Box w='full' h='2px' bgColor='var(--navbar-seperator)' />

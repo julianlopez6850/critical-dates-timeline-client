@@ -58,7 +58,7 @@ function Main() {
     useEffect(() => {
         axiosInstance.get(`http://localhost:5000/auth/profile`).then((response) => {
             setProfile(profile => {
-                return {...profile, loggedIn: true, user: response.data.username, actions: profile.actions + 1 }
+                return {...profile, loggedIn: true, user: response.data.username, actions: profile.actions + 1, settings: response.data.settings }
             })
         }).catch((error) => {
             setProfile(profile => {
