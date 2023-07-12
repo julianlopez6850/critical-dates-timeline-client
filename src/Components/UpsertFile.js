@@ -184,26 +184,27 @@ const AddFile = (props) => {
 
             if(!props.new && props.fileNo) {
                 axiosInstance.get(`http://localhost:5000/files?fileNumber=${props.fileNo}`).then((response) => {
-                    setOldFileNo(response.data.fileNumber);
-                    setFileNo(response.data.fileNumber);
-                    setFileRef(response.data.fileRef);
-                    setPropertyAddress(response.data.address);
-                    setFolioNo(response.data.folioNo);
-                    setSeller(response.data.seller);
-                    setBuyer(response.data.buyer);
-                    setIsPurchase(response.data.isPurchase);
-                    setWhoRepresenting(response.data.whoRepresenting);
-                    setNotes(response.data.notes);
-                    setIsClosed(response.data.isClosed);
+                    const file = response.data.file;
+                    setOldFileNo(file.fileNumber);
+                    setFileNo(file.fileNumber);
+                    setFileRef(file.fileRef);
+                    setPropertyAddress(file.address);
+                    setFolioNo(file.folioNo);
+                    setSeller(file.seller);
+                    setBuyer(file.buyer);
+                    setIsPurchase(file.isPurchase);
+                    setWhoRepresenting(file.whoRepresenting);
+                    setNotes(file.notes);
+                    setIsClosed(file.isClosed);
     
-                    const responseRoles = JSON.parse(response.data.roles);
+                    const responseRoles = JSON.parse(file.roles);
                     setIsSellerDocs(responseRoles.isSellerDocs);
                     setIsBuyerDocs(responseRoles.isBuyerDocs);
                     setIsEscrowAgent(responseRoles.isEscrowAgent);
                     setIsTitleAgent(responseRoles.isTitleAgent);
                     setIsClosingAgent(responseRoles.isClosingAgent);
     
-                    const responseMilestones = JSON.parse(response.data.milestones);
+                    const responseMilestones = JSON.parse(file.milestones);
                     setIsEscrowReceived(responseMilestones.isEscrowReceived);
                     setIsLienRequested(responseMilestones.isLienRequested);
                     setIsTitleOrdered(responseMilestones.isTitleOrdered);
@@ -214,7 +215,7 @@ const AddFile = (props) => {
                     setIsBuyerDocsDrafted(responseMilestones.isBuyerDocsDrafted);
                     setIsBuyerDocsApproved(responseMilestones.isBuyerDocsApproved);
     
-                    for(const date of response.data.dates) {
+                    for(const date of file.dates) {
                         switch(date.type) {
                             case 'Effective':
                                 setEffective(date.date);
