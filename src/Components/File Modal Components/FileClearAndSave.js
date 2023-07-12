@@ -28,7 +28,7 @@ const FileClearAndSaveButtons = (props) => {
             console.info(`Successfully deleted file ${props.fileNo}`);
             props.toast({
                 title: 'Success!',
-                description: 'Successfully deleted file ${props.fileNo}',
+                description: `Successfully deleted file ${props.fileNo}`,
                 status: 'success',
                 duration: 2000,
                 isClosable: true,
