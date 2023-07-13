@@ -43,6 +43,7 @@ const CustomDatePopover = (props) => {
                             <DateInput
                                 date={props.startDate}
                                 setDate={props.setStartDate}
+                                elementID={':customDateInput-startDate:'}
                             />
                         </HStack>
                         <HStack w='full'>
@@ -50,10 +51,11 @@ const CustomDatePopover = (props) => {
                             <DateInput
                                 date={props.endDate}
                                 setDate={props.setEndDate}
+                                elementID={':customDateInput-endDate:'}
                             />
                         </HStack>
                         <Text fontSize='12px'>
-                            {`Time frame: ${props.startDate || '???'} to ${props.endDate || '???'}`}
+                            {`Time frame: ${props.startDate || 'MM-DD-YY'} to ${props.endDate || 'MM-DD-YY'}`}
                         </Text>
                         <HStack w='full' justifyContent='right'>
                             <Button
