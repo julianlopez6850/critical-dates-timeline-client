@@ -15,17 +15,18 @@ import { LockIcon, UnlockIcon } from '@chakra-ui/icons'
 import UpsertFile from './UpsertFile';
 
 const TableRow = (props) => {
+    const dateInfo = props.dateInfo
     
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const [isClosed, setIsClosed] = useState(props.dateInfo.isClosed === 1 ? true : false);
+    const [isClosed, setIsClosed] = useState(dateInfo.isClosed === 1 ? true : false);
     const [update, setUpdate] = useState(false);
     const [dateColor, setDateColor] = useState('');
 
     // If the Date's status is changed within its File's Modal, update the isClosed hook to reflect that change.
     useEffect(() => {
-        setIsClosed(props.dateInfo.isClosed === 1 ? true : false);
-    }, [props.dateInfo])
+        setIsClosed(dateInfo.isClosed === 1 ? true : false);
+    }, [dateInfo])
 
     // Update the isClosed property of date in database whenever the value is updated by the user &
     // Update the color of a row's Date column depending on its status. i.e.
@@ -43,23 +44,17 @@ const TableRow = (props) => {
         const d = new Date();
         const todayString = `${d.getFullYear()}-${leadingZero(d.getMonth() + 1)}-${leadingZero(d.getDate())}`;
 
-        if(props.dateInfo.isFileClosed || isClosed)
+        if(dateInfo.File.isClosed || isClosed)
             setDateColor('black');
-        else if(props.dateInfo.date === todayString)
+        else if(dateInfo.date === todayString)
             setDateColor('yellow.500');
-        else if(props.dateInfo.date > todayString)
+        else if(dateInfo.date > todayString)
             setDateColor('green.500');
         else
             setDateColor('red.500');
 
         if(update) {
-            const dateInfo = {
-                fileNumber: props.dateInfo.fileNumber,
-                type: props.dateInfo.type,
-                prefix: props.dateInfo.prefix,
-                isClosed: isClosed
-            }
-            
+            dateInfo.isClosed = isClosed;
             axiosInstance.put(`http://localhost:5000/dates`, dateInfo).then(() => {
                 console.info(`Updated Status of ${dateInfo.fileNumber} ${dateInfo.prefix}${dateInfo.type} to ${dateInfo.isClosed ? `CLOSED` : `OPEN`}`);
             }).catch(() => {
@@ -82,29 +77,29 @@ const TableRow = (props) => {
         >
             <Box h='full' w='fit-content' p='10px' bgColor={dateColor} display='flex' alignItems='center' borderRadius='10px' >
                 <Text w='90px' textAlign='center' fontWeight='bold'>
-                    {props.dateInfo.date}
+                    {dateInfo.date}
                 </Text>
             </Box>
 
             <Text w='50px' textAlign='center'>
-                {props.dateInfo.fileNumber}
+                {dateInfo.fileNumber}
             </Text>
 
             <Divider orientation='vertical' h='70%' />
 
             <Text w='81px'  textAlign='center'>
                 {
-                    props.dateInfo.prefix && (
-                        props.dateInfo.prefix === 'First ' && '1st ' || 
-                        props.dateInfo.prefix === 'Second ' && '2nd '
+                    dateInfo.prefix && (
+                        dateInfo.prefix === 'First ' && '1st ' || 
+                        dateInfo.prefix === 'Second ' && '2nd '
                     )
                 }
-                {props.dateInfo.type}
+                {dateInfo.type}
             </Text>
 
             {/* Display Buyer, Seller, Address w/ Tooltip in case of overflow. */}
             {
-                [props.dateInfo.buyer, props.dateInfo.seller, props.dateInfo.address].map((item, index) => {
+                [dateInfo.File.buyer, dateInfo.File.seller, dateInfo.File.address].map((item, index) => {
                     return <Fragment key={index}>
                         <Divider orientation='vertical' h='70%' />
                         <Tooltip
@@ -122,7 +117,7 @@ const TableRow = (props) => {
 
             <Button m='0px !important' w='59px' h='36px' bgColor='transparent'
                 _hover={{bgColor:'transparent'}}
-                isDisabled={props.dateInfo.isFileClosed}
+                isDisabled={dateInfo.File.isClosed}
                 onClick={(e)=>{
                     e.stopPropagation();
                     setIsClosed((isClosed) => !isClosed);
@@ -130,7 +125,7 @@ const TableRow = (props) => {
                 }}
             >
                 <Text w='40px' textAlign='center'>
-                    { (props.dateInfo.isFileClosed || isClosed) && <LockIcon color='red'/> || <UnlockIcon/> }
+                    { (dateInfo.File.isClosed || isClosed) && <LockIcon color='red'/> || <UnlockIcon/> }
                 </Text>
             </Button>
             
@@ -138,8 +133,7 @@ const TableRow = (props) => {
                 new={false}
                 onClose={onClose}
                 isOpen={isOpen}
-                fileNo={props.dateInfo.fileNumber}
-                setUpdate={setUpdate}
+                fileNo={dateInfo.fileNumber}
             />
         </HStack>
     )

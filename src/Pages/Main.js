@@ -33,6 +33,7 @@ function Main() {
     const [isClosed, setIsClosed] = useState(false);
     const [prevWhen, setPrevWhen] = useState();
     const [customDates, setCustomDates] = useState();
+    const [sort, setSort] = useState({ by: 'Date', dir:'ASC'});
 
     const { 
         isOpen: isOpenCustomDate, 
@@ -71,13 +72,13 @@ function Main() {
             else
                 console.warn('ERROR: Server is currently unavailable. Please try again later.');
         });
-    }, [startDate, endDate, dateType, isClosed]);
+    }, [startDate, endDate, dateType, isClosed, sort]);
 
     useEffect(() => {
         if(!profile.loggedIn) {
             setCriticalDates([]);
         } else {
-            axiosInstance.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}`).then((response) => {
+            axiosInstance.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}&sort=${sort.by},${sort.dir}`).then((response) => {
                 setCriticalDates(response.data.dates);
                 setLoading(false);
             }).catch(() => {
@@ -230,6 +231,8 @@ function Main() {
                             when={when}
                             dates={criticalDates}
                             status={status}
+                            sort={sort}
+                            setSort={setSort}
                         /> )
                     }
                 </Box>

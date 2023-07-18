@@ -215,7 +215,7 @@ const AddFile = (props) => {
                     setIsBuyerDocsDrafted(responseMilestones.isBuyerDocsDrafted);
                     setIsBuyerDocsApproved(responseMilestones.isBuyerDocsApproved);
     
-                    for(const date of file.dates) {
+                    for(const date of file.Dates) {
                         switch(date.type) {
                             case 'Effective':
                                 setEffective(date.date);
