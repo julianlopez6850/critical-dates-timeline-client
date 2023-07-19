@@ -7,7 +7,7 @@ const FileSelect = (props) => {
     const {setProfile} = useContext(profileContext);
 
     const validateUser = () => {
-        axiosInstance.get(`http://localhost:5000/auth/profile`).then((response) => {
+        axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then((response) => {
             setProfile(profile => {
                 return {...profile, loggedIn: true, user: response.data.username }
             })

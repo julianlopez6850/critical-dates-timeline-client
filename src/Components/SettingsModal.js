@@ -67,7 +67,7 @@ const SettingsModal = (props) => {
     const updateSettings = () => {
         if(!profile.loggedIn)
             return;
-        axiosInstance.put(`http://localhost:5000/auth/settings`, { username: profile.user, settings: notificationDatesTimes}).then((response) => {
+        axiosInstance.put(`${process.env.REACT_APP_API_URL}/auth/settings`, { username: profile.user, settings: notificationDatesTimes}).then((response) => {
             setProfile(profile => {
                 return {...profile, settings: response.data.settings};
             });

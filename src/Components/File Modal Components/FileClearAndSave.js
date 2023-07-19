@@ -21,7 +21,7 @@ const FileClearAndSaveButtons = (props) => {
     } = useDisclosure()
 
     const deleteFile = () => {
-        axiosInstance.delete(`http://localhost:5000/files`, { data: {fileNumber: props.fileNo}}).then(() => {
+        axiosInstance.delete(`${process.env.REACT_APP_API_URL}/files`, { data: {fileNumber: props.fileNo}}).then(() => {
             setProfile(profile => {
                 return {...profile, actions: profile.actions + 1 }
             })
@@ -90,7 +90,7 @@ const FileClearAndSaveButtons = (props) => {
 
         // if new file, POST to database.
         if(props.new) {
-            axiosInstance.post(`http://localhost:5000/files`, file).then(() => {
+            axiosInstance.post(`${process.env.REACT_APP_API_URL}/files`, file).then(() => {
                 setProfile(profile => {
                     return {...profile, actions: profile.actions + 1 }
                 })
@@ -126,7 +126,7 @@ const FileClearAndSaveButtons = (props) => {
                 }
             })
         } else { // else (if old file), PUT (update) file in database.
-            axiosInstance.put(`http://localhost:5000/files`, file).then(() => {
+            axiosInstance.put(`${process.env.REACT_APP_API_URL}/files`, file).then(() => {
                 setProfile(profile => {
                     return {...profile, actions: profile.actions + 1 }
                 })

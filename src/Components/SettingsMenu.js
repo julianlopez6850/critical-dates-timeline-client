@@ -31,7 +31,7 @@ const SettingsMenu = () => {
     } = useDisclosure()
 
     const logoutUser = () => {
-        axiosInstance.post('http://localhost:5000/auth/logout').then(() => {
+        axiosInstance.post(`${process.env.REACT_APP_API_URL}/auth/logout`).then(() => {
             console.info('You have been logged out successfully.');
             setProfile(profile => {
                 return {...profile, loggedIn: false, user: undefined }

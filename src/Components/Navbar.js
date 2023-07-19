@@ -51,7 +51,7 @@ const Navbar = () => {
         if(profile.loggedIn === false)
             return;
 
-        axiosInstance.get(`http://localhost:5000/files/all`).then((response) => {
+        axiosInstance.get(`${process.env.REACT_APP_API_URL}/files/all`).then((response) => {
             response.data.files.map((file) => {
                 setFiles((files) => [...files, {
                     value: file.fileNumber,

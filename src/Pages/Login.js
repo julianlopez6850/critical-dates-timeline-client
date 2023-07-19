@@ -28,7 +28,7 @@ const Login = () => {
  
     // If a user is already authenticated, navigate to the main page.
     useEffect(() => {
-        axiosInstance.get(`http://localhost:5000/auth/profile`).then(() => {
+        axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then(() => {
             setTimeout(() => navigate('/'), 100);
         }).catch(function (error) {
             if (!error.response)
@@ -38,7 +38,7 @@ const Login = () => {
 
     // Call the login API endpoint with the user-given credentials to attempt to authenticate the user.
     const tryLogin = () => {
-        axiosInstance.post(`http://localhost:5000/auth/login`, { username: username, password: password}).then(() => {
+        axiosInstance.post(`${process.env.REACT_APP_API_URL}/auth/login`, { username: username, password: password}).then(() => {
             console.info(`You are now logged in as ${username.toUpperCase()}`);
             setTimeout(() => navigate('/'), 1500);
             if(!toast.isActive(''))

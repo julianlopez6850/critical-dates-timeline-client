@@ -57,7 +57,7 @@ function Main() {
     }
 
     useEffect(() => {
-        axiosInstance.get(`http://localhost:5000/auth/profile`).then((response) => {
+        axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then((response) => {
             setProfile(profile => {
                 return {...profile, loggedIn: true, user: response.data.username, actions: profile.actions + 1, settings: response.data.settings }
             })
@@ -78,7 +78,7 @@ function Main() {
         if(!profile.loggedIn) {
             setCriticalDates([]);
         } else {
-            axiosInstance.get(`http://localhost:5000/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}&sort=${sort.by},${sort.dir}`).then((response) => {
+            axiosInstance.get(`${process.env.REACT_APP_API_URL}/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}&sort=${sort.by},${sort.dir}`).then((response) => {
                 setCriticalDates(response.data.dates);
                 setLoading(false);
             }).catch(() => {

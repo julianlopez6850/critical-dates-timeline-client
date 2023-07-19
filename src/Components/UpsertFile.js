@@ -177,13 +177,13 @@ const AddFile = (props) => {
             return;
         }
 
-        axiosInstance.get(`http://localhost:5000/auth/profile`).then((response) => {
+        axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then((response) => {
             setProfile(profile => {
                 return {...profile, loggedIn: true, user: response.data.username }
             })
 
             if(!props.new && props.fileNo) {
-                axiosInstance.get(`http://localhost:5000/files?fileNumber=${props.fileNo}`).then((response) => {
+                axiosInstance.get(`${process.env.REACT_APP_API_URL}/files?fileNumber=${props.fileNo}`).then((response) => {
                     const file = response.data.file;
                     setOldFileNo(file.fileNumber);
                     setFileNo(file.fileNumber);

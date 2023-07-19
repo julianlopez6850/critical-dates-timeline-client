@@ -55,7 +55,7 @@ const TableRow = (props) => {
 
         if(update) {
             dateInfo.isClosed = isClosed;
-            axiosInstance.put(`http://localhost:5000/dates`, dateInfo).then(() => {
+            axiosInstance.put(`${process.env.REACT_APP_API_URL}/dates`, dateInfo).then(() => {
                 console.info(`Updated Status of ${dateInfo.fileNumber} ${dateInfo.prefix}${dateInfo.type} to ${dateInfo.isClosed ? `CLOSED` : `OPEN`}`);
             }).catch(() => {
                 console.warn('ERROR. We encountered a problem while trying to update this date. Please try again later.');
