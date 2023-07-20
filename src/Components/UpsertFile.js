@@ -231,8 +231,8 @@ const AddFile = (props) => {
                                         setDepositSecond(date.date);
                                         setIsClosedDepositSecond(date.isClosed)
                                         break;
-                                    default:
                                 }
+                                break;
                             case 'Loan ✓':
                                 setLoanApproval(date.date);
                                 setIsClosedLoanApproval(date.isClosed);
