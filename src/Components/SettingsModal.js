@@ -208,7 +208,11 @@ const SettingsModal = (props) => {
                         </VStack>
                     </HStack>
                 </ModalBody>
-                
+                <ModalFooter>
+                    <Text color='gray.400'>
+                        v{process.env.REACT_APP_VERSION}
+                    </Text>
+                </ModalFooter>
             </ModalContent>
         </Modal>
     )
