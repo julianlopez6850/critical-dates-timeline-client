@@ -122,25 +122,6 @@ const SettingsModal = (props) => {
                                 onChange={(e) => {updateTheme(e)}}
                             />
                         </HStack>
-                        <HStack align='left' justifyContent='space-between'>
-                            <Text alignSelf='center'>
-                                Table Design
-                            </Text>
-                            {/* TODO: Add different table designs. */}
-                            <Tabs>
-                                <TabList>
-                                    <Tab isDisabled={true}>
-                                        Retro
-                                    </Tab>
-                                    <Tab isDisabled={true}>
-                                        Classic
-                                    </Tab>
-                                    <Tab isDisabled={true}>
-                                        Modern
-                                    </Tab>
-                                </TabList>
-                            </Tabs>
-                        </HStack>
                     </VStack>
                     <Text mt='20px' fontWeight='bold'>
                         Notifications
