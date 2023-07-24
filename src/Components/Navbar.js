@@ -103,7 +103,7 @@ const Navbar = () => {
                 {/* Navbar, Center */}
                 <HStack display='flex' justifyContent='center' minW='218px'>                
                     <Text fontSize='20px' fontWeight='bold'>
-                        Critical Times Schedule
+                        Critical Dates Schedule
                     </Text>
                 </HStack>
                 {/* Navbar, Right Side */}

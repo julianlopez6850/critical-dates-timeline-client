@@ -1,6 +1,6 @@
 {
   "name": "critical-dates-schedule-client",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@chakra-ui/icons": "^2.0.18",
@@ -23,8 +23,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "dotenv -e .env.development react-scripts start",
+    "build-production": "dotenv -e .env.production react-scripts build",
+    "build-staging": "dotenv -e .env.staging react-scripts build",
+    "deploy-production": "firebase deploy -P production",
+    "deploy-staging": "firebase deploy -P staging",
+    "predeploy-production": "npm run build-production",
+    "predeploy-staging": "npm run build-staging",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
