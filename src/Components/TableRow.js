@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { LockIcon, UnlockIcon } from '@chakra-ui/icons';
 
-import UpsertFile from './UpsertFile';
+import FileModal from './FileModal';
 import leadingZero from '../Helpers/leadingZero';
 
 const TableRow = (props) => {
@@ -124,7 +124,7 @@ const TableRow = (props) => {
                 </Text>
             </Button>
             
-            <UpsertFile
+            <FileModal
                 new={false}
                 onClose={onClose}
                 isOpen={isOpen}

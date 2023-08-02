@@ -3,7 +3,7 @@ import { profileContext } from '../Helpers/profileContext';
 
 import { Button } from '@chakra-ui/react';
 
-const DateFilterButton = forwardRef(function DateTypeButton(props, ref) {
+const DateFilterButton = forwardRef((props, ref) => {
 
     const { profile } = useContext(profileContext);
 

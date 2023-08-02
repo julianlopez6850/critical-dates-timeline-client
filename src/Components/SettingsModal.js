@@ -12,20 +12,13 @@ import {
     HStack,
     VStack,
     Divider,
-    useToast,
-    Spinner,
     Text,
     ModalHeader,
     Checkbox,
     Stack,
     Input,
     Switch,
-    Tabs,
-    Tab,
-    TabList,
 } from '@chakra-ui/react'
-
-import NavbarButton from './NavbarButton';
 
 const SettingsModal = (props) => {
     

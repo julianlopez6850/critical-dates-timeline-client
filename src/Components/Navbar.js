@@ -13,7 +13,7 @@ import { SearchIcon, AddIcon, SunIcon, MoonIcon } from '@chakra-ui/icons';
 
 import NavbarButton from './NavbarButton';
 import FileSelect from './FileSelect';
-import UpsertFile from './UpsertFile';
+import FileModal from './FileModal';
 import SettingsMenu from './SettingsMenu';
 
 const Navbar = () => {
@@ -71,12 +71,6 @@ const Navbar = () => {
         });
     }, [profile.loggedIn, profile.actions]);
 
-    const searchFile = () => {
-        if(selectedFile) {
-            onOpenFileEditor();
-        }
-    }
-
     return (
         <Box w='full'>
             <HStack h='60px' w='full' bgColor='var(--navbar-color)' textColor='white' display='flex' justifyContent='space-between' paddingInline='10px'>
@@ -91,12 +85,15 @@ const Navbar = () => {
                         }}
                     />
                     <NavbarButton
-                        onClick={(e) => {searchFile()}}
+                        onClick={() => {
+                            if(selectedFile)
+                                onOpenFileEditor();
+                        }}
                         icon={<SearchIcon/>}
                     />
                     {/* Button: Add New File */}
                     <NavbarButton
-                        onClick={(e) => {onOpenFileCreator()}}
+                        onClick={onOpenFileCreator}
                         icon={<AddIcon/>}
                     />
                 </HStack>
@@ -119,12 +116,12 @@ const Navbar = () => {
             </HStack>
             <Box w='full' h='2px' bgColor='var(--navbar-seperator)' />
 
-            <UpsertFile
+            <FileModal
                 new={true}
                 onClose={onCloseFileCreator}
                 isOpen={isOpenFileCreator}
             />
-            <UpsertFile
+            <FileModal
                 new={false}
                 onClose={onCloseFileEditor}
                 isOpen={isOpenFileEditor}

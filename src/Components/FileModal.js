@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { profileContext } from '../Helpers/profileContext'
-import { axiosInstance } from '../Helpers/axiosInstance'
+import React, { useState, useEffect, useContext } from 'react';
+import { profileContext } from '../Helpers/profileContext';
+import { axiosInstance } from '../Helpers/axiosInstance';
 
 import {
     Modal,
@@ -15,20 +15,20 @@ import {
     useToast,
     Spinner,
     Text,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
-import FileNoAndRefInput from './File Modal Components/FileNoAndRefInput'
-import FileTaskInfo from './File Modal Components/FileTaskInfo'
-import FileBuyerAndSeller from './File Modal Components/FileBuyerAndSeller'
-import FilePropertyInfo from './File Modal Components/FilePropertyInfo'
-import FileDates from './File Modal Components/FileDates'
-import FileMilestones from './File Modal Components/FileMilestones'
-import FileNotes from './File Modal Components/FileNotes'
-import FileStatus from './File Modal Components/FileStatus'
-import FileClearAndSave from './File Modal Components/FileClearAndSave'
-import FileFooter from './File Modal Components/FileFooter'
+import FileNoAndRefInput from './File Modal Components/FileNoAndRefInput';
+import FileTaskInfo from './File Modal Components/FileTaskInfo';
+import FileBuyerAndSeller from './File Modal Components/FileBuyerAndSeller';
+import FilePropertyInfo from './File Modal Components/FilePropertyInfo';
+import FileDates from './File Modal Components/FileDates';
+import FileMilestones from './File Modal Components/FileMilestones';
+import FileNotes from './File Modal Components/FileNotes';
+import FileStatus from './File Modal Components/FileStatus';
+import FileClearAndSave from './File Modal Components/FileClearAndSave';
+import FileFooter from './File Modal Components/FileFooter';
 
-const AddFile = (props) => {
+const FileModal = (props) => {
 
     const { profile, setProfile } = useContext(profileContext);
     
@@ -612,4 +612,4 @@ const AddFile = (props) => {
     )
 }
 
-export default AddFile;
+export default FileModal;

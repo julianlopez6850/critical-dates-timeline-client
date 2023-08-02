@@ -12,7 +12,7 @@ import {
     Button,
 } from '@chakra-ui/react';
 
-import DateTypeButton from './DateFilterButton';
+import DateFilterButton from './DateFilterButton';
 import DateInput from './DateInput';
 
 const CustomDatePopover = (props) => {
@@ -24,7 +24,7 @@ const CustomDatePopover = (props) => {
             placement={'bottom'}
         >
             <PopoverTrigger>
-                <DateTypeButton
+                <DateFilterButton
                     text={props.item}
                     onClick={() => {props.setWhen(props.item)}}
                     active={props.when === props.item}
