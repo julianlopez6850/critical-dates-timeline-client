@@ -117,6 +117,12 @@ const AddFile = (props) => {
     const [isClosedInspection, setIsClosedInspection] = useState(false);
     const [isClosedClosing, setIsClosedClosing] = useState(false);
 
+    const [isCalculatedDepositInit, setIsCalculatedDepositInit] = useState({});
+    const [isCalculatedDepositSecond, setIsCalculatedDepositSecond] = useState({});
+    const [isCalculatedLoanApproval, setIsCalculatedLoanApproval] = useState({});
+    const [isCalculatedInspection, setIsCalculatedInspection] = useState({});
+    const [isCalculatedClosing, setIsCalculatedClosing] = useState({});
+
     const dates = [
         {
             label: 'Effective', 
@@ -130,35 +136,45 @@ const AddFile = (props) => {
             value: depositInit, 
             setValue: setDepositInit, 
             isClosed: isClosedDepositInit, 
-            setIsClosed: setIsClosedDepositInit
+            setIsClosed: setIsClosedDepositInit,
+            isCalculated: isCalculatedDepositInit,
+            setIsCalculated: setIsCalculatedDepositInit
         },
         {
             label: 'Deposit 2', 
             value: depositSecond, 
             setValue: setDepositSecond, 
             isClosed: isClosedDepositSecond, 
-            setIsClosed: setIsClosedDepositSecond
+            setIsClosed: setIsClosedDepositSecond,
+            isCalculated: isCalculatedDepositSecond,
+            setIsCalculated: setIsCalculatedDepositSecond
         },
         {
             label: 'Loan ✓', 
             value: loanApproval, 
             setValue: setLoanApproval, 
             isClosed: isClosedLoanApproval, 
-            setIsClosed: setIsClosedLoanApproval
+            setIsClosed: setIsClosedLoanApproval,
+            isCalculated: isCalculatedLoanApproval,
+            setIsCalculated: setIsCalculatedLoanApproval
         },
         {
             label: 'Inspection', 
             value: inspection, 
             setValue: setInspection, 
             isClosed: isClosedInspection, 
-            setIsClosed: setIsClosedInspection
+            setIsClosed: setIsClosedInspection,
+            isCalculated: isCalculatedInspection,
+            setIsCalculated: setIsCalculatedInspection
         },
         {
             label: 'Closing', 
             value: closing, 
             setValue: setClosing, 
             isClosed: isClosedClosing, 
-            setIsClosed: setIsClosedClosing
+            setIsClosed: setIsClosedClosing,
+            isCalculated: isCalculatedClosing,
+            setIsCalculated: setIsCalculatedClosing
         }
     ]
 
@@ -225,25 +241,30 @@ const AddFile = (props) => {
                                 switch(date.prefix) {
                                     case 'First ':
                                         setDepositInit(date.date);
-                                        setIsClosedDepositInit(date.isClosed)
+                                        setIsClosedDepositInit(date.isClosed);
+                                        setIsCalculatedDepositInit(date.calculatedDate);
                                         break;
                                     case 'Second ':
                                         setDepositSecond(date.date);
-                                        setIsClosedDepositSecond(date.isClosed)
+                                        setIsClosedDepositSecond(date.isClosed);
+                                        setIsCalculatedDepositSecond(date.calculatedDate);
                                         break;
                                 }
                                 break;
                             case 'Loan ✓':
                                 setLoanApproval(date.date);
                                 setIsClosedLoanApproval(date.isClosed);
+                                setIsCalculatedLoanApproval(date.calculatedDate);
                                 break;
                             case 'Inspection':
                                 setInspection(date.date);
                                 setIsClosedInspection(date.isClosed);
+                                setIsCalculatedInspection(date.calculatedDate);
                                 break;
                             case 'Closing':
                                 setClosing(date.date);
                                 setIsClosedClosing(date.isClosed);
+                                setIsCalculatedClosing(date.calculatedDate);
                                 break;
                         }
                     }
@@ -389,6 +410,11 @@ const AddFile = (props) => {
         setIsClosedLoanApproval(false);
         setIsClosedInspection(false);
         setIsClosedClosing(false);
+        setIsCalculatedDepositInit({});
+        setIsCalculatedDepositSecond({});
+        setIsCalculatedLoanApproval({});
+        setIsCalculatedInspection({});
+        setIsCalculatedClosing({});
         setIsEscrowReceived(false);
         setIsLienRequested(false);
         setIsTitleOrdered(false);
@@ -439,7 +465,7 @@ const AddFile = (props) => {
             onClose={() => { props.onClose() }}
             isOpen={props.isOpen}
             motionPreset='slideInBottom'
-            size='4xl'
+            size='5xl'
         >
             <ModalOverlay />
             <ModalContent
@@ -558,6 +584,11 @@ const AddFile = (props) => {
                                             isClosedLoanApproval={isClosedLoanApproval}
                                             isClosedInspection={isClosedInspection}
                                             isClosedClosing={isClosedClosing}
+                                            isCalculatedDepositInit={isCalculatedDepositInit}
+                                            isCalculatedDepositSecond={isCalculatedDepositSecond}
+                                            isCalculatedLoanApproval={isCalculatedLoanApproval}
+                                            isCalculatedInspection={isCalculatedInspection}
+                                            isCalculatedClosing={isCalculatedClosing}
                                             isClosed={isClosed}
                                             roles={roles}
                                             milestones={milestones}

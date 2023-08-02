@@ -1,5 +1,5 @@
-import React, { useEffect, useState, Fragment } from 'react'
-import { axiosInstance } from '../Helpers/axiosInstance'
+import React, { useEffect, useState, Fragment } from 'react';
+import { axiosInstance } from '../Helpers/axiosInstance';
 
 import {
     Box,
@@ -9,10 +9,11 @@ import {
     Text,
     Tooltip,
     useDisclosure
-} from '@chakra-ui/react'
-import { LockIcon, UnlockIcon } from '@chakra-ui/icons'
+} from '@chakra-ui/react';
+import { LockIcon, UnlockIcon } from '@chakra-ui/icons';
 
 import UpsertFile from './UpsertFile';
+import leadingZero from '../Helpers/leadingZero';
 
 const TableRow = (props) => {
     const dateInfo = props.dateInfo
@@ -35,12 +36,6 @@ const TableRow = (props) => {
     // Upcoming => green
     // Completed => black
     useEffect(() => {
-        const leadingZero = (num) => {
-            if(num < 10)
-                return '0' + num;
-            return num;
-        }
-        
         const d = new Date();
         const todayString = `${d.getFullYear()}-${leadingZero(d.getMonth() + 1)}-${leadingZero(d.getDate())}`;
 

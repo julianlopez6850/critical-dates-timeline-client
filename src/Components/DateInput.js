@@ -1,26 +1,16 @@
 import { useState } from 'react';
 
+import {
+    Text,
+    Tooltip
+} from '@chakra-ui/react';
+
 import { DateField } from '@mui/x-date-pickers';
-import { Text, Tooltip } from '@chakra-ui/react';
+import trySetDate from '../Helpers/trySetDate';
 
 const DateInput = (props) => {
 
     const [inputError, setInputError] = useState(undefined);
-
-    const trySetDate = async (setDate) => {
-        var M = '1', D = '1', Y='1';
-        setTimeout(()=>{
-            M = document.getElementById(props.elementID).value.slice(0,2);
-            D = document.getElementById(props.elementID).value.slice(3,5);
-            Y = document.getElementById(props.elementID).value.slice(6) >= 2000 && document.getElementById(props.elementID).value.slice(6) < 2050 ? 
-                document.getElementById(props.elementID).value.slice(6) : 'YYYY';
-            // If the input date is valid, set it. Otherwise, set date as undefined.
-            if([M, D, Y].every(isNum => /^\d+$/.test(isNum)))
-                setDate(`${M}-${D}-${Y}`);
-            else
-                setDate(undefined);
-        });
-    }
 
     return (
         <Tooltip
@@ -60,7 +50,11 @@ const DateInput = (props) => {
                         textAlign:'center'
                     },
                 }}
-                onKeyDown={() => {trySetDate(props.setDate)}}
+                onKeyDown={() => {
+                    setTimeout(() => {
+                        trySetDate(document.getElementById(props.elementID).value, props.setDate)
+                    })
+                }}
                 onError={(err) => {
                     if(err === null)
                         return setInputError(undefined);

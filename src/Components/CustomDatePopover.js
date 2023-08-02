@@ -41,7 +41,6 @@ const CustomDatePopover = (props) => {
                         <HStack w='full'>
                             <Text w='70px' textAlign='left' fontSize='14px'>Start Date: </Text>
                             <DateInput
-                                date={props.startDate}
                                 setDate={props.setStartDate}
                                 elementID={':customDateInput-startDate:'}
                             />
@@ -49,7 +48,6 @@ const CustomDatePopover = (props) => {
                         <HStack w='full'>
                             <Text w='70px' textAlign='left' fontSize='14px'>End Date: </Text>
                             <DateInput
-                                date={props.endDate}
                                 setDate={props.setEndDate}
                                 elementID={':customDateInput-endDate:'}
                             />

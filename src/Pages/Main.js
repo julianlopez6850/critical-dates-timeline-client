@@ -15,6 +15,7 @@ import {
 import DateFilterButton from '../Components/DateFilterButton'
 import CustomDatePopover from '../Components/CustomDatePopover'
 import DatesTable from '../Components/Table'
+import leadingZero from '../Helpers/leadingZero'
 
 function Main() {
 
@@ -49,12 +50,6 @@ function Main() {
     ];
     const statuses = ['All', 'Open', 'Closed'];
     const timeframes = ['All', 'Past Due', 'Today', 'This Week', 'Upcoming', 'Custom'];
-
-    const leadingZero = (num) => {
-        if(num < 10)
-            return '0' + num;
-        return num;
-    }
 
     useEffect(() => {
         axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then((response) => {

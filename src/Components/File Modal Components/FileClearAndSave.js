@@ -1,12 +1,12 @@
 import { useContext } from 'react';
 import { profileContext } from '../../Helpers/profileContext';
-import { axiosInstance } from '../../Helpers/axiosInstance'
+import { axiosInstance } from '../../Helpers/axiosInstance';
 
 import {
     HStack,
     Button,
     useDisclosure,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
 import FileDeleteDialog from './FileDeleteDialog';
 
@@ -81,6 +81,11 @@ const FileClearAndSaveButtons = (props) => {
             isClosedInspection: props.isClosedInspection,
             isClosedClosing: props.isClosedClosing,
             isClosed: props.isClosed,
+            isCalculatedDepositInitial: props.isCalculatedDepositInit,
+            isCalculatedDepositSecond: props.isCalculatedDepositSecond,
+            isCalculatedLoanApproval: props.isCalculatedLoanApproval,
+            isCalculatedInspection: props.isCalculatedInspection,
+            isCalculatedClosing: props.isCalculatedClosing,
             notes: props.notes,
             whoRepresenting: props.whoRepresenting,
             isPurchase: props.isPurchase,
