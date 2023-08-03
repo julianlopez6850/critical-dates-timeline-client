@@ -23,6 +23,7 @@ import {
     PopoverFooter,
     Box,
     useDisclosure,
+    Tooltip,
 } from '@chakra-ui/react';
 import { CalculateOutlined } from '@mui/icons-material';
 
@@ -148,13 +149,26 @@ const CalculateDatePopover = (props) => {
                     ml='4px !important'
                     minW='32px'
                     h='32px'
-                    isDisabled={props.isFileClosed || (props.type === 'Effective')}
+                    isDisabled={props.isFileClosed || props.isDateClosed || (props.type === 'Effective')}
                     color={(props.isFileClosed || props.isDateClosed) ? 'red' : (props.isCalculated && props.isCalculated.isCalculated) ? '#EECC33' : '#B1B1B1'}
                     bg='transparent'
                     _hover={{bg:'#FFFFFF15'}}
                     transition='0s'
                 >
-                    <CalculateOutlined/>
+                    <Tooltip
+                        w='fit-content'
+                        maxW='250px'
+                        textAlign='center'
+                        whiteSpace='pre-wrap'
+                        label={
+                            props.type === 'Effective' ? 'Effective Date cannot use Calculator' :
+                            props.isFileClosed ? 'File status is Closed or Cancelled.\nRe-open it to update Date.' :
+                            props.isDateClosed ? 'Date status is Closed.\nRe-open it to update Date.' : ''
+                    }>
+                        <Box w='32px' h='32px' display='flex' justifyContent='center' alignItems='center'>
+                            <CalculateOutlined/>
+                        </Box>
+                    </Tooltip>
                 </Button>
             </PopoverTrigger>
             <PopoverContent color='white' bg='blue.800' borderColor='blue.800' w='250px' h='250px' justifyContent='space-between'>
