@@ -76,6 +76,7 @@ const Navbar = () => {
                         onChange={(selection) => {
                             setSelectedFile(selection);
                         }}
+                        openFile={onOpenFileEditor}
                     />
                     <NavbarButton
                         onClick={() => {

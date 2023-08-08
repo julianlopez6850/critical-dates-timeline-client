@@ -1,10 +1,12 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import Select from 'react-select';
 import { profileContext } from '../Helpers/profileContext';
 import { axiosInstance } from '../Helpers/axiosInstance';
 
 const FileSelect = (props) => {
     const {setProfile} = useContext(profileContext);
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const validateUser = () => {
         axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then((response) => {
@@ -24,12 +26,21 @@ const FileSelect = (props) => {
 
     return (
         <Select
-            onMenuOpen={()=>{validateUser()}}
+            onMenuOpen={() => { validateUser(); setIsMenuOpen(true) }}
+            onMenuClose={() => { setIsMenuOpen(false) }}
             className='select'
             options={props.options}
             value={props.value}
             onChange={props.onChange}
+            onKeyDown={(e) => {
+                if(e.key === 'Enter' && !isMenuOpen && document.getElementById('file-select-input').value === '') {
+                    console.log()
+                    e.preventDefault();
+                    props.openFile();
+                }
+            }}
             placeholder='Select File...'
+            inputId='file-select-input'
             styles={{
                 container: (baseStyles) => ({
                     ...baseStyles,
