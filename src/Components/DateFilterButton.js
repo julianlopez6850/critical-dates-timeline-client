@@ -11,22 +11,17 @@ const DateFilterButton = forwardRef((props, ref) => {
         <Button ref={ref}
             fontSize={props.fontSize || 16}
             variant='link'
-            color={(profile.lightTheme) ? 
-                (props.active) ? 'black' : 'gray.500' :
-                (props.active) ? 'white' : 'gray.400'
+            color={(profile.darkMode) ? 
+                (props.active) ? 'white' : 'gray.400' :
+                (props.active) ? 'black' : 'gray.500'
             }
-            borderBottom={(profile.lightTheme) ? 
-                (props.active) ? '2px solid black' : '2px solid transparent' :
-                (props.active) ? '2px solid white' : '2px solid transparent'
+            borderBottom={(profile.darkMode) ? 
+                (props.active) ? '2px solid white' : '2px solid transparent' :
+                (props.active) ? '2px solid black' : '2px solid transparent'
             }
             borderRadius='0'
             textShadow={(props.active) ? '0px 0px 1px' : ''}
-            _hover={(props.active) ? {
-                cursor:'default'} : profile.lightTheme ?
-                {
-                    textShadow:'0px 0px 1px',
-                    cursor:'pointer'
-                } : 
+            _hover={(props.active) ? { cursor:'default' } : 
                 {
                     textShadow:'0px 0px 1px',
                     cursor:'pointer'

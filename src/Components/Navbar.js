@@ -9,7 +9,7 @@ import {
     Text,
     useToast,
 } from '@chakra-ui/react';
-import { SearchIcon, AddIcon, SunIcon, MoonIcon } from '@chakra-ui/icons';
+import { SearchIcon, AddIcon} from '@chakra-ui/icons';
 
 import NavbarButton from './NavbarButton';
 import FileSelect from './FileSelect';
@@ -18,7 +18,7 @@ import SettingsMenu from './SettingsMenu';
 
 const Navbar = () => {
 
-    const {profile, setProfile} = useContext(profileContext);
+    const { profile } = useContext(profileContext);
 
     const toast = useToast();
 
@@ -36,13 +36,6 @@ const Navbar = () => {
 
     const [files, setFiles] = useState([]);
     const [selectedFile, setSelectedFile] = useState();
-
-    const updateTheme = (e) => {
-        e.preventDefault();
-        setProfile(profile => {
-            return { ...profile, lightTheme: !profile.lightTheme }
-        });
-    }
 
     useEffect(() => {
         setFiles([]);
@@ -104,12 +97,7 @@ const Navbar = () => {
                     </Text>
                 </HStack>
                 {/* Navbar, Right Side */}
-                <HStack display='flex' justifyContent='right' w='320px' minW='120px'>
-                    {/* Button: Switch between light and dark background theme */}
-                    <NavbarButton
-                        onClick={(e) => {updateTheme(e)}}
-                        icon={profile.lightTheme ? <MoonIcon/> : <SunIcon/>} 
-                    />
+                <HStack display='flex' justifyContent='right' w='320px' minW='52px'>
                     {/* Button: Open Settings */}
                     <SettingsMenu/>
                 </HStack>

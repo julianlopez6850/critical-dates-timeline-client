@@ -26,7 +26,7 @@ const materialTheme = muiCreateTheme();
 
 function App() {
 
-  const [profile, setProfile] =  useState({ loggedIn: false, user: undefined, lightTheme: true, actions: 0, settings: undefined });
+  const [profile, setProfile] =  useState({ loggedIn: false, user: undefined, darkMode: false, actions: 0, notificationSettings: undefined });
 
   return (
     <ChakraProvider theme={chakraTheme} resetCSS>
@@ -34,8 +34,8 @@ function App() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <profileContext.Provider value = {{ profile, setProfile }}>
             <Box className='App' w='full'
-              bgColor={profile.lightTheme ? 'var(--background-light)' : 'var(--background-dark)'}
-              textColor={profile.lightTheme ? 'var(--text-color-light)' : 'var(--text-color-dark)'}
+              bgColor={profile.darkMode ? 'var(--background-dark)' : 'var(--background-light)'}
+              textColor={profile.darkMode ? 'var(--text-color-dark)' : 'var(--text-color-light)'}
             >
               <Router>
                 <Navbar/>

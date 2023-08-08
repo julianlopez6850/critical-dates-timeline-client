@@ -53,16 +53,26 @@ const SettingsModal = (props) => {
     const updateTheme = (e) => {
         e.preventDefault();
         setProfile(profile => {
-            return { ...profile, lightTheme: !profile.lightTheme }
+            return { ...profile, darkMode: !profile.darkMode }
         });
     }
+
+    useEffect(() => {
+        axiosInstance.put(`${process.env.REACT_APP_API_URL}/auth/settings`, { username: profile.user, settings: {...notificationDatesTimes, darkMode: profile.darkMode}}).then((response) => {
+            console.log('Your settings have been updated successfully.');
+        }).catch(() => {
+            console.warn('ERROR: A problem occurred while trying to update your settings. Please try again later.');
+        })
+    }, [profile.darkMode])
     
-    const updateSettings = () => {
+    const updateNotificationSettings = () => {
         if(!profile.loggedIn)
             return;
-        axiosInstance.put(`${process.env.REACT_APP_API_URL}/auth/settings`, { username: profile.user, settings: notificationDatesTimes}).then((response) => {
+        axiosInstance.put(`${process.env.REACT_APP_API_URL}/auth/settings`, { username: profile.user, settings: {...notificationDatesTimes, darkMode: profile.darkMode}}).then((response) => {
+            const notificationSettings = response.data.settings;
+            delete notificationSettings.darkMode;
             setProfile(profile => {
-                return {...profile, settings: response.data.settings};
+                return {...profile, notificationSettings: notificationSettings};
             });
             console.log('Your settings have been updated successfully.');
         }).catch(() => {
@@ -74,12 +84,12 @@ const SettingsModal = (props) => {
         if(Object.values(notificationDatesTimes).every(value => value.time === notificationDatesTimes.Mon.time))
             setAllAtValue(notificationDatesTimes.Mon.time);
         if(props.isOpen)
-            updateSettings();
+            updateNotificationSettings();
     }, [notificationDatesTimes])
 
     useEffect(() => {
         if(profile.loggedIn)
-            setNotificationDatesTimes(profile.settings);
+            setNotificationDatesTimes(profile.notificationSettings);
     }, [profile.loggedIn])
 
     return (
@@ -111,7 +121,7 @@ const SettingsModal = (props) => {
                                 Dark Mode
                             </Text>
                             <Switch
-                                isChecked={!profile.lightTheme}
+                                isChecked={profile.darkMode}
                                 onChange={(e) => {updateTheme(e)}}
                             />
                         </HStack>
