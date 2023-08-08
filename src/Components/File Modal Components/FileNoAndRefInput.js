@@ -21,6 +21,7 @@ const FileNoAndRefInput = (props) => {
                     maxLength='5'
                     onChange={(e)=>{props.setFileNo(e.target.value)}}
                     isInvalid={props.isFileNoError}
+                    autoFocus={true}
                 />
             </Tooltip>
 

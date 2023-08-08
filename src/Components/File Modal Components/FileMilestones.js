@@ -16,7 +16,7 @@ const FileMilestones = (props) => {
                     if(item.role)
                         return (
                             <HStack w='170px' spacing='0' key={index}>
-                                <Checkbox spacing='2' size='sm' onChange={(e)=>{item.set(e.target.checked)}} defaultChecked={item.value} isChecked={item.value}>
+                                <Checkbox spacing='2' size='sm' onChange={(e)=>{item.set(e.target.checked)}} defaultChecked={item.value} isChecked={item.value} tabIndex={-1}>
                                     {item.label}
                                 </Checkbox>
                             </HStack>

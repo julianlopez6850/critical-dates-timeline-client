@@ -98,6 +98,7 @@ const FileDates = (props) => {
                                 }}
                                 isDisabled={props.isClosed}
                                 transition='0s'
+                                tabIndex={-1}
                             >
                                 <Text display='flex'>
                                     { (props.isClosed || item.isClosed) && <LockIcon/> || <UnlockIcon/> }

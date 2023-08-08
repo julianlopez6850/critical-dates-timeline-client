@@ -48,7 +48,7 @@ const FileTaskInfo = (props) => {
                     </Text>
                     <Popover h='30px'>
                         <PopoverTrigger>
-                            <Button h='30px' paddingInline='10px' backgroundColor='transparent' _hover={{backgroundColor:'whiteAlpha.100'}} _active={{backgroundColor:'whiteAlpha.200'}} border='1px solid white' fontWeight='normal' color='whiteAlpha.700'>
+                            <Button h='30px' paddingInline='10px' backgroundColor='transparent' _hover={{backgroundColor:'whiteAlpha.100'}} _active={{backgroundColor:'whiteAlpha.200'}} border='1px solid white' fontWeight='normal' color='whiteAlpha.700' tabIndex={-1}>
                                 Select... <ChevronDownIcon/>
                             </Button>
                         </PopoverTrigger>

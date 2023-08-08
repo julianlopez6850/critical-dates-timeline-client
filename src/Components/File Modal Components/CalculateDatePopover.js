@@ -154,6 +154,7 @@ const CalculateDatePopover = (props) => {
                     bg='transparent'
                     _hover={{bg:'#FFFFFF15'}}
                     transition='0s'
+                    tabIndex={-1}
                 >
                     <Tooltip
                         w='fit-content'
