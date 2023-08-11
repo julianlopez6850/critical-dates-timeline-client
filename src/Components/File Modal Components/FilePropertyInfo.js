@@ -1,4 +1,5 @@
 import {
+    Stack,
     HStack,
     Text,
     Tooltip,
@@ -7,28 +8,37 @@ import {
 
 const FilePropertyInfo = (props) => {
     return (
-        <HStack w='full' mt='5px !important'>
-            <Text minW='57px'>
-                Property
-            </Text>
-            <Tooltip label={props.isPropertyError || ''}>
+        <Stack direction={props.stackDir} w='full' mt='8px !important'>
+            <HStack w='full'>
+                <Text minW={props.minW}>
+                    Property
+                </Text>
+                <Tooltip label={props.isPropertyError || ''}>
+                    <Input
+                        height={props.height}
+                        paddingInline={props.padding}
+                        borderRadius='10px'
+                        fontSize={props.fontSize}
+                        value={props.propertyAddress}
+                        onChange={(e) => {props.setPropertyAddress(e.target.value)}}
+                        isInvalid={props.isPropertyError}
+                    />
+                </Tooltip>
+            </HStack>
+            <HStack minW='250px'>
+                <Text minW={props.stackDir === 'column' ? props.minW : 'fit-content'}>
+                    Folio
+                </Text>
                 <Input
-                    size='sm' borderRadius='10px'
-                    value={props.propertyAddress}
-                    onChange={(e) => {props.setPropertyAddress(e.target.value)}}
-                    isInvalid={props.isPropertyError}
+                    height={props.height}
+                    paddingInline={props.padding}
+                    borderRadius='10px'
+                    fontSize={props.fontSize}
+                    value={props.folioNo}
+                    onChange={(e) => {props.setFolioNo(e.target.value)}}
                 />
-            </Tooltip>
-
-            <Text>
-                Folio
-            </Text>
-            <Input
-                w='300px' size='sm' borderRadius='10px'
-                value={props.folioNo}
-                onChange={(e) => {props.setFolioNo(e.target.value)}}
-            />
-        </HStack>
+            </HStack>
+        </Stack>
     )
 }
 

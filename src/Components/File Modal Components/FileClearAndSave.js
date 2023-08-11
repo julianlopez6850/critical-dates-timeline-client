@@ -152,14 +152,14 @@ const FileClearAndSaveButtons = (props) => {
         <HStack h='40px'>
             {/* If adding a new file, show Clear Fields Button. If updating an existing file, show Delete File Button */}
             {props.new &&
-                <Button w='120px' colorScheme='red' onClick={()=>{props.resetAllValues()}}>
+                <Button w={props.otherButtonsW} height={props.buttonH} colorScheme='red' fontSize={props.fontSize} onClick={()=>{props.resetAllValues()}}>
                     CLEAR FIELDS
                 </Button> ||
-                <Button w='120px' colorScheme='red' onClick={()=>{onOpenDeleteFile()}}>
+                <Button w={props.otherButtonsW} height={props.buttonH} colorScheme='red' fontSize={props.fontSize} onClick={()=>{onOpenDeleteFile()}}>
                     DELETE FILE
                 </Button>
             }
-            <Button w='100px' colorScheme='blue' onClick={()=>{trySaveFile()}}>
+            <Button w={props.saveButtonW} height={props.buttonH} colorScheme='blue' fontSize={props.fontSize} onClick={()=>{trySaveFile()}}>
                 SAVE
             </Button>
 

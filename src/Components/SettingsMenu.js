@@ -18,7 +18,7 @@ import { SettingsIcon } from '@chakra-ui/icons';
 import NavbarButton from './NavbarButton';
 import SettingsModal from './SettingsModal';
 
-const SettingsMenu = () => {
+const SettingsMenu = (props) => {
     
     const { profile, setProfile } = useContext(profileContext);
 
@@ -45,18 +45,19 @@ const SettingsMenu = () => {
                 <MenuButton
                     as={NavbarButton}
                     icon={<SettingsIcon/>}
+                    size={props.size}
                 />
-                <MenuList bgColor={'gray.800'}>
-                    <Text>
+                <MenuList bgColor={'gray.800'} minWidth={props.width} width={props.width} fontSize={props.fontSize}>
+                    <Text h='30px' textAlign='center' padding='4px'>
                         HELLO, {profile.user ? profile.user.toUpperCase() : 'GUEST'}
                     </Text>
-                    <MenuDivider/>
+                    <MenuDivider marginInline='5px' marginBlock={props.margin}/>
                     {profile.loggedIn ? 
                         <>
                             <MenuItem bgColor={'gray.800'} _hover={{bgColor:'gray.600'}} onClick={onOpenSettingsModal}>
                                 Settings
                             </MenuItem>
-                            <MenuDivider/>
+                            <MenuDivider marginInline='5px' marginBlock={props.margin}/>
                             <MenuItem bgColor={'gray.800'} _hover={{bgColor:'gray.600'}} onClick={()=>{logoutUser()}}>
                                 Logout
                             </MenuItem>

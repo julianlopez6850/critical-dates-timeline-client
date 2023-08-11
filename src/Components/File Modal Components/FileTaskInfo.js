@@ -1,6 +1,7 @@
 import {
     Button,
     HStack,
+    Stack,
     Text,
     Tabs,
     TabList,
@@ -17,38 +18,64 @@ import { ChevronDownIcon, } from '@chakra-ui/icons';
 
 const FileTaskInfo = (props) => {
     return (
-        <HStack width='full' justify='space-between' mt='10px'>
+        <Stack direction={props.stackDir} width='full' justify='space-between' mt={props.spacing} spacing={props.spacing}>
             <HStack>
-                <Text minW='fit-content' fontWeight='bold'>
+                <Text minW='fit-content' fontWeight='bold' fontSize={props.fontSize}>
                     File Type:
                 </Text>
-                <Tabs h='25px' variant='enclosed' colorScheme='white' defaultIndex={props.isPurchase ? 0 : 1}>
-                    <TabList h='25px' border='none'>
-                        <Tab paddingInline='5px' w='80px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {props.setIsPurchase(true)}}>Purchase</Tab>
-                        <Tab paddingInline='5px' w='80px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {props.setIsPurchase(false)}}>Refinance</Tab>
+                <Tabs h={props.height} variant='enclosed' colorScheme='white' defaultIndex={props.isPurchase ? 0 : 1}>
+                    <TabList h={props.height} border='none'>
+                        <Tab
+                            w={props.fileTypeTabsW} h={props.height} p='0px' border='none' color='whiteAlpha.700' fontSize={props.fontSize}
+                            _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}}
+                            onClick={() => {props.setIsPurchase(true)}}
+                        >
+                            Purchase
+                        </Tab>
+                        <Tab
+                            w={props.fileTypeTabsW} h={props.height} p='0px' border='none' color='whiteAlpha.700' fontSize={props.fontSize}
+                            _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}}
+                            onClick={() => {props.setIsPurchase(false)}}
+                        >
+                            Refinance
+                        </Tab>
                     </TabList>
                 </Tabs>
             </HStack>
             {props.isPurchase &&
                 <HStack>
-                    <Text minW='fit-content' fontWeight='bold'>
+                    <Text minW='fit-content' fontWeight='bold' fontSize={props.fontSize}>
                         Representing:
                     </Text>
-                    <Tabs h='25px' variant='enclosed' colorScheme='white' defaultIndex={props.whoRepresenting ? 1 : 0}>
-                        <TabList h='25px' border='none'>
-                            <Tab paddingInline='5px' w='50px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {props.setWhoRepresenting(false)}}>Buyer</Tab>
-                            <Tab paddingInline='5px' w='50px' border='none' color='whiteAlpha.700' _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}} onClick={() => {props.setWhoRepresenting(true)}}>Seller</Tab>
+                    <Tabs h={props.height} variant='enclosed' colorScheme='white' defaultIndex={props.whoRepresenting ? 1 : 0}>
+                        <TabList h={props.height} border='none'>
+                            <Tab
+                                w={props.fileRepTabsW} h={props.height} p='0px' border='none' color='whiteAlpha.700' fontSize={props.fontSize}
+                                _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}}
+                                onClick={() => {props.setWhoRepresenting(false)}}
+                            >
+                                Buyer
+                            </Tab>
+                            <Tab
+                                w={props.fileRepTabsW} h={props.height}  p='0px' border='none' color='whiteAlpha.700' fontSize={props.fontSize}
+                                _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}}
+                                onClick={() => {props.setWhoRepresenting(true)}}
+                            >
+                                Seller
+                            </Tab>
                         </TabList>
                     </Tabs>
                 </HStack>
             }
-            <HStack>
+            <HStack >
                     <Text minW='fit-content' fontWeight='bold'>
                         Responsibilities:
                     </Text>
                     <Popover h='30px'>
                         <PopoverTrigger>
-                            <Button h='30px' paddingInline='10px' backgroundColor='transparent' _hover={{backgroundColor:'whiteAlpha.100'}} _active={{backgroundColor:'whiteAlpha.200'}} border='1px solid white' fontWeight='normal' color='whiteAlpha.700' tabIndex={-1}>
+                            <Button h={props.height} paddingInline='10px' backgroundColor='transparent' border='1px solid white' fontSize={props.fontSize} fontWeight='normal' color='whiteAlpha.700' tabIndex={-1}
+                            _hover={{backgroundColor:'whiteAlpha.100'}}
+                            _active={{backgroundColor:'whiteAlpha.200'}}>
                                 Select... <ChevronDownIcon/>
                             </Button>
                         </PopoverTrigger>
@@ -58,7 +85,12 @@ const FileTaskInfo = (props) => {
                             <PopoverBody>
                                 {
                                     props.rolesButtons.map((item, index) => {
-                                        return <Checkbox key={index} onChange={(e)=>{item.set(e.target.checked)}} defaultChecked={item.value} isChecked={item.value}>
+                                        return <Checkbox
+                                            key={index}
+                                            onChange={(e)=>{item.set(e.target.checked)}}
+                                            defaultChecked={item.value}
+                                            isChecked={item.value}
+                                        >
                                             {item.label}
                                         </Checkbox>
                                     })
@@ -67,7 +99,7 @@ const FileTaskInfo = (props) => {
                         </PopoverContent>
                     </Popover>
             </HStack>
-        </HStack>
+        </Stack>
     )
 }
 

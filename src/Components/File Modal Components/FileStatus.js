@@ -6,11 +6,11 @@ import {
 
 const FileStatus = (props) => {
     return (
-        <HStack>
-            {props.isClosed && <Button w='120px' colorScheme='green' onClick={()=>{props.setIsClosed(false)}}>
+        <HStack fontSize={props.fontSize}>
+            {props.isClosed && <Button w={props.statusButtonW} height={props.statusButtonH} fontSize={props.fontSize} colorScheme='green' onClick={()=>{props.setIsClosed(false)}}>
                     RE-OPEN FILE
                 </Button> ||
-                <Button w='120px' colorScheme='red' onClick={()=>{props.setIsClosed(true)}}>
+                <Button w={props.statusButtonW} height={props.statusButtonH} colorScheme='red' fontSize={props.fontSize} onClick={()=>{props.setIsClosed(true)}}>
                     CLOSE FILE
                 </Button>
             }

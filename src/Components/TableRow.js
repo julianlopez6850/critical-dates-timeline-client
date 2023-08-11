@@ -66,23 +66,23 @@ const TableRow = (props) => {
     }, [isClosed, update]);
 
     return (
-        <HStack w='1060px' h='30px' borderRadius='10px' textAlign='left' bgColor='#0077cc' color='white'
+        <HStack w={props.tableWidth} h='30px' borderRadius='10px' textAlign='left' bgColor='#0077cc' color='white' fontSize={props.fontSize} spacing={props.colWidths.columns.margin}
             _hover={{cursor:'pointer'}} 
             onClick={()=>{onOpen()}}
         >
-            <Box h='full' w='fit-content' p='10px' bgColor={dateColor} display='flex' alignItems='center' borderRadius='10px' >
-                <Text w='90px' textAlign='center' fontWeight='bold'>
-                    {dateInfo.date}
+            <Box h='full' w='fit-content' p={props.colWidths.columns.dateColPadding} bgColor={dateColor} display='flex' alignItems='center' borderRadius='10px'>
+                <Text w={props.colWidths.columns.dateColW} textAlign='center' fontWeight='bold'>
+                    {dateInfo.date.slice(5) + '-' + dateInfo.date.slice(2,4)}
                 </Text>
             </Box>
 
-            <Text w='50px' textAlign='center'>
+            <Text w={props.colWidths.columns.fileNoColW} textAlign='center'>
                 {dateInfo.fileNumber}
             </Text>
 
             <Divider orientation='vertical' h='70%' />
 
-            <Text w='81px'  textAlign='center'>
+            <Text w={props.colWidths.columns.eventColW} textAlign='center'>
                 {
                     dateInfo.prefix && (
                         dateInfo.prefix === 'First ' && '1st ' || 
@@ -100,8 +100,8 @@ const TableRow = (props) => {
                         <Tooltip
                             label={item}
                             maxW='255px'
-                        >
-                            <Text w='225px' overflow='hidden' whiteSpace='nowrap' textOverflow='ellipsis'>
+                        >   
+                            <Text w={props.colWidths.columns.infoColW} noOfLines={props.colWidths.columns.numLines} lineHeight={`${props.colWidths.columns.lineHeight}px`}>
                                 {item}
                             </Text>
                         </Tooltip>
@@ -110,7 +110,7 @@ const TableRow = (props) => {
             }
             <Divider orientation='vertical' h='70%' />
 
-            <Button m='0px !important' w='59px' h='36px' bgColor='transparent'
+            <Button m='0px !important' minW='32px' w={props.colWidths.columns.statusColW} h='36px' bgColor='transparent'
                 _hover={{bgColor:'transparent'}}
                 isDisabled={dateInfo.File.isClosed}
                 onClick={(e)=>{
@@ -119,8 +119,8 @@ const TableRow = (props) => {
                     setUpdate(true);
                 }}
             >
-                <Text w='40px' textAlign='center'>
-                    { (dateInfo.File.isClosed || isClosed) && <LockIcon color='red'/> || <UnlockIcon/> }
+                <Text textAlign='center'>
+                    { (dateInfo.File.isClosed || isClosed) && <LockIcon color='red' boxSize={props.colWidths.columns.iconSize}/> || <UnlockIcon boxSize={props.colWidths.columns.iconSize}/> }
                 </Text>
             </Button>
             

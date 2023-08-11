@@ -49,37 +49,37 @@ const DatesTable = (props) => {
             }>
                 <span>Date <InfoIcon/></span>
             </Tooltip>,
-            w:'110px',
+            w:props.colWidths.headers.dateHeaderW,
             sortable: true
         },
         {
             label: 'FileNumber',
             text:'File #',
-            w:'66px',
+            w:props.colWidths.headers.fileNoHeaderW,
             sortable: true
         },
         {
             label: 'Event',
             text:'Event',
-            w:'98px',
+            w:props.colWidths.headers.eventHeaderW,
             sortable: false
         },
         {
             label: 'Buyer',
             text:'Buyer',
-            w:'242px',
+            w:props.colWidths.headers.infoHeaderW,
             sortable: true
         },
         {
             label: 'Seller',
             text:'Seller',
-            w:'242px',
+            w:props.colWidths.headers.infoHeaderW,
             sortable: true
         },
         {
             label: 'Address',
             text:'Address',
-            w:'242px',
+            w:props.colWidths.headers.infoHeaderW,
             sortable: true
         },
         {
@@ -104,22 +104,22 @@ const DatesTable = (props) => {
                     <span>Status</span><InfoIcon/>
                 </HStack>
             </Tooltip>,
-            w:'62px',
+            w:props.colWidths.headers.statusHeaderW,
             sortable: false
         },
     ]
 
     return (
-        <VStack>
-            <VStack>
-                <Text fontSize='20px' fontWeight='bold'>
+        <VStack fontSize={props.fontSize}>
+            <VStack spacing={props.headerMargin}>
+                <Text fontSize={props.titleFontSize} fontWeight='bold'>
                     {`${props.type} | ${props.when}`}
                 </Text>
 
-                <Divider w='1060px' borderColor='red' />
+                <Divider w={props.tableWidth} borderColor='red' marginTop='4px !important'/>
 
                 {/* Table Column Headers */}
-                <HStack w='1120px' spacing='0' pl='30px'>
+                <HStack w={`${parseInt(props.tableWidth.slice(0,-2)) + 10}px`} spacing='0' pl='5px'>
                     {
                         columnHeaders.map((item, index) => 
                             <HStack
@@ -141,7 +141,7 @@ const DatesTable = (props) => {
                     }
                 </HStack>
 
-                <Divider w='1060px' borderColor='red' />
+                <Divider w={props.tableWidth} borderColor='red' />
             </VStack>
 
             <VStack>
@@ -149,6 +149,9 @@ const DatesTable = (props) => {
                     props.dates.length > 0 ? props.dates.map((item) => {
                         return (
                             <TableRow
+                                tableWidth={props.tableWidth}
+                                colWidths={props.colWidths}
+                                fontSize={props.rowFontSize}
                                 key={item.fileNumber + item.prefix + item.type}
                                 dateInfo={item}
                             />
@@ -173,7 +176,7 @@ const DatesTable = (props) => {
                                     text={'Login'}
                                     onClick={() => {navigate('/login')}}
                                     active={false}
-                                    fontSize={'24'}
+                                    fontSize={`${parseInt(props.fontSize.slice(0,-2)) * 1.5}px`}
                                 />
                             </>
                         )

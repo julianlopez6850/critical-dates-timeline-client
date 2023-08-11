@@ -15,6 +15,8 @@ const NavbarButton = forwardRef((props, ref) => {
             _hover={''}
             _active={''}
             onClick = {props.onClick}
+            minWidth='unset'
+            boxSize={props.size}
         >
             {props.icon}
             {props.text}

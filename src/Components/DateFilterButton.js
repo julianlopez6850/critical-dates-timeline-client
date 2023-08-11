@@ -28,7 +28,7 @@ const DateFilterButton = forwardRef((props, ref) => {
                 }
             }
             _active={{}}
-            p='0px 10px 0px 10px'
+            paddingInline={props.padding}
             onClick={props.onClick}
         >
             {props.text}

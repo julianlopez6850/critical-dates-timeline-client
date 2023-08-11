@@ -37,17 +37,17 @@ const FileDates = (props) => {
     }
 
     return (
-        <VStack w='300px' spacing='1.5'>
-            <Text>
+        <VStack w='fit-content' h='full' fontSize={props.mainFontSize} spacing={props.spacing}>
+            <Text fontWeight='bold'>
                 Critical Dates:
             </Text>
             {props.dates.map((item, index) => {
                 return (
-                    <HStack w='290px' spacing='0' key={index}
+                    <HStack w='fit-content' spacing='0' key={index}
                         color={(props.isClosed || item.isClosed) ? 'red' : ''}
                         borderColor={(props.isClosed || item.isClosed) ? 'red' : ''}
                     >
-                        <Text w='68px'>
+                        <Text w={props.dateTypeW}>
                             {item.label}
                         </Text>
                         <Tooltip
@@ -62,7 +62,7 @@ const FileDates = (props) => {
                                 item.label === 'Effective' ? props.isEffectiveError || '' : item.label === 'Closing' ? props.isClosingError || '' : ''
                             }
                         >
-                            <Input w='150px' h='30px' paddingInline='8px' borderRadius='10px' type='date' 
+                            <Input w={props.dateW} h={props.height} paddingInline='8px' borderRadius='10px' type='date' fontSize={props.datesFontSize} 
                                 value={item.value}
                                 onChange={(e)=>{item.setValue(e.target.value)}}
                                 transition='0s'
@@ -81,6 +81,7 @@ const FileDates = (props) => {
                             type={item.label}
                             isDateClosed={item.isClosed}
                             isFileClosed={props.isClosed}
+                            boxSize={props.calculatorIconSize}
                         />
                         <Tooltip
                             w='fit-content'
@@ -89,7 +90,7 @@ const FileDates = (props) => {
                             whiteSpace='pre-wrap'
                             label={props.isClosed ? 'File status is Closed or Cancelled.\nRe-open it to update Date.' : ''}
                         >
-                            <Button p='0px !important' size='sm' bgColor='transparent'
+                            <Button p='0px !important' minW='unset' boxSize={props.height} bgColor='transparent' mr='4px !important'
                                 _hover={{bgColor:'#FFFFFF15'}}
                                 onClick={(e)=>{
                                     e.stopPropagation();
@@ -101,7 +102,7 @@ const FileDates = (props) => {
                                 tabIndex={-1}
                             >
                                 <Text display='flex'>
-                                    { (props.isClosed || item.isClosed) && <LockIcon/> || <UnlockIcon/> }
+                                    { (props.isClosed || item.isClosed) && <LockIcon boxSize={props.lockIconSize}/> || <UnlockIcon boxSize={props.lockIconSize}/> }
                                 </Text>
                             </Button>
                         </Tooltip>

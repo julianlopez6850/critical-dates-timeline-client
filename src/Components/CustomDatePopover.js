@@ -25,9 +25,10 @@ const CustomDatePopover = (props) => {
         >
             <PopoverTrigger>
                 <DateFilterButton
-                    text={props.item}
-                    onClick={() => {props.setWhen(props.item)}}
-                    active={props.when === props.item}
+                    text={props.text}
+                    fontSize={props.fontSize}
+                    onClick={() => {props.setWhen(props.text)}}
+                    active={props.when === props.text}
                 />
             </PopoverTrigger>
             <PopoverContent color='white' bg='blue.800' borderColor='blue.800' w='250px'>

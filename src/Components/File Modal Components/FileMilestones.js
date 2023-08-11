@@ -7,17 +7,23 @@ import {
 
 const FileMilestones = (props) => {
     return (
-        <VStack w='200px' h='237px'>
-            <Text>
+        <VStack w='fit-content' h='full'>
+            <Text fontWeight='bold'>
                 Milestones:
             </Text>
             <VStack spacing='0'>
                 {props.milestonesChecks.map((item, index) => {
                     if(item.role)
                         return (
-                            <HStack w='170px' spacing='0' key={index}>
-                                <Checkbox spacing='2' size='sm' onChange={(e)=>{item.set(e.target.checked)}} defaultChecked={item.value} isChecked={item.value} tabIndex={-1}>
-                                    {item.label}
+                            <HStack spacing='0' key={index} alignSelf='start'>
+                                <Checkbox
+                                    spacing='2' size ='sm'
+                                    defaultChecked={item.value}
+                                    isChecked={item.value}
+                                    onChange={(e)=>{item.set(e.target.checked)}}
+                                    tabIndex={-1}
+                                >
+                                    <Text w='max-content' noOfLines={1} fontSize={props.fontSize}>{item.label}</Text>
                                 </Checkbox>
                             </HStack>
                         )

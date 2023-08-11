@@ -31,20 +31,15 @@ const FileSelect = (props) => {
             className='select'
             options={props.options}
             value={props.value}
-            isSearchable={props.isSearchable}
-            onChange={(e) => {
-                props.onChange(e)
-                if(!props.isSearchable && e) {
-                    props.openFile();
-                }
-            }}
+            onChange={props.onChange}
             onKeyDown={(e) => {
-                if(e.key === 'Enter' && !isMenuOpen && props.isSearchable && document.getElementById('file-select-input').value === '') {
+                if(e.key === 'Enter' && !isMenuOpen && document.getElementById('file-select-input').value === '') {
+                    console.log()
                     e.preventDefault();
                     props.openFile();
                 }
             }}
-            placeholder={props.placeholder}
+            placeholder=''
             inputId='file-select-input'
             styles={{
                 container: (baseStyles) => ({
@@ -65,7 +60,7 @@ const FileSelect = (props) => {
                     },
                     minHeight: 'inherit',
                     height: 'inherit',
-                    alignContent:'center',
+                    alignContent: 'center',
                     transition:'0s'
                 }),
                 option: (baseStyles, state) => ({
@@ -78,25 +73,20 @@ const FileSelect = (props) => {
                     '&:hover': {
                         cursor: 'pointer',
                     },
-                    minW:'160px'
                 }),
                 placeholder: (baseStyles) => ({
                     ...baseStyles,
-                    fontSize:props.fontSize,
-                    textAlign:'center'
+                    fontSize:props.fontSize
                 }),
                 valueContainer: (baseStyles) => ({
                     ...baseStyles,
                     minHeight: 'inherit',
                     height: 'inherit',
                     alignContent: 'center',
-                    width:props.isSearchable ? '' : '0px',
-                    height:props.isSearchable ? '' : '0px',
-                    padding:props.isSearchable ? '' : '0px',
-                    marginLeft:props.isSearchable ? '5px' : '0px',
                 }),
                 singleValue: (baseStyles) => ({
                     ...baseStyles,
+                    display: 'flex',
                     justifyContent: 'left',
                     color: 'white',
                 }),
@@ -117,37 +107,31 @@ const FileSelect = (props) => {
                     borderBottom:'1px solid',
                     paddingBlock:'4px',
                     fontSize:props.fontSize,
-                    minWidth:'160px'
                 }),
                 menuList: (baseStyles) => ({
                     ...baseStyles,
                     borderBottom:'1px solid gray',
                     padding:'0px',
                 }),
-                indicatorSeparator: () => ({
+                indicatorSeparator: (baseStyles, state) => ({
+                    ...baseStyles,
+                    backgroundColor: state.isFocused ? 'hsl(0, 0%, 80%)' : 'hsl(0, 0%, 80%)',
+                    transition:'0s'
                 }),
                 indicatorsContainer: (baseStyles) => ({
                     ...baseStyles,
                     minHeight:'inherit',
                     height:'inherit',
-                    width:'32px',
-                    alignSelf:'center',
-                    alignItems:'center',
-                    justifyContent:'center',
-                    border:'none',
                     transition:'0s',
-                    margin:'0px',
+                    margin:'2px'
                 }),
                 dropdownIndicator: (baseStyles, state) => ({
                     ...baseStyles,
                     color: state.isFocused ? 'hsl(0, 0%, 80%)' : 'hsl(0, 0%, 80%)',
+                    minHeight:'inherit',
                     height:'inherit',
-                    width:'inherit',
-                    alignItems:'center',
-                    justifyContent:'center',
-                    border:'none',
-                    padding:'0px',
                     transition:'0s',
+                    margin:'2px',
                     ":hover":{}
                 }),
             }}

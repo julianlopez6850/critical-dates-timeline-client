@@ -17,6 +17,41 @@ import FileModal from './FileModal';
 import SettingsMenu from './SettingsMenu';
 
 const Navbar = () => {
+    
+    const [styles, setStyles] = useState({});
+
+    useEffect(() => {
+        const windowListener = () => {
+            if(window.innerWidth >= 650) {
+                setStyles({
+                    navbarHeight: '60px', leftMinWidth: '320px', rightMinWidth: '52px', titleSize:'20px', buttonSize:'40px',
+                    fileSelectWidth:'200px', fileSelectFontSize:'16px', placeholder: 'Select File...', isSearchable: true,
+                    menuWidth:'200px', menuFontSize:'16px', menuMargin:'5px'
+                });
+            } else if(window.innerWidth >= 500) {
+                setStyles({
+                    navbarHeight: '40px', leftMinWidth: '248px', rightMinWidth: '36px', titleSize:'16px', buttonSize:'30px',
+                    fileSelectWidth:'160px', fileSelectFontSize:'14px', placeholder: 'Select File...', isSearchable: true,
+                    menuWidth:'175px', menuFontSize:'14px', menuMargin:'2px'
+                });
+            } else if(window.innerWidth >= 420) {
+                setStyles({
+                    navbarHeight: '40px', leftMinWidth: '80px', rightMinWidth: '36px', titleSize:'16px', buttonSize:'30px',
+                    fileSelectWidth:'36px', fileSelectFontSize:'10px', placeholder: '', isSearchable: false,
+                    menuWidth:'150px', menuFontSize:'14px', menuMargin:'0px'
+                });
+            }  else {
+                setStyles({
+                    navbarHeight: '40px', leftMinWidth: '80px', rightMinWidth: '36px', titleSize:'16px', buttonSize:'30px',
+                    fileSelectWidth:'36px', fileSelectFontSize:'10px', placeholder: '', isSearchable: false,
+                    menuWidth:'120px', menuFontSize:'12px', menuMargin:'0px'
+                });
+            }
+        };
+        windowListener();
+        window.addEventListener('resize', windowListener);
+        return () => window.removeEventListener('resize', windowListener);
+    }, []);
 
     const { profile } = useContext(profileContext);
 
@@ -66,9 +101,9 @@ const Navbar = () => {
 
     return (
         <Box w='full'>
-            <HStack h='60px' w='full' bgColor='var(--navbar-color)' textColor='white' display='flex' justifyContent='space-between' paddingInline='10px'>
+            <HStack h={styles.navbarHeight} w='full' bgColor='var(--navbar-color)' textColor='white' display='flex' justifyContent='space-between' paddingInline='10px'>
                 {/* Navbar, Left Side */}
-                <HStack display='flex' justifyContent='left' w='320px' minW='320px'>
+                <HStack display='flex' justifyContent='left' w={styles.leftMinWidth} minW={styles.leftMinWidth}>
                     {/* Search for Specific File */}
                     <FileSelect
                         options={files}
@@ -77,30 +112,48 @@ const Navbar = () => {
                             setSelectedFile(selection);
                         }}
                         openFile={onOpenFileEditor}
+                        height={styles.buttonSize}
+                        width={styles.fileSelectWidth}
+                        fontSize={styles.fileSelectFontSize}
+                        placeholder={styles.placeholder}
+                        isSearchable={styles.isSearchable}
+                        arrowMargin={styles.arrowMargin}
+                        removeWidth={styles.removeWidth}
                     />
-                    <NavbarButton
-                        onClick={() => {
-                            if(selectedFile)
-                                onOpenFileEditor();
-                        }}
-                        icon={<SearchIcon/>}
-                    />
+                    {
+                        styles.isSearchable ?
+                        <NavbarButton
+                            onClick={() => {
+                                if(selectedFile)
+                                    onOpenFileEditor();
+                            }}
+                            icon={<SearchIcon/>}
+                            size={styles.buttonSize}
+                        /> : <></>
+                    }
+                    
                     {/* Button: Add New File */}
                     <NavbarButton
                         onClick={onOpenFileCreator}
                         icon={<AddIcon/>}
+                        size={styles.buttonSize}
                     />
                 </HStack>
                 {/* Navbar, Center */}
-                <HStack display='flex' justifyContent='center' minW='218px'>                
-                    <Text fontSize='20px' fontWeight='bold'>
+                <HStack display='flex' justifyContent='center' minW='fit-content'>                
+                    <Text fontSize={styles.titleSize} fontWeight='bold'>
                         Critical Dates Schedule
                     </Text>
                 </HStack>
                 {/* Navbar, Right Side */}
-                <HStack display='flex' justifyContent='right' w='320px' minW='52px'>
+                <HStack display='flex' justifyContent='right' w={styles.leftMinWidth} minW={styles.rightMinWidth}>
                     {/* Button: Open Settings */}
-                    <SettingsMenu/>
+                    <SettingsMenu
+                        size={styles.buttonSize}
+                        width={styles.menuWidth}
+                        fontSize={styles.menuFontSize}
+                        margin={styles.menuMargin}
+                    />
                 </HStack>
             </HStack>
             <Box w='full' h='2px' bgColor='var(--navbar-seperator)' />

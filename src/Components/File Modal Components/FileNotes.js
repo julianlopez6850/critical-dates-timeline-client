@@ -6,11 +6,11 @@ import {
 
 const FileNotes = (props) => {
     return (
-        <VStack w='100%' h='237px'>
-            <Text>
+        <VStack w='full' h={props.height}>
+            <Text fontWeight='bold'>
                 Notes:
             </Text>
-            <Textarea h='100%' fontSize='12px' resize='none'
+            <Textarea h='full' fontSize='12px' resize='none'
                 value={props.notes}
                 onChange={(e) => {props.setNotes(e.target.value)}}
             />

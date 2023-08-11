@@ -24,6 +24,7 @@ import {
     Box,
     useDisclosure,
     Tooltip,
+    Icon,
 } from '@chakra-ui/react';
 import { CalculateOutlined } from '@mui/icons-material';
 
@@ -147,8 +148,9 @@ const CalculateDatePopover = (props) => {
                 <Button
                     p='0'
                     ml='4px !important'
-                    minW='32px'
-                    h='32px'
+                    minW='unset'
+                    minH='unset'
+                    boxSize={props.boxSize}
                     isDisabled={props.isFileClosed || props.isDateClosed || (props.type === 'Effective')}
                     color={(props.isFileClosed || props.isDateClosed) ? 'red' : (props.isCalculated && props.isCalculated.isCalculated) ? '#EECC33' : '#B1B1B1'}
                     bg='transparent'
@@ -166,8 +168,8 @@ const CalculateDatePopover = (props) => {
                             props.isFileClosed ? 'File status is Closed or Cancelled.\nRe-open it to update Date.' :
                             props.isDateClosed ? 'Date status is Closed.\nRe-open it to update Date.' : ''
                     }>
-                        <Box w='32px' h='32px' display='flex' justifyContent='center' alignItems='center'>
-                            <CalculateOutlined/>
+                        <Box display='flex' justifyContent='center' alignItems='center'>
+                            <Icon as={CalculateOutlined} boxSize={props.boxSize}/>
                         </Box>
                     </Tooltip>
                 </Button>

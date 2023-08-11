@@ -9,6 +9,7 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
+    Stack,
     HStack,
     VStack,
     Divider,
@@ -29,6 +30,67 @@ import FileClearAndSave from './File Modal Components/FileClearAndSave';
 import FileFooter from './File Modal Components/FileFooter';
 
 const FileModal = (props) => {
+
+    const [styles, setStyles] = useState({});
+
+    useEffect(() => {
+        const windowListener = () => {
+            if(window.innerWidth >= 1150) {
+                setStyles({
+                    modalSize:'5xl', modalInlinePadding:'24px', bodyFontSize: '14px', spacing:'8px',
+                    bodyInputHeight: '30px', inputPadding:'16px', firstStacksDir:'row', secondStacksDir: 'row',
+                    headerFontSize:'16px', headerInputHeight: '32px', headerStackDir:'row',
+                    fileNoW:'75px', fileRefW:'620px', beginningMinW:'57px',
+                    sec3height:'237px', dateTypeW:'68px', dateW:'150px', datesSpacing:'6px', calculatorIconSize:'26px', lockIconSize:'16px',
+                    fileTypeTabsW:'80px', fileRepTabsW:'50px', tabsPadding:'5px',
+                    saveButtonW:'100px', otherFooterButtonsW:'120px', footerButtonH:'40px', footerFontSize:'16px', footerTooltipSize:'700px'
+                });
+            } else if(window.innerWidth >= 900) {
+                setStyles({
+                    modalSize:'3xl', modalInlinePadding:'24px', bodyFontSize: '12px', spacing:'8px',
+                    bodyInputHeight: '26px', inputPadding:'12px', firstStacksDir:'row', secondStacksDir: 'row', 
+                    headerFontSize:'14px', headerInputHeight: '28px', headerStackDir:'row', 
+                    fileNoW:'60px', fileRefW:'400px', beginningMinW:'49px',
+                    sec3height:'210px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px', calculatorIconSize:'24px', lockIconSize:'14px',
+                    fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
+                    saveButtonW:'80px', otherFooterButtonsW:'110px', footerButtonH:'36px', footerFontSize:'14px', footerTooltipSize:'500px'
+                });
+            } else if(window.innerWidth >= 650) {
+                setStyles({
+                    modalSize:'xl', modalInlinePadding:'16px', bodyFontSize: '12px', spacing:'8px',
+                    bodyInputHeight: '22px', inputPadding:'10px', firstStacksDir:'column', secondStacksDir: 'row', 
+                    headerFontSize:'14px', headerInputHeight: '24px', headerStackDir:'row', 
+                    fileNoW:'50px', fileRefW:'340px', beginningMinW:'49px',
+                    sec3height:'186px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px', calculatorIconSize:'22px', lockIconSize:'14px',
+                    fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
+                    saveButtonW:'60px', otherFooterButtonsW:'90px', footerButtonH:'32px', footerFontSize:'12px', footerTooltipSize:'350px'
+                });
+            } else if(window.innerWidth >= 500) {
+                setStyles({
+                    modalSize:'sm', modalInlinePadding:'12px', bodyFontSize: '10px', spacing:'4px',
+                    bodyInputHeight: '18px', inputPadding:'8px', firstStacksDir:'column', secondStacksDir: 'column',
+                    headerFontSize:'12px', headerInputHeight: '20px', headerStackDir:'row',
+                    fileNoW:'40px', fileRefW:'220px', beginningMinW:'41px',
+                    sec3height:'159px', dateTypeW:'60px', dateW:'120px', datesSpacing:'6px', calculatorIconSize:'18px', lockIconSize:'12px',
+                    fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
+                    saveButtonW:'40px', otherFooterButtonsW:'80px', footerButtonH:'28px', footerFontSize:'10px', footerTooltipSize:'200px'
+                });
+            } else {
+                setStyles({
+                    modalSize:'xs', modalInlinePadding:'12px', bodyFontSize: '10px', spacing:'4px',
+                    bodyInputHeight: '18px', inputPadding:'8px', firstStacksDir:'column', secondStacksDir: 'column',
+                    headerFontSize:'12px', headerInputHeight: '20px', headerStackDir:'column',
+                    fileNoW:'40px', fileRefW:'full', beginningMinW:'41px',
+                    sec3height:'', dateTypeW:'60px', dateW:'120px', datesSpacing:'6px', calculatorIconSize:'18px', lockIconSize:'12px',
+                    fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
+                    saveButtonW:'30px', otherFooterButtonsW:'60px', footerButtonH:'24px', footerFontSize:'8px', footerTooltipSize:'160px'
+                })
+            };
+        };
+        windowListener();
+        window.addEventListener('resize', windowListener);
+        return () => window.removeEventListener('resize', windowListener);
+    }, []);
 
     const { profile, setProfile } = useContext(profileContext);
     
@@ -461,19 +523,17 @@ const FileModal = (props) => {
     return (
         <Modal
             closeOnOverlayClick={false}
-            isCentered
             onClose={() => { props.onClose() }}
             isOpen={props.isOpen}
-            motionPreset='slideInBottom'
-            size='5xl'
+            size={styles.modalSize}
+            scrollBehavior='outside'
         >
             <ModalOverlay />
             <ModalContent
                 color='white'
                 bgColor='gray.800'
-                h='540px'
             >
-                <ModalCloseButton />
+                <ModalCloseButton top='0px' right='0px'/>
 
                 {!profile.loggedIn ? 
                     <ModalBody display='flex' justifyContent='center' alignItems='center'>
@@ -486,7 +546,7 @@ const FileModal = (props) => {
                             <Spinner/>
                         </ModalBody> : 
                         <>
-                            <ModalBody>
+                            <ModalBody paddingInline={styles.modalInlinePadding} paddingBottom='0px'>
                                 <FileNoAndRefInput
                                     fileNo={fileNo}
                                     setFileNo={setFileNo}
@@ -494,18 +554,33 @@ const FileModal = (props) => {
                                     fileRef={fileRef}
                                     setFileRef={setFileRef}
                                     isFileRefError={isFileRefError}
+                                    fontSize={styles.headerFontSize}
+                                    fileNoW={styles.fileNoW}
+                                    fileRefW={styles.fileRefW}
+                                    height={styles.headerInputHeight}
+                                    spacing={styles.spacing}
+                                    padding={styles.inputPadding}
+                                    stackDir={styles.headerStackDir}
                                 />
 
-                                <VStack spacing='0.5' fontSize='14px'>
+                                <VStack w='full' spacing='0px' fontSize={styles.bodyFontSize}>
                                     <FileTaskInfo
                                         isPurchase={isPurchase}
                                         setIsPurchase={setIsPurchase}
                                         whoRepresenting={whoRepresenting}
                                         setWhoRepresenting={setWhoRepresenting}
                                         rolesButtons={rolesButtons}
+                                        fontSize={styles.bodyFontSize}
+                                        height={styles.bodyInputHeight}
+                                        spacing={styles.spacing}
+                                        padding={styles.inputPadding}
+                                        fileTypeTabsW={styles.fileTypeTabsW}
+                                        fileRepTabsW={styles.fileRepTabsW}
+                                        tabsPadding={styles.tabsPadding}
+                                        stackDir={styles.secondStacksDir}
                                     />
 
-                                    <Divider marginBlock='0.5rem !important' />
+                                    <Divider marginBlock='8px !important' />
 
                                     <FileBuyerAndSeller
                                         isPurchase={isPurchase}
@@ -516,6 +591,12 @@ const FileModal = (props) => {
                                         seller={seller}
                                         setSeller={setSeller}
                                         isSellerError={isSellerError}
+                                        fontSize={styles.bodyFontSize}
+                                        height={styles.bodyInputHeight}
+                                        stackDir={styles.firstStacksDir}
+                                        minW={styles.beginningMinW}
+                                        spacing={styles.spacing}
+                                        padding={styles.inputPadding}
                                     />
                                     
                                     <FilePropertyInfo
@@ -524,42 +605,81 @@ const FileModal = (props) => {
                                         isPropertyError={isPropertyError}
                                         folioNo={folioNo}
                                         setFolioNo={setFolioNo}
+                                        fontSize={styles.bodyFontSize}
+                                        height={styles.bodyInputHeight}
+                                        stackDir={styles.firstStacksDir}
+                                        minW={styles.beginningMinW}
+                                        spacing={styles.spacing}
+                                        padding={styles.inputPadding}
                                     />
 
-                                    <Divider mt='0.5rem !important' mb='0rem !important' />
+                                    <Divider marginBlock='8px !important'/>
 
-                                    <HStack w='100%' h='100%' m='0'>
-                                        <FileDates
-                                            dates={dates}
-                                            isEffectiveError={isEffectiveError}
-                                            isClosingError={isClosingError}
-                                            isClosed={isClosed}
+                                    <Stack direction={styles.firstStacksDir} w='full' h={styles.firstStacksDir === 'row' ? styles.sec3height : ''} m='0px !important' spacing='0px'>
+                                        <Stack direction={styles.secondStacksDir} h={styles.secondStacksDir === 'row' ? styles.sec3height : ''}>
+                                            <HStack w={styles.firstStacksDir === 'column' ? '50%' : ''} h={styles.sec3height}>
+                                                <FileDates
+                                                    dates={dates}
+                                                    isEffectiveError={isEffectiveError}
+                                                    isClosingError={isClosingError}
+                                                    isClosed={isClosed}
+                                                    textFontSize={styles.bodyFontSize}
+                                                    datesFontSize={styles.headerFontSize}
+                                                    height={styles.bodyInputHeight}
+                                                    dateTypeW={styles.dateTypeW}
+                                                    dateW={styles.dateW}
+                                                    spacing={styles.datesSpacing}
+                                                    padding={styles.inputPadding}
+                                                    calculatorIconSize={styles.calculatorIconSize}
+                                                    lockIconSize={styles.lockIconSize}
+                                                />
+                                            </HStack>
+
+                                            <Divider
+                                                orientation={styles.secondStacksDir === 'row' ? 'vertical' : 'horizontal'}
+                                                h={styles.secondStacksDir === 'row' ? parseInt(styles.sec3height.slice(0,-2) - 8 + 'px') : 'full'}
+                                                margin={styles.secondStacksDir === 'row' ? '0px !important' : '8px !important'}
+                                                alignSelf='end'
+                                            />
+
+                                            <FileMilestones
+                                                milestonesChecks={milestonesChecks}
+                                                height={styles.sec3height}
+                                                fontSize={styles.bodyFontSize}
+                                                boxSize={styles.checkboxSize}
+                                                spacing={styles.spacing}
+                                            />
+                                        </Stack>
+
+                                        <Divider
+                                            orientation={styles.firstStacksDir === 'row' ? 'vertical' : 'horizontal'}
+                                            h={styles.firstStacksDir === 'row' ? parseInt(styles.sec3height.slice(0,-2) - 8 + 'px') : 'full'}
+                                            marginBlock={styles.firstStacksDir === 'row' ? '0px !important' : '8px !important'}
+                                            marginInline={styles.firstStacksDir === 'row' ? '8px !important' : '0px !important'}
+                                            alignSelf='end'
                                         />
-
-                                        <Divider orientation='vertical' h='237px' margin='0px !important'/>
-
-                                        <FileMilestones
-                                            milestonesChecks={milestonesChecks}
-                                        />
-
-                                        <Divider orientation='vertical' h='237px' margin='0px !important'/>
 
                                         <FileNotes
                                             notes={notes}
                                             setNotes={setNotes}
+                                            height={styles.sec3height}
                                         />
-                                    </HStack>
+                                    </Stack>
                                     
-                                    <Divider marginBlock='0.5rem !important' />
+                                    <Divider marginBlock='8px !important' />
                                 </VStack>
                             </ModalBody>
 
-                            <ModalFooter justifyContent='space-between' alignItems='start' m='0'paddingTop='0'>
-                                <VStack w='100%' h='100%' align='left'>
-                                    <HStack w='100%' justifyContent='space-between'>
+                            <ModalFooter justifyContent='space-between' alignItems='start' m='0px' paddingTop='0px'>
+                                <VStack w='full' h='full' align='left'>
+                                    <HStack w='full' h={styles.footerButtonH} justifyContent='space-between'>
                                         <FileStatus
                                             isClosed={isClosed}
                                             setIsClosed={setIsClosed}
+                                            closeFileButtonW={styles.otherFooterButtonsW}
+                                            fontSize={styles.footerFontSize}
+                                            statusButtonW={styles.otherFooterButtonsW}
+                                            statusButtonH={styles.footerButtonH}
                                         />
                                         <FileClearAndSave
                                             new={props.new}
@@ -597,11 +717,17 @@ const FileModal = (props) => {
                                             toast={toast}
                                             onClose={props.onClose}
                                             resetAllValues={resetAllValues}
+                                            fontSize={styles.footerFontSize}
+                                            saveButtonW={styles.saveButtonW}
+                                            otherButtonsW={styles.otherFooterButtonsW}
+                                            buttonH={styles.footerButtonH}
                                         />
                                     </HStack>
                                     <FileFooter
                                         displayedFileNo={displayedFileNo}
                                         fileRef={fileRef}
+                                        fontSize={styles.headerFontSize}
+                                        tooltipSize={styles.footerTooltipSize}
                                     />
                                 </VStack>
                             </ModalFooter>
