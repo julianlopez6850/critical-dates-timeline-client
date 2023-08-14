@@ -39,8 +39,8 @@ function Main() {
                     pageW: '1060px', pageMarginBlock: '25px', fontSize: '16px', stackDir: 'row', titleFontSize: '20px',
                     buttonTitleW: '65px', buttonPadding: '10px', tableW: '1060px', tableHeaderMargin: '8px', rowFontSize: '16px',
                     columnStyles: {
-                        headers:{ dateHeaderW: '110px', fileNoHeaderW: '66px', eventHeaderW: '98px', infoHeaderW: '242px', statusHeaderW: '62px' },
-                        columns:{ dateColW: '90px', fileNoColW: '50px', eventColW: '81px', infoColW: '225px', statusColW: '59px',
+                        headers:{ dateHeaderW: '110px', fileNoHeaderW: '66px', eventHeaderW: '104px', infoHeaderW: '240px', statusHeaderW: '62px' },
+                        columns:{ dateColW: '90px', fileNoColW: '50px', eventColW: '87px', infoColW: '223px', statusColW: '59px',
                             dateColPadding: '10px', numLines:1, margin: '8px', iconSize: '16px' }
                     },
                 });
@@ -49,9 +49,9 @@ function Main() {
                     pageW: '850px', pageMarginBlock: '25px', fontSize: '14px', stackDir: 'row', titleFontSize: '20px',
                     buttonTitleW: '65px', buttonPadding: '6px', tableW: '850px', tableHeaderMargin: '8px', rowFontSize: '14px',
                     columnStyles: {
-                        headers:{ dateHeaderW: '100px', fileNoHeaderW: '61px', eventHeaderW: '87px', infoHeaderW: '181px', statusHeaderW: '59px' },
-                        columns:{ dateColW: '80px', fileNoColW: '44px', eventColW: '71px', infoColW: '164px', statusColW: '59px',
-                            dateColPadding: '10px', numLines:1, margin: '8px', iconSize: '16px' }
+                        headers:{ dateHeaderW: '96px', fileNoHeaderW: '61px', eventHeaderW: '94px', infoHeaderW: '180px', statusHeaderW: '59px' },
+                        columns:{ dateColW: '80px', fileNoColW: '44px', eventColW: '78px', infoColW: '163px', statusColW: '59px',
+                            dateColPadding: '8px', numLines:1, margin: '8px', iconSize: '16px' }
                     },
                 });
             } else if(window.innerWidth >= 650) {
@@ -59,9 +59,9 @@ function Main() {
                     pageW: '600px', pageMarginBlock: '10px', fontSize: '12px', stackDir: 'column', titleFontSize: '18px',
                     buttonTitleW: '65px', buttonPadding: '6px', tableW: '600px', tableHeaderMargin: '4px', rowFontSize: '12px',
                     columnStyles: {
-                        headers:{ dateHeaderW: '77px', fileNoHeaderW: '47px', eventHeaderW: '73px', infoHeaderW: '118px', statusHeaderW: '49px' },
-                        columns:{ dateColW: '65px', fileNoColW: '34px', eventColW: '61px', infoColW: '105px', statusColW: '49px',
-                            dateColPadding: '6px', numLines:2, lineHeight:15, margin: '6px', iconSize: '14px' }
+                        headers:{ dateHeaderW: '75px', fileNoHeaderW: '53px', eventHeaderW: '72px', infoHeaderW: '117px', statusHeaderW: '49px' },
+                        columns:{ dateColW: '65px', fileNoColW: '40px', eventColW: '60px', infoColW: '104px', statusColW: '49px',
+                            dateColPadding: '5px', numLines:2, lineHeight:15, margin: '6px', iconSize: '14px' }
                     },
                 });
             } else if(window.innerWidth >= 500) {
@@ -69,8 +69,8 @@ function Main() {
                     pageW: '480px', pageMarginBlock: '10px', fontSize: '10px', stackDir: 'column', titleFontSize: '16px',
                     buttonTitleW: '50px', buttonPadding: '4px', tableW: '480px', tableHeaderMargin: '2px', rowFontSize: '10px',
                     columnStyles: {
-                        headers:{ dateHeaderW: '65px', fileNoHeaderW: '47px', eventHeaderW: '55px', infoHeaderW: '91px', statusHeaderW: '40px' },
-                        columns:{ dateColW: '55px', fileNoColW: '38px', eventColW: '47px', infoColW: '82px', statusColW: '40px',
+                        headers:{ dateHeaderW: '65px', fileNoHeaderW: '47px', eventHeaderW: '61px', infoHeaderW: '89px', statusHeaderW: '40px' },
+                        columns:{ dateColW: '55px', fileNoColW: '38px', eventColW: '53px', infoColW: '80px', statusColW: '40px',
                             dateColPadding: '5px', numLines:2, lineHeight:15, margin: '4px', iconSize: '12px' }
                     },
                 });
@@ -79,8 +79,8 @@ function Main() {
                     pageW: '400px', pageMarginBlock: '10px', fontSize: '10px', stackDir: 'column', titleFontSize: '14px',
                     buttonTitleW: '50px', buttonPadding: '4px', tableW: '400px', tableHeaderMargin: '0px', rowFontSize: '8px',
                     columnStyles: {
-                        headers:{ dateHeaderW: '52px', fileNoHeaderW: '40px', eventHeaderW: '43px', infoHeaderW: '75px', statusHeaderW: '40px' },
-                        columns:{ dateColW: '44px', fileNoColW: '33px', eventColW: '37px', infoColW: '68px', statusColW: '40px',
+                        headers:{ dateHeaderW: '52px', fileNoHeaderW: '44px', eventHeaderW: '48px', infoHeaderW: '72px', statusHeaderW: '40px' },
+                        columns:{ dateColW: '44px', fileNoColW: '37px', eventColW: '42px', infoColW: '65px', statusColW: '40px',
                             dateColPadding: '4px', numLines:2, lineHeight:15, margin: '3px', iconSize: '12px' }
                     },
                 });
@@ -89,8 +89,8 @@ function Main() {
                     pageW: '320px', pageMarginBlock: '5px', fontSize: '8px', stackDir: 'column', titleFontSize: '14px',
                     buttonTitleW: '40px', buttonPadding: '4px', tableW: '320px', tableHeaderMargin: '-2px', rowFontSize: '8px',
                     columnStyles: {
-                        headers:{ dateHeaderW: '42px', fileNoHeaderW: '34px', eventHeaderW: '34px', infoHeaderW: '59px', statusHeaderW: '33px' },
-                        columns:{ dateColW: '36px', fileNoColW: '27px', eventColW: '28px', infoColW: '52px', statusColW: '33px',
+                        headers:{ dateHeaderW: '50px', fileNoHeaderW: '39px', eventHeaderW: '48px', infoHeaderW: '50px', statusHeaderW: '33px' },
+                        columns:{ dateColW: '44px', fileNoColW: '32px', eventColW: '42px', infoColW: '43px', statusColW: '33px',
                         dateColPadding: '3px', numLines:3, lineHeight:10, margin: '3px', iconSize: '10px' }
                     },
                 })
