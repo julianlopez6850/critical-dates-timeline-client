@@ -110,7 +110,7 @@ const TableRow = (props) => {
             }
             <Divider orientation='vertical' h='70%' />
 
-            <Button m='0px !important' minW='32px' w={props.colWidths.columns.statusColW} h='36px' bgColor='transparent'
+            <Button m='0px !important' minW='32px' w={props.colWidths.columns.statusColW} h='30px' bgColor='transparent'
                 _hover={{bgColor:'transparent'}}
                 isDisabled={dateInfo.File.isClosed}
                 onClick={(e)=>{

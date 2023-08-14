@@ -21,6 +21,25 @@ import {
 } from '@chakra-ui/react'
 
 const SettingsModal = (props) => {
+
+    const [styles, setStyles] = useState({});
+
+    useEffect(() => {
+        const windowListener = () => {
+            if(window.innerWidth >= 500) {
+                setStyles({
+                    headerFontSize:'20px', bodyFontSize:'14px', inputH:'21px', paddingInline:'8px'
+                });
+            } else {
+                setStyles({
+                    headerFontSize:'18px', bodyFontSize:'12px', inputH:'18px', paddingInline:'4px'
+                })
+            };
+        };
+        windowListener();
+        window.addEventListener('resize', windowListener);
+        return () => window.removeEventListener('resize', windowListener);
+    }, []);
     
     const { profile, setProfile } = useContext(profileContext);
     
@@ -104,18 +123,19 @@ const SettingsModal = (props) => {
             <ModalContent
                 color='white'
                 bgColor='gray.800'
-                h='540px'
+                h='fit-content'
+                w='fit-content'
             >
                 <ModalCloseButton />
-                <ModalHeader>
+                <ModalHeader fontSize={styles.headerFontSize}>
                     SETTINGS
                 </ModalHeader>
-                <ModalBody>
-                    <Text fontWeight='bold'>
-                        Display
-                    </Text>
-                    <Divider/>
-                    <VStack align='left'>
+                <ModalBody paddingBlock='0px' fontSize={styles.bodyFontSize}>
+                    <VStack align='left' spacing='0'>
+                        <Text fontWeight='bold'>
+                            Display
+                        </Text>
+                        <Divider/>
                         <HStack justifyContent='space-between'>
                             <Text>
                                 Dark Mode
@@ -126,71 +146,82 @@ const SettingsModal = (props) => {
                             />
                         </HStack>
                     </VStack>
-                    <Text mt='20px' fontWeight='bold'>
-                        Notifications
-                    </Text>
-                    <Divider/>
-                    <HStack h='250px'>
-                        <VStack h='full' alignItems='normal'>
-                            <Checkbox
-                                isChecked={allChecked}
-                                isIndeterminate={partialChecked}
-                                onChange={(e) => Object.keys(notificationDatesTimes).forEach(key => 
-                                    setNotificationDatesTimes(days => {
-                                        return {...days, [key]: {...notificationDatesTimes[key], active: e.target.checked } }
-                                    })
-                                )}
-                            >
-                                All Days
-                            </Checkbox>
-                            <Divider/>
-                            <Stack pl={6} mt={1}>
-                                {dayLabels.map((item, index) => {
-                                    return <Checkbox
-                                        key={index}
-                                        isChecked={notificationDatesTimes[item.short].active}
-                                        onChange={(e) => setNotificationDatesTimes(days => {
-                                            return {...days, [item.short]: {...notificationDatesTimes[item.short], active:e.target.checked } }
-                                        })}
-                                    >
-                                        {item.full}
-                                    </Checkbox>
-                                })}
-                            </Stack>
-                        </VStack>
-                        <VStack h='full' alignItems='normal' w='150px'>
-                            <HStack>
-                                <Checkbox whiteSpace='nowrap'
-                                    isChecked={allAtMatch}
-                                    onChange={(e) => !allAtMatch ? Object.keys(notificationDatesTimes).forEach(key => 
+                    <VStack align='left' spacing='0' mt='10px'>
+                        <Text fontWeight='bold'>
+                            Notifications
+                        </Text>
+                        <Divider/>
+                        <HStack h='fit-content' spacing='0'>
+                            <VStack h='full' alignItems='normal' mt='8px'>
+                                <Checkbox
+                                    isChecked={allChecked}
+                                    isIndeterminate={partialChecked}
+                                    onChange={(e) => Object.keys(notificationDatesTimes).forEach(key => 
                                         setNotificationDatesTimes(days => {
-                                            return {...days, [key]: {...notificationDatesTimes[key], time: allAtValue } }
+                                            return {...days, [key]: {...notificationDatesTimes[key], active: e.target.checked } }
                                         })
-                                    ) : ''}
+                                    )}
                                 >
-                                    All at
+                                    <Text fontSize={styles.bodyFontSize}>All Days</Text>
                                 </Checkbox>
-                                <Input type='time' size='xs' value={allAtValue} onChange={(e) => {setAllAtValue(e.target.value)}} w='82px'/>
-                            </HStack>
-                            <Divider/>
-                            {dayLabels.map((item, index) => {
-                                return <HStack key={index} mt='32px' justifyContent='right'>
-                                    <Text>
-                                        at
-                                    </Text>
-                                    <Input type='time' size='xs' w='82px'
-                                        value={notificationDatesTimes[item.short].time}
-                                        onChange={(e)=>{
+                                <Divider/>
+                                <Stack pl='20px' mt='8px'>
+                                    {dayLabels.map((item, index) => {
+                                        return <Checkbox
+                                            key={index}
+                                            isChecked={notificationDatesTimes[item.short].active}
+                                            onChange={(e) => setNotificationDatesTimes(days => {
+                                                return {...days, [item.short]: {...notificationDatesTimes[item.short], active:e.target.checked } }
+                                            })}
+                                        >
+                                            <Text fontSize={styles.bodyFontSize}>{item.full}</Text>
+                                        </Checkbox>
+                                    })}
+                                </Stack>
+                            </VStack>
+                            <VStack h='full' w='fit-content' mt='8px !important' alignItems='normal'>
+                                <HStack>
+                                    <Checkbox whiteSpace='nowrap'
+                                        isChecked={allAtMatch}
+                                        onChange={(e) => !allAtMatch ? Object.keys(notificationDatesTimes).forEach(key => 
                                             setNotificationDatesTimes(days => {
-                                                return {...days, [item.short]: {...notificationDatesTimes[item.short], time: e.target.value}}
+                                                return {...days, [key]: {...notificationDatesTimes[key], time: allAtValue } }
                                             })
-                                        }}
-                                        isDisabled={!notificationDatesTimes[item.short]}
+                                        ) : ''}
+                                    >
+                                        <Text fontSize={styles.bodyFontSize}>All at</Text>
+                                    </Checkbox>
+                                    <Input
+                                        type='time' w='fit-content' h={styles.inputH}
+                                        paddingInline={styles.paddingInline}
+                                        fontSize='inherit'
+                                        value={allAtValue}
+                                        onChange={(e) => {setAllAtValue(e.target.value)}}
                                     />
                                 </HStack>
-                            })}
-                        </VStack>
-                    </HStack>
+                                <Divider/>
+                                {dayLabels.map((item, index) => {
+                                    return <HStack key={index} mt='32px' justifyContent='right'>
+                                        <Text>
+                                            at
+                                        </Text>
+                                        <Input
+                                            type='time' w='fit-content' h={styles.inputH}
+                                            paddingInline={styles.paddingInline}
+                                            fontSize='inherit'
+                                            value={notificationDatesTimes[item.short].time}
+                                            onChange={(e)=>{
+                                                setNotificationDatesTimes(days => {
+                                                    return {...days, [item.short]: {...notificationDatesTimes[item.short], time: e.target.value}}
+                                                })
+                                            }}
+                                            isDisabled={!notificationDatesTimes[item.short]}
+                                        />
+                                    </HStack>
+                                })}
+                            </VStack>
+                        </HStack>
+                    </VStack>
                 </ModalBody>
                 <ModalFooter>
                     <Text color='gray.400'>
