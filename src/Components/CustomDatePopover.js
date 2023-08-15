@@ -21,7 +21,7 @@ const CustomDatePopover = (props) => {
             isOpen={props.isOpen}
             onOpen={props.onOpen}
             onClose={props.onClose}
-            placement={'bottom'}
+            placement='bottom-end'
         >
             <PopoverTrigger>
                 <DateFilterButton
@@ -31,34 +31,42 @@ const CustomDatePopover = (props) => {
                     active={props.when === props.text}
                 />
             </PopoverTrigger>
-            <PopoverContent color='white' bg='blue.800' borderColor='blue.800' w='250px'>
-                <PopoverHeader>
+            <PopoverContent color='white' bg='blue.800' borderColor='blue.800' w='fit-content'>
+                <PopoverHeader fontWeight='bold' fontSize={props.fontSize}>
                     Choose your time frame
                 </PopoverHeader>
                 <PopoverArrow/>
                 <PopoverCloseButton/>
                 <PopoverBody>
                     <VStack>
-                        <HStack w='full'>
-                            <Text w='70px' textAlign='left' fontSize='14px'>Start Date: </Text>
+                        <HStack w='full' justifyContent='space-between'>
+                            <Text w='fit-content' textAlign='left' fontSize={props.fontSize}>Start Date: </Text>
                             <DateInput
                                 setDate={props.setStartDate}
                                 elementID={':customDateInput-startDate:'}
+                                fontSize={props.fontSize}
+                                width={`${parseInt(props.inputHeight.slice(0,-2)) * 5.5}px`}
+                                height={props.inputHeight}
                             />
                         </HStack>
-                        <HStack w='full'>
-                            <Text w='70px' textAlign='left' fontSize='14px'>End Date: </Text>
+                        <HStack w='full' justifyContent='space-between'>
+                            <Text w='fit-content' textAlign='left' fontSize={props.fontSize}>End Date: </Text>
                             <DateInput
                                 setDate={props.setEndDate}
                                 elementID={':customDateInput-endDate:'}
+                                fontSize={props.fontSize}
+                                width={`${parseInt(props.inputHeight.slice(0,-2)) * 5.5}px`}
+                                height={props.inputHeight}
                             />
                         </HStack>
-                        <Text fontSize='12px'>
+                        <Text fontSize={props.fontSize}>
                             {`Time frame: ${props.startDate || 'MM-DD-YY'} to ${props.endDate || 'MM-DD-YY'}`}
                         </Text>
                         <HStack w='full' justifyContent='right'>
                             <Button
-                                colorScheme='red' 
+                                h={props.inputHeight}
+                                fontSize={props.fontSize}
+                                colorScheme='red'
                                 onClick={()=> {
                                     props.setWhen(props.prevWhen);
                                     props.onClose();
@@ -66,7 +74,12 @@ const CustomDatePopover = (props) => {
                             >
                                 Cancel
                             </Button>
-                            <Button colorScheme='blue' onClick={props.onClose}>
+                            <Button
+                                h={props.inputHeight}
+                                fontSize={props.fontSize}
+                                colorScheme='blue'
+                                onClick={props.onClose}
+                            >
                                 Save
                             </Button>
                         </HStack>

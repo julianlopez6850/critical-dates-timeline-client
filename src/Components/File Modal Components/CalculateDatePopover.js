@@ -174,21 +174,21 @@ const CalculateDatePopover = (props) => {
                     </Tooltip>
                 </Button>
             </PopoverTrigger>
-            <PopoverContent color='white' bg='blue.800' borderColor='blue.800' w='250px' h='250px' justifyContent='space-between'>
+            <PopoverContent w='fit-content' h='fit-content' fontSize={props.fontSize} color='white' bg='blue.800' borderColor='blue.800' justifyContent='space-between'>
                 <Box>
-                    <PopoverHeader>
+                    <PopoverHeader fontWeight='bold'>
                         Calculate Your Date
                     </PopoverHeader>
                     <PopoverArrow/>
                     <PopoverCloseButton/>
                     <PopoverBody>
                         <VStack>
-                            <HStack w='full'>
+                            <HStack>
                                 <NumberInput w='70px' value={numDays} min={0} onChange={(e) => {setNumDays(e)}}>
-                                    <NumberInputField/>
-                                    <NumberInputStepper>
-                                        <NumberIncrementStepper border='none' bg='#FFFFFF08' _hover={{bg:'#FFFFFF20'}}/>
-                                        <NumberDecrementStepper border='none' bg='#FFFFFF08' _hover={{bg:'#FFFFFF20'}}/>
+                                    <NumberInputField h={props.inputHeight} pl='15px' pr='25px'/>
+                                    <NumberInputStepper border='none' minH='unset' h={props.inputHeight} margin='0px'>
+                                        <NumberIncrementStepper border='transparent' bg='#FFFFFF08' _hover={{bg:'#FFFFFF20'}} h='50%'/>
+                                        <NumberDecrementStepper border='transparent' bg='#FFFFFF08' _hover={{bg:'#FFFFFF20'}} h='50%'/>
                                     </NumberInputStepper>
                                 </NumberInput>
                                 <Text>
@@ -201,34 +201,43 @@ const CalculateDatePopover = (props) => {
                                             _selected={{color:'white', borderBottom:'2px solid white' }}
                                             onClick={() => {setDirection(-1)}}
                                         >
-                                            Before
+                                            <Text fontSize={props.fontSize}>
+                                                Before
+                                            </Text>
                                         </Tab>
                                         <Tab borderBottom='2px solid transparent' bg='none' color='blackAlpha.700' p='5px'
                                             _hover={{color:'whiteAlpha.700'}}
                                             _selected={{color:'white', borderBottom:'2px solid white' }}
                                             onClick={() => {setDirection(1)}}
                                         >
-                                            After
+                                            <Text fontSize={props.fontSize}>
+                                                After
+                                            </Text>
                                         </Tab>
                                     </TabList>
                                 </Tabs>
                             </HStack>
                             <HStack w='full'>
-                                <Text w='90px' textAlign='left' fontSize='14px'>Select Date:</Text>
+                                <Text w='84px' textAlign='left'>Select Date:</Text>
                                 <DateSelect w='125px' h='30px'
                                     options={dateTypes}
                                     value={baseDate}
                                     onChange={(selection) => {
                                         setBaseDate(selection);
                                     }}
+                                    width={`${parseInt(props.inputHeight.slice(0,-2)) * 4.5}px`}
+                                    height={props.inputHeight}
                                 />
                             </HStack>
                             {baseDate.label === 'Other' &&
                                 <HStack w='full'>
-                                    <Text w='90px' textAlign='left' fontSize='14px'>Other:</Text>
+                                    <Text w='84px' textAlign='left'>Other:</Text>
                                     <DateInput
                                         setDate={setOtherDate}
                                         elementID={`:calculateDatePopover:Other:`}
+                                        width={`${parseInt(props.inputHeight.slice(0,-2)) * 4.5}px`}
+                                        height={props.inputHeight}
+                                        fontSize={props.fontSize}
                                     />                      
                                 </HStack>
                             }
@@ -236,14 +245,14 @@ const CalculateDatePopover = (props) => {
                     </PopoverBody>
                 </Box>
                 <PopoverFooter justifySelf='flex-end'>
-                    <Text fontSize='12px'>
+                    <Text>
                         {`Calculated Date: ${selectedDate || 'MM-DD-YY'}`}
                     </Text>
                     <HStack w='full' justifyContent='right'>
-                        <Button colorScheme='red' onClick={removeCalculatedDate}>
+                        <Button h={props.buttonH} colorScheme='red' onClick={removeCalculatedDate} fontSize={props.fontSize}>
                             Remove
                         </Button>
-                        <Button colorScheme='blue' onClick={saveCalculatedDate}>
+                        <Button h={props.buttonH} colorScheme='blue' onClick={saveCalculatedDate} fontSize={props.fontSize}>
                             Save
                         </Button>
                     </HStack>

@@ -1,5 +1,6 @@
 import {
     Button,
+    VStack,
     HStack,
     Stack,
     Text,
@@ -79,22 +80,22 @@ const FileTaskInfo = (props) => {
                                 Select... <ChevronDownIcon/>
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent color='white' h='175px' w='175px' backgroundColor='#101622'>
+                        <PopoverContent color='white' w='fit-content' h='fit-content' backgroundColor='#101622'>
                             <PopoverArrow/>
-                            <PopoverHeader fontSize='16px'>File Responsibilities:</PopoverHeader>
+                            <PopoverHeader fontSize={props.fontSize} fontWeight='bold'>File Responsibilities:</PopoverHeader>
                             <PopoverBody>
-                                {
-                                    props.rolesButtons.map((item, index) => {
+                                <VStack align='left' spacing='4px'>
+                                    {props.rolesButtons.map((item, index) => {
                                         return <Checkbox
                                             key={index}
                                             onChange={(e)=>{item.set(e.target.checked)}}
                                             defaultChecked={item.value}
                                             isChecked={item.value}
                                         >
-                                            {item.label}
+                                            <Text fontSize={props.fontSize}>{item.label}</Text>
                                         </Checkbox>
-                                    })
-                                }
+                                    })}
+                                </VStack>
                             </PopoverBody>
                         </PopoverContent>
                     </Popover>

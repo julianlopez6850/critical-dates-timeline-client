@@ -22,10 +22,10 @@ const DateInput = (props) => {
                 maxDate={'2049-12-31'}
                 id={props.elementID}
                 sx={{
-                    width:'125px',
+                    width: props.width || '125px',
                     '& .MuiInputBase-root': {
                         color:'white',
-                        height:'30px',
+                        height: props.height || '30px',
                         '& .MuiOutlinedInput-notchedOutline': {
                             color:'white',
                             borderColor:'#c0c0c0',
@@ -47,7 +47,8 @@ const DateInput = (props) => {
                     },
                     '& .MuiInputBase-input': {
                         padding:'0px',
-                        textAlign:'center'
+                        textAlign:'center',
+                        fontSize: props.fontSize
                     },
                 }}
                 onKeyDown={() => {

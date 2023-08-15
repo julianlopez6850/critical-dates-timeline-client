@@ -632,6 +632,7 @@ const FileModal = (props) => {
                                                     padding={styles.inputPadding}
                                                     calculatorIconSize={styles.calculatorIconSize}
                                                     lockIconSize={styles.lockIconSize}
+                                                    buttonH={styles.footerButtonH}
                                                 />
                                             </HStack>
 

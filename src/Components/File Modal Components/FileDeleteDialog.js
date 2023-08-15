@@ -15,8 +15,8 @@ const FileDeleteDialog = (props) => {
             onClose={props.onClose}
         >
             <AlertDialogOverlay>
-                <AlertDialogContent bgColor='gray.700' color='white'>
-                    <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                <AlertDialogContent w='fit-content' h='fit-content' bgColor='gray.700' color='white' fontSize={props.fontSize}>
+                    <AlertDialogHeader fontSize={props.fontSize} fontWeight='bold'>
                         Delete File {props.fileNo}?
                     </AlertDialogHeader>
                     <AlertDialogBody whiteSpace='pre-line'>
@@ -24,10 +24,21 @@ const FileDeleteDialog = (props) => {
                         This action cannot be undone.
                     </AlertDialogBody>
                     <AlertDialogFooter>
-                        <Button colorScheme='whiteAlpha' onClick={props.onClose}>
+                        <Button
+                            h={props.buttonHeight}
+                            fontSize={props.fontSize}
+                            colorScheme='whiteAlpha'
+                            onClick={props.onClose}
+                        >
                             Cancel
                         </Button>
-                        <Button colorScheme='red' onClick={()=>{props.onClose(); props.deleteFile()}} ml={3}>
+                        <Button
+                            h={props.buttonHeight}
+                            ml={3}
+                            fontSize={props.fontSize}
+                            colorScheme='red'
+                            onClick={()=>{props.onClose(); props.deleteFile()}}
+                        >
                             Delete
                         </Button>
                     </AlertDialogFooter>

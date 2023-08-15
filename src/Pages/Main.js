@@ -20,13 +20,21 @@ import leadingZero from '../Helpers/leadingZero'
 
 function Main() {
 
-    const [styles, setStyles] = useState({});
+    const [styles, setStyles] = useState({
+        pageW: '1200px', pageMarginBlock: '25px', fontSize: '16px', stackDir: 'row', titleFontSize: '20px', inputHeight: '30px',
+        buttonTitleW: '65px', buttonPadding: '10px', tableW: '1060px', tableHeaderMargin: '8px', rowFontSize: '16px',
+        columnStyles: {
+            headers:{ dateHeaderW: '110px', fileNoHeaderW: '66px', eventHeaderW: '98px', infoHeaderW: '242px', statusHeaderW: '62px' },
+            columns:{ dateColW: '90px', fileNoColW: '50px', eventColW: '81px', infoColW: '225px', statusColW: '59px',
+                dateColPadding: '10px', numLines:1, margin: '8px', iconSize: '16px' }
+        }
+    });
 
     useEffect(() => {
         const windowListener = () => {
             if(window.innerWidth >= 1300) {
                 setStyles({
-                    pageW: '1200px', pageMarginBlock: '25px', fontSize: '16px', stackDir: 'row', titleFontSize: '20px', 
+                    pageW: '1200px', pageMarginBlock: '25px', fontSize: '16px', stackDir: 'row', titleFontSize: '20px', inputHeight: '30px',
                     buttonTitleW: '65px', buttonPadding: '10px', tableW: '1060px', tableHeaderMargin: '8px', rowFontSize: '16px',
                     columnStyles: {
                         headers:{ dateHeaderW: '110px', fileNoHeaderW: '66px', eventHeaderW: '98px', infoHeaderW: '242px', statusHeaderW: '62px' },
@@ -36,7 +44,7 @@ function Main() {
                 });
             } else if(window.innerWidth >= 1150) {
                 setStyles({
-                    pageW: '1060px', pageMarginBlock: '25px', fontSize: '16px', stackDir: 'row', titleFontSize: '20px',
+                    pageW: '1060px', pageMarginBlock: '25px', fontSize: '16px', stackDir: 'row', titleFontSize: '20px', inputHeight: '30px',
                     buttonTitleW: '65px', buttonPadding: '10px', tableW: '1060px', tableHeaderMargin: '8px', rowFontSize: '16px',
                     columnStyles: {
                         headers:{ dateHeaderW: '110px', fileNoHeaderW: '66px', eventHeaderW: '104px', infoHeaderW: '240px', statusHeaderW: '62px' },
@@ -46,7 +54,7 @@ function Main() {
                 });
             } else if(window.innerWidth >= 900) {
                 setStyles({
-                    pageW: '850px', pageMarginBlock: '25px', fontSize: '14px', stackDir: 'row', titleFontSize: '20px',
+                    pageW: '850px', pageMarginBlock: '25px', fontSize: '14px', stackDir: 'row', titleFontSize: '20px', inputHeight: '28px',
                     buttonTitleW: '65px', buttonPadding: '6px', tableW: '850px', tableHeaderMargin: '8px', rowFontSize: '14px',
                     columnStyles: {
                         headers:{ dateHeaderW: '96px', fileNoHeaderW: '61px', eventHeaderW: '94px', infoHeaderW: '180px', statusHeaderW: '59px' },
@@ -56,7 +64,7 @@ function Main() {
                 });
             } else if(window.innerWidth >= 650) {
                 setStyles({
-                    pageW: '600px', pageMarginBlock: '10px', fontSize: '12px', stackDir: 'column', titleFontSize: '18px',
+                    pageW: '600px', pageMarginBlock: '10px', fontSize: '12px', stackDir: 'column', titleFontSize: '18px', inputHeight: '26px',
                     buttonTitleW: '65px', buttonPadding: '6px', tableW: '600px', tableHeaderMargin: '4px', rowFontSize: '12px',
                     columnStyles: {
                         headers:{ dateHeaderW: '75px', fileNoHeaderW: '53px', eventHeaderW: '72px', infoHeaderW: '117px', statusHeaderW: '49px' },
@@ -66,7 +74,7 @@ function Main() {
                 });
             } else if(window.innerWidth >= 500) {
                 setStyles({
-                    pageW: '480px', pageMarginBlock: '10px', fontSize: '10px', stackDir: 'column', titleFontSize: '16px',
+                    pageW: '480px', pageMarginBlock: '10px', fontSize: '10px', stackDir: 'column', titleFontSize: '16px', inputHeight: '24px',
                     buttonTitleW: '50px', buttonPadding: '4px', tableW: '480px', tableHeaderMargin: '2px', rowFontSize: '10px',
                     columnStyles: {
                         headers:{ dateHeaderW: '65px', fileNoHeaderW: '47px', eventHeaderW: '61px', infoHeaderW: '89px', statusHeaderW: '40px' },
@@ -76,7 +84,7 @@ function Main() {
                 });
             } else if(window.innerWidth >= 420) {
                 setStyles({
-                    pageW: '400px', pageMarginBlock: '10px', fontSize: '10px', stackDir: 'column', titleFontSize: '14px',
+                    pageW: '400px', pageMarginBlock: '10px', fontSize: '10px', stackDir: 'column', titleFontSize: '14px', inputHeight: '22px',
                     buttonTitleW: '50px', buttonPadding: '4px', tableW: '400px', tableHeaderMargin: '0px', rowFontSize: '8px',
                     columnStyles: {
                         headers:{ dateHeaderW: '52px', fileNoHeaderW: '44px', eventHeaderW: '48px', infoHeaderW: '72px', statusHeaderW: '40px' },
@@ -86,7 +94,7 @@ function Main() {
                 });
             } else {
                 setStyles({
-                    pageW: '320px', pageMarginBlock: '5px', fontSize: '8px', stackDir: 'column', titleFontSize: '14px',
+                    pageW: '320px', pageMarginBlock: '5px', fontSize: '8px', stackDir: 'column', titleFontSize: '14px', inputHeight: '20px',
                     buttonTitleW: '40px', buttonPadding: '4px', tableW: '320px', tableHeaderMargin: '-2px', rowFontSize: '8px',
                     columnStyles: {
                         headers:{ dateHeaderW: '50px', fileNoHeaderW: '39px', eventHeaderW: '48px', infoHeaderW: '50px', statusHeaderW: '33px' },
@@ -280,6 +288,7 @@ function Main() {
                                 key={index}
                                 text={item}
                                 fontSize={styles.fontSize}
+                                inputHeight={styles.titleFontSize}
                                 when={when}
                                 setWhen={doSetWhen}
                                 prevWhen={prevWhen}

@@ -169,6 +169,8 @@ const FileClearAndSaveButtons = (props) => {
                 onClose={onCloseDeleteFile}
                 fileNo={props.fileNo}
                 deleteFile={deleteFile}
+                buttonHeight={props.buttonH}
+                fontSize={props.fontSize}
             />
         </HStack>
     )

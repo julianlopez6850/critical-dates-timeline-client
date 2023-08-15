@@ -82,6 +82,9 @@ const FileDates = (props) => {
                             isDateClosed={item.isClosed}
                             isFileClosed={props.isClosed}
                             boxSize={props.calculatorIconSize}
+                            fontSize={props.textFontSize}
+                            inputHeight={props.height}
+                            buttonH={props.buttonH}
                         />
                         <Tooltip
                             w='fit-content'

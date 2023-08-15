@@ -7,17 +7,17 @@ const DateSelect = (props) => {
             options={props.options}
             value={props.value}
             onChange={props.onChange}
-            placeholder='Select Date...'
+            placeholder='Select...'
             isSearchable={false}
             styles={{
                 container: (baseStyles) => ({
                     ...baseStyles,
-                    width: '125px',
+                    width: props.width || 'fit-content',
                 }),
                 control: (baseStyles) => ({
                     ...baseStyles,
-                    minHeight: '30px',
-                    height: '30px',
+                    minHeight: props.height || '30px',
+                    height: props.height || '30px',
                     backgroundColor: 'transparent',
                     border: '1px solid #c0c0c0',
                     '&:hover': {
@@ -39,7 +39,7 @@ const DateSelect = (props) => {
                 }),
                 singleValue: (baseStyles) => ({
                     ...baseStyles,
-                    width:'100px',
+                    width: 'fit-content',
                     display: 'flex',
                     justifyContent: 'left',
                     color: 'white',
@@ -68,19 +68,19 @@ const DateSelect = (props) => {
                 indicatorSeparator: () => ({}),
                 indicatorsContainer: (baseStyles) => ({
                     ...baseStyles,
-                    height: '30px',
+                    height: '100%',
                 }),
                 dropdownIndicator: (baseStyles) => ({
                     ...baseStyles,
                     color:'hsl(0, 0%, 80%) !important',
-                    height:'30px',
+                    height: '100%',
                     padding:'0px',
                     alignItems:'center',
                     '&:hover': {}
                 }),
                 placeholder: (baseStyles) => ({
                     ...baseStyles,
-                    width:'100px',
+                    width: 'fit-content',
                 })
             }}
         />
