@@ -99,11 +99,22 @@ const TableRow = (props) => {
                         <Divider orientation='vertical' h='70%' />
                         <Tooltip
                             label={item}
-                            maxW='255px'
-                        >   
-                            <Text w={props.colWidths.columns.infoColW} noOfLines={props.colWidths.columns.numLines} lineHeight={`${props.colWidths.columns.lineHeight}px`}>
-                                {item}
-                            </Text>
+                            fontSize={props.fontSize}
+                            // Max Width of Tooltip changes based on cell's numLines and fontSize.
+                            maxW={`${275 - (props.colWidths.columns.numLines * 25) - ((14 - Math.min(parseInt(props.fontSize.slice(0,-2)), 14)) * 15)}px`}
+                            gutter='2'
+                        >
+                            <Box h='100%' display='flex'>
+                                <Text
+                                    w={props.colWidths.columns.infoColW}
+                                    h='fit-content'
+                                    alignSelf='center'
+                                    noOfLines={props.colWidths.columns.numLines}
+                                    lineHeight={`${props.colWidths.columns.lineHeight}px`}
+                                >
+                                    {item}
+                                </Text>
+                            </Box>
                         </Tooltip>
                     </Fragment>
                 })

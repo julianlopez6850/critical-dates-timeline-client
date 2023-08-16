@@ -522,11 +522,12 @@ const FileModal = (props) => {
 
     return (
         <Modal
-            closeOnOverlayClick={false}
-            onClose={() => { props.onClose() }}
             isOpen={props.isOpen}
+            onClose={props.onClose}
             size={styles.modalSize}
+            closeOnOverlayClick={false}
             scrollBehavior='outside'
+            allowPinchZoom={true}
         >
             <ModalOverlay />
             <ModalContent

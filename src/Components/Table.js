@@ -28,7 +28,7 @@ const DatesTable = (props) => {
         {
             label: 'Date',
             text: <Tooltip borderRadius='5px' mt='-5px' closeOnClick={false} label={
-                <VStack>
+                <VStack fontSize={props.fontSize}>
                     <HStack w='full'>
                         <Box w='10px' h='10px' mb='-3px' bgColor='red'></Box>
                         <Text>: Past Due</Text>
@@ -85,7 +85,7 @@ const DatesTable = (props) => {
         {
             label: 'Status',
             text: <Tooltip borderRadius='5px' mt='-5px' closeOnClick={false} label={
-                <VStack>
+                <VStack fontSize={props.fontSize}>
                     <HStack w='full'>
                         <Text mb='2px'><UnlockIcon/></Text>
                         <Text>: Ongoing</Text>

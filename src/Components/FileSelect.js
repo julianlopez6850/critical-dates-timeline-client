@@ -31,7 +31,6 @@ const FileSelect = (props) => {
             className='select'
             options={props.options}
             value={props.value}
-            isSearchable={props.isSearchable}
             onChange={(e) => {
                 props.onChange(e)
                 if(!props.isSearchable && e) {

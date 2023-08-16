@@ -113,11 +113,12 @@ const SettingsModal = (props) => {
 
     return (
         <Modal
-            closeOnOverlayClick={false}x    
-            onClose={() => { props.onClose() }}
             isOpen={props.isOpen}
-            motionPreset='slideInBottom'
+            onClose={props.onClose}
             size='md'
+            closeOnOverlayClick={false}
+            scrollBehavior='outside'
+            allowPinchZoom={true}
         >
             <ModalOverlay />
             <ModalContent
