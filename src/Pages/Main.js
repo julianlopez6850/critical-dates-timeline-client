@@ -72,7 +72,7 @@ function Main() {
                             dateColPadding: '5px', numLines:2, lineHeight:15, margin: '6px', iconSize: '14px' }
                     },
                 });
-            } else if(window.innerWidth >= 500) {
+            } else if(window.innerWidth >= 530) {
                 setStyles({
                     pageW: '480px', pageMarginBlock: '10px', fontSize: '10px', stackDir: 'column', titleFontSize: '16px', inputHeight: '24px',
                     buttonTitleW: '50px', buttonPadding: '4px', tableW: '480px', tableHeaderMargin: '2px', rowFontSize: '10px',

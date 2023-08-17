@@ -26,7 +26,7 @@ const SettingsModal = (props) => {
 
     useEffect(() => {
         const windowListener = () => {
-            if(window.innerWidth >= 500) {
+            if(window.innerWidth >= 530) {
                 setStyles({
                     headerFontSize:'20px', bodyFontSize:'14px', inputH:'21px', paddingInline:'8px'
                 });

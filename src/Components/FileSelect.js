@@ -129,7 +129,7 @@ const FileSelect = (props) => {
                     ...baseStyles,
                     minHeight:'inherit',
                     height:'inherit',
-                    width:'32px',
+                    width:props.indicatorSize,
                     alignSelf:'center',
                     alignItems:'center',
                     justifyContent:'center',

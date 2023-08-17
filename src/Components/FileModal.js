@@ -65,7 +65,7 @@ const FileModal = (props) => {
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
                     saveButtonW:'60px', otherFooterButtonsW:'90px', footerButtonH:'32px', footerFontSize:'12px', footerTooltipSize:'350px'
                 });
-            } else if(window.innerWidth >= 500) {
+            } else if(window.innerWidth >= 530) {
                 setStyles({
                     modalSize:'sm', modalInlinePadding:'12px', bodyFontSize: '10px', spacing:'4px',
                     bodyInputHeight: '18px', inputPadding:'8px', firstStacksDir:'column', secondStacksDir: 'column',

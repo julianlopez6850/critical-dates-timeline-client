@@ -46,6 +46,7 @@ const SettingsMenu = (props) => {
                     as={NavbarButton}
                     icon={<SettingsIcon/>}
                     size={props.size}
+                    iconSize={props.iconSize}
                 />
                 <MenuList bgColor={'gray.800'} minWidth={props.width} width={props.width} fontSize={props.fontSize}>
                     <Text h='30px' textAlign='center' padding='4px'>

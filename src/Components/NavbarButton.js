@@ -1,6 +1,9 @@
 import { forwardRef } from 'react';
 
-import { Button } from '@chakra-ui/react';
+import {
+    Button,
+    Icon
+} from '@chakra-ui/react';
 
 const NavbarButton = forwardRef((props, ref) => {
 
@@ -16,10 +19,13 @@ const NavbarButton = forwardRef((props, ref) => {
             _active={''}
             onClick = {props.onClick}
             minWidth='unset'
+            minHeight='unset'
+            padding='unset'
             boxSize={props.size}
         >
-            {props.icon}
-            {props.text}
+            <Icon boxSize={props.iconSize}>
+                {props.icon}
+            </Icon>
         </Button>
     )
 })

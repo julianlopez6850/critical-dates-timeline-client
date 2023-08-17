@@ -22,28 +22,34 @@ const Navbar = () => {
 
     useEffect(() => {
         const windowListener = () => {
-            if(window.innerWidth >= 650) {
+            if(window.innerWidth >= 900) {
                 setStyles({
-                    navbarHeight: '60px', leftMinWidth: '320px', rightMinWidth: '52px', titleSize:'20px', buttonSize:'40px',
-                    fileSelectWidth:'200px', fileSelectFontSize:'16px', placeholder: 'Select File...', isSearchable: true,
+                    navbarHeight: '60px', titleSize:'20px', buttonSize:'40px', iconSize:'16px',
+                    fileSelectWidth:'200px', fileSelectFontSize:'16px', indicatorSize:'32px', placeholder: 'Select File...', isSearchable: true,
                     menuWidth:'200px', menuFontSize:'16px', menuMargin:'5px'
                 });
-            } else if(window.innerWidth >= 500) {
+            } else if(window.innerWidth >= 650) {
                 setStyles({
-                    navbarHeight: '40px', leftMinWidth: '248px', rightMinWidth: '36px', titleSize:'16px', buttonSize:'30px',
-                    fileSelectWidth:'160px', fileSelectFontSize:'14px', placeholder: 'Select File...', isSearchable: true,
+                    navbarHeight: '40px', titleSize:'16px', buttonSize:'30px', iconSize:'14px',
+                    fileSelectWidth:'140px', fileSelectFontSize:'14px', indicatorSize:'28px', placeholder: 'Select File...', isSearchable: true,
+                    menuWidth:'175px', menuFontSize:'14px', menuMargin:'2px'
+                });
+            } else if(window.innerWidth >= 530) {
+                setStyles({
+                    navbarHeight: '40px', titleSize:'16px', buttonSize:'26px', iconSize:'12px',
+                    fileSelectWidth:'90px', fileSelectFontSize:'14px', indicatorSize:'22px', placeholder: 'Select...', isSearchable: true,
                     menuWidth:'175px', menuFontSize:'14px', menuMargin:'2px'
                 });
             } else if(window.innerWidth >= 420) {
                 setStyles({
-                    navbarHeight: '40px', leftMinWidth: '80px', rightMinWidth: '36px', titleSize:'16px', buttonSize:'30px',
-                    fileSelectWidth:'36px', fileSelectFontSize:'10px', placeholder: '', isSearchable: false,
+                    navbarHeight: '40px', titleSize:'16px', buttonSize:'26px', iconSize:'12px',
+                    fileSelectWidth:'26px', fileSelectFontSize:'10px', indicatorSize:'22px', placeholder: '', isSearchable: false,
                     menuWidth:'150px', menuFontSize:'14px', menuMargin:'0px'
                 });
             }  else {
                 setStyles({
-                    navbarHeight: '40px', leftMinWidth: '80px', rightMinWidth: '36px', titleSize:'16px', buttonSize:'30px',
-                    fileSelectWidth:'36px', fileSelectFontSize:'10px', placeholder: '', isSearchable: false,
+                    navbarHeight: '40px', titleSize:'16px', buttonSize:'26px    ', iconSize:'12px',
+                    fileSelectWidth:'26px', fileSelectFontSize:'10px', indicatorSize:'22px', placeholder: '', isSearchable: false,
                     menuWidth:'120px', menuFontSize:'12px', menuMargin:'0px'
                 });
             }
@@ -103,7 +109,7 @@ const Navbar = () => {
         <Box w='full'>
             <HStack h={styles.navbarHeight} w='full' bgColor='var(--navbar-color)' textColor='white' display='flex' justifyContent='space-between' paddingInline='10px'>
                 {/* Navbar, Left Side */}
-                <HStack display='flex' justifyContent='left' w={styles.leftMinWidth} minW={styles.leftMinWidth}>
+                <HStack display='flex' justifyContent='left' w='0px' minW='0px'>
                     {profile.loggedIn && <>
                         {/* Search for Specific File */}
                         <FileSelect
@@ -117,27 +123,34 @@ const Navbar = () => {
                             height={styles.buttonSize}
                             width={styles.fileSelectWidth}
                             fontSize={styles.fileSelectFontSize}
+                            indicatorSize={styles.indicatorSize}
                             placeholder={styles.placeholder}
                             arrowMargin={styles.arrowMargin}
                             removeWidth={styles.removeWidth}
                         />
                         {styles.isSearchable &&
-                            <NavbarButton
-                                onClick={() => {
-                                    if(selectedFile)
-                                        onOpenFileEditor();
-                                }}
-                                icon={<SearchIcon/>}
-                                size={styles.buttonSize}
-                            />
+                            <Box>
+                                <NavbarButton
+                                    onClick={() => {
+                                        if(selectedFile)
+                                            onOpenFileEditor();
+                                    }}
+                                    icon={<SearchIcon/>}
+                                    size={styles.buttonSize}
+                                    iconSize={styles.iconSize}
+                                />
+                            </Box>
                         }
                         
                         {/* Button: Add New File */}
-                        <NavbarButton
-                            onClick={onOpenFileCreator}
-                            icon={<AddIcon/>}
-                            size={styles.buttonSize}
-                        />
+                        <Box minH='0' h='100%'>
+                            <NavbarButton
+                                onClick={onOpenFileCreator}
+                                icon={<AddIcon/>}
+                                size={styles.buttonSize}
+                                iconSize={styles.iconSize}
+                            />
+                        </Box>
                     </>}
                 </HStack>
                 {/* Navbar, Center */}
@@ -147,13 +160,14 @@ const Navbar = () => {
                     </Text>
                 </HStack>
                 {/* Navbar, Right Side */}
-                <HStack display='flex' justifyContent='right' w={styles.leftMinWidth} minW={styles.rightMinWidth}>
+                <HStack display='flex' justifyContent='right' w='0px' minW='0px'>
                     {/* Button: Open Settings */}
                     <SettingsMenu
                         size={styles.buttonSize}
                         width={styles.menuWidth}
                         fontSize={styles.menuFontSize}
                         margin={styles.menuMargin}
+                        iconSize={styles.iconSize}
                     />
                 </HStack>
             </HStack>
