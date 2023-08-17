@@ -104,40 +104,41 @@ const Navbar = () => {
             <HStack h={styles.navbarHeight} w='full' bgColor='var(--navbar-color)' textColor='white' display='flex' justifyContent='space-between' paddingInline='10px'>
                 {/* Navbar, Left Side */}
                 <HStack display='flex' justifyContent='left' w={styles.leftMinWidth} minW={styles.leftMinWidth}>
-                    {/* Search for Specific File */}
-                    <FileSelect
-                        options={files}
-                        value={selectedFile}
-                        onChange={(selection) => {
-                            setSelectedFile(selection);
-                        }}
-                        openFile={onOpenFileEditor}
-                        height={styles.buttonSize}
-                        width={styles.fileSelectWidth}
-                        fontSize={styles.fileSelectFontSize}
-                        placeholder={styles.placeholder}
-                        isSearchable={styles.isSearchable}
-                        arrowMargin={styles.arrowMargin}
-                        removeWidth={styles.removeWidth}
-                    />
-                    {
-                        styles.isSearchable ?
-                        <NavbarButton
-                            onClick={() => {
-                                if(selectedFile)
-                                    onOpenFileEditor();
+                    {profile.loggedIn && <>
+                        {/* Search for Specific File */}
+                        <FileSelect
+                            options={files}
+                            isSearchable={styles.isSearchable}
+                            value={selectedFile}
+                            onChange={(selection) => {
+                                setSelectedFile(selection);
                             }}
-                            icon={<SearchIcon/>}
+                            openFile={onOpenFileEditor}
+                            height={styles.buttonSize}
+                            width={styles.fileSelectWidth}
+                            fontSize={styles.fileSelectFontSize}
+                            placeholder={styles.placeholder}
+                            arrowMargin={styles.arrowMargin}
+                            removeWidth={styles.removeWidth}
+                        />
+                        {styles.isSearchable &&
+                            <NavbarButton
+                                onClick={() => {
+                                    if(selectedFile)
+                                        onOpenFileEditor();
+                                }}
+                                icon={<SearchIcon/>}
+                                size={styles.buttonSize}
+                            />
+                        }
+                        
+                        {/* Button: Add New File */}
+                        <NavbarButton
+                            onClick={onOpenFileCreator}
+                            icon={<AddIcon/>}
                             size={styles.buttonSize}
-                        /> : <></>
-                    }
-                    
-                    {/* Button: Add New File */}
-                    <NavbarButton
-                        onClick={onOpenFileCreator}
-                        icon={<AddIcon/>}
-                        size={styles.buttonSize}
-                    />
+                        />
+                    </>}
                 </HStack>
                 {/* Navbar, Center */}
                 <HStack display='flex' justifyContent='center' minW='fit-content'>                
