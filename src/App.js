@@ -38,9 +38,8 @@ function App() {
               textColor={profile.darkMode ? 'var(--text-color-dark)' : 'var(--text-color-light)'}
             >
               <Router>
-                <Navbar/>
                 <Routes>
-                  <Route exact path='/' element={<Main/>} />
+                  <Route exact path='/' element={<><Navbar/><Main/></>} />
                   <Route exact path='/login' element={<Login/>} />
                 </Routes>
               </Router>
