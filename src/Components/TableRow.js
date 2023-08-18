@@ -95,6 +95,10 @@ const TableRow = (props) => {
             {/* Display Buyer, Seller, Address w/ Tooltip in case of overflow. */}
             {
                 [dateInfo.File.buyer, dateInfo.File.seller, dateInfo.File.address].map((item, index) => {
+                    const whoRepresenting = dateInfo.File.whoRepresenting
+                    const represented = ((index !== 2 && whoRepresenting === 'Both') ||
+                        (index === 0 && whoRepresenting === 'Buyer') ||
+                        (index === 1 && whoRepresenting === 'Seller'))
                     return <Fragment key={index}>
                         <Divider orientation='vertical' h='70%' />
                         <Tooltip
@@ -111,6 +115,10 @@ const TableRow = (props) => {
                                     alignSelf='center'
                                     noOfLines={props.colWidths.columns.numLines}
                                     lineHeight={`${props.colWidths.columns.lineHeight}px`}
+                                    /* Make the represented party of each Date's File stand out. */
+                                    fontStyle={represented ? 'italic' : 'normal'}
+                                    fontWeight={represented ? 'bold' : 'normal'}
+                                    color={represented ? 'floralwhite' : 'white'}
                                 >
                                     {item}
                                 </Text>
