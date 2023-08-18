@@ -48,21 +48,36 @@ const FileTaskInfo = (props) => {
                     <Text minW='fit-content' fontWeight='bold' fontSize={props.fontSize}>
                         Representing:
                     </Text>
-                    <Tabs h={props.height} variant='enclosed' colorScheme='white' defaultIndex={props.whoRepresenting ? 1 : 0}>
+                    <Tabs h={props.height} variant='enclosed' colorScheme='white'
+                        defaultIndex={() => {
+                            switch(props.whoRepresenting) {
+                                case 'Seller': return 0;
+                                case 'Buyer': return 1;
+                                default: return 2;
+                            }
+                        }}
+                    >
                         <TabList h={props.height} border='none'>
                             <Tab
                                 w={props.fileRepTabsW} h={props.height} p='0px' border='none' color='whiteAlpha.700' fontSize={props.fontSize}
                                 _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}}
-                                onClick={() => {props.setWhoRepresenting(false)}}
+                                onClick={() => {props.setWhoRepresenting('Seller')}}
+                            >
+                                Seller
+                            </Tab>
+                            <Tab
+                                w={props.fileRepTabsW} h={props.height}  p='0px' border='none' color='whiteAlpha.700' fontSize={props.fontSize}
+                                _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}}
+                                onClick={() => {props.setWhoRepresenting('Buyer')}}
                             >
                                 Buyer
                             </Tab>
                             <Tab
                                 w={props.fileRepTabsW} h={props.height}  p='0px' border='none' color='whiteAlpha.700' fontSize={props.fontSize}
                                 _selected={{borderBottom:'1px', fontWeight:'bold', color:'white'}}
-                                onClick={() => {props.setWhoRepresenting(true)}}
+                                onClick={() => {props.setWhoRepresenting('Both')}}
                             >
-                                Seller
+                                Both
                             </Tab>
                         </TabList>
                     </Tabs>
@@ -70,7 +85,7 @@ const FileTaskInfo = (props) => {
             }
             <HStack >
                     <Text minW='fit-content' fontWeight='bold'>
-                        Responsibilities:
+                        Tasks:
                     </Text>
                     <Popover h='30px'>
                         <PopoverTrigger>

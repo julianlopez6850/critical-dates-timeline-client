@@ -100,7 +100,7 @@ const FileModal = (props) => {
     const [fileNo, setFileNo] = useState('');
     const [displayedFileNo, setDisplayedFileNo] = useState('');
     const [fileRef, setFileRef] = useState('');
-    const [whoRepresenting, setWhoRepresenting] = useState(false); // true = Seller, false = Buyer
+    const [whoRepresenting, setWhoRepresenting] = useState('Buyer');
     const [isPurchase, setIsPurchase] = useState(true); // true = Purchase, false = REFI
     const [buyer, setBuyer] = useState(''); // buyer name
     const [seller, setSeller] = useState(''); // seller name
@@ -448,7 +448,7 @@ const FileModal = (props) => {
     const resetAllValues = () => {
         setFileNo('');
         setFileRef('');
-        setWhoRepresenting(false);
+        setWhoRepresenting('Buyer');
         setIsPurchase(true);
         setBuyer('')
         setSeller('')
