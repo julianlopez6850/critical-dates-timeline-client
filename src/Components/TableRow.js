@@ -66,7 +66,7 @@ const TableRow = (props) => {
     }, [isClosed, update]);
 
     return (
-        <HStack w={props.tableWidth} h='30px' borderRadius='10px' textAlign='left' bgColor='#0077cc' color='white' fontSize={props.fontSize} spacing={props.colWidths.columns.margin}
+        <HStack w={props.tableWidth} h='30px' borderRadius='10px' textAlign='left' bgColor={dateInfo.File.isPurchase ? '#0077cc' : '#0055aa'} color='white' fontSize={props.fontSize} spacing={props.colWidths.columns.margin}
             _hover={{cursor:'pointer'}} 
             onClick={()=>{onOpen()}}
         >
