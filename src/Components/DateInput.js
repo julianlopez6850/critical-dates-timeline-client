@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
     Text,
@@ -17,9 +17,13 @@ const DateInput = (props) => {
             label={inputError ? <Text>{inputError.toUpperCase()}<br/> DEFAULTING TO NO BOUND</Text> : undefined}
         >
             <DateField
-                aria-placeholder='MM-DD-YYYY'
                 minDate={'2000-01-01'}
                 maxDate={'2049-12-31'}
+                defaultValue={props.value}
+                onChange={() =>
+                    setTimeout(() =>
+                        trySetDate(document.getElementById(props.elementID).value, props.setDate, false, false)
+                )}
                 id={props.elementID}
                 sx={{
                     width: props.width || '125px',
@@ -29,7 +33,6 @@ const DateInput = (props) => {
                         '& .MuiOutlinedInput-notchedOutline': {
                             color:'white',
                             borderColor:'#c0c0c0',
-
                         }
                     },
                     ':hover': {
@@ -50,11 +53,6 @@ const DateInput = (props) => {
                         textAlign:'center',
                         fontSize: props.fontSize
                     },
-                }}
-                onKeyDown={() => {
-                    setTimeout(() => {
-                        trySetDate(document.getElementById(props.elementID).value, props.setDate)
-                    })
                 }}
                 onError={(err) => {
                     if(err === null)

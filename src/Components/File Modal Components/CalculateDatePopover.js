@@ -27,6 +27,7 @@ import {
     Icon,
 } from '@chakra-ui/react';
 import { CalculateOutlined } from '@mui/icons-material';
+import dayjs from 'dayjs';
 
 import DateInput from '../DateInput';
 import DateSelect from './DateSelect';
@@ -73,10 +74,14 @@ const CalculateDatePopover = (props) => {
                 break;
             }
         }
-        setBaseDate({
-            label: isCalculated.from,
-            value: from
-        });
+        if(isCalculated.from === 'Other') {
+            trySetDate(props.isCalculated.otherDate, setOtherDate, true, false);
+        } else {
+            setBaseDate({
+                label: isCalculated.from,
+                value: from
+            });
+        }
     }, [props.isCalculated])
 
     useEffect(() => {
@@ -107,7 +112,7 @@ const CalculateDatePopover = (props) => {
     useEffect(() => {
         if(!otherDate)
             return;
-        trySetDate(otherDate, setFormattedOtherDate, true);
+        trySetDate(otherDate, setFormattedOtherDate, false);
     }, [otherDate])
 
     useEffect(() => {
@@ -233,8 +238,9 @@ const CalculateDatePopover = (props) => {
                                 <HStack w='full'>
                                     <Text w='84px' textAlign='left'>Other:</Text>
                                     <DateInput
+                                        value={dayjs(formattedOtherDate)}
                                         setDate={setOtherDate}
-                                        elementID={`:calculateDatePopover:Other:`}
+                                        elementID={`:calculateDatePopover:Other:${props.type}`}
                                         width={`${parseInt(props.inputHeight.slice(0,-2)) * 4.5}px`}
                                         height={props.inputHeight}
                                         fontSize={props.fontSize}
