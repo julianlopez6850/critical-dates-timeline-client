@@ -15,7 +15,7 @@ import {
 
 import DateFilterButton from '../Components/DateFilterButton'
 import CustomDatePopover from '../Components/CustomDatePopover'
-import DatesTable from '../Components/Table'
+import DatesTable from '../Components/DatesTable'
 import leadingZero from '../Helpers/leadingZero'
 
 function Main() {
@@ -117,6 +117,7 @@ function Main() {
     const [loading, setLoading] = useState(true);
     const [criticalDates, setCriticalDates] = useState([]);
     const [dateType, setDateType] = useState({label: 'All', value: ''});
+    const [dealType, setDealType] = useState({label: 'All', value: ''});
     const [when, setWhen] = useState('All');
     const [status, setStatus] = useState('Open');
     const [startDate, setStartDate] = useState('');
@@ -132,11 +133,17 @@ function Main() {
         onClose: onCloseCustomDate 
     } = useDisclosure()
 
-    const types = [
+    const dateTypes = [
         {label: 'All', value: ''}, 
         {label: 'Escrows', value: 'Escrow'},  
         {label: 'Closings', value: 'Closing'}, 
         {label: 'Inspections', value: 'Inspection'}
+    ];
+    const dealTypes = [
+        {label: 'All', value: ''},
+        {label: 'Sale', value: 'Sale'},
+        {label: 'Purchase', value: 'Purchase'},
+        {label: 'Refinance', value: 'Refinance'},
     ];
     const statuses = ['All', 'Open', 'Closed'];
     const timeframes = ['All', 'Past Due', 'Today', 'This Week', 'Upcoming', 'Custom'];
@@ -160,13 +167,13 @@ function Main() {
             else
                 console.warn('ERROR: Server is currently unavailable. Please try again later.');
         });
-    }, [startDate, endDate, dateType, isClosed, sort]);
+    }, [startDate, endDate, dateType, dealType, isClosed, sort]);
 
     useEffect(() => {
         if(!profile.loggedIn) {
             setCriticalDates([]);
         } else {
-            axiosInstance.get(`${process.env.REACT_APP_API_URL}/dates?type=${dateType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}&sort=${sort.by},${sort.dir}`).then((response) => {
+            axiosInstance.get(`${process.env.REACT_APP_API_URL}/dates?type=${dateType.value}&dealType=${dealType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}&sort=${sort.by},${sort.dir}`).then((response) => {
                 setCriticalDates(response.data.dates);
                 setLoading(false);
             }).catch(() => {
@@ -233,7 +240,7 @@ function Main() {
         <VStack w='full' h='max-content' alignItems='center' marginBlock={styles.pageMarginBlock}>
             {/* Filter Buttons */}
             <Stack w={styles.pageW} justifyContent='space-between' direction={styles.stackDir} spacing={styles.buttonPadding}>
-                {/* Type Filter */}
+                {/* Date Type Filter */}
                 <VStack spacing={styles.buttonPadding}>
                     <HStack w='full' spacing='0' alignSelf='start'>
                         <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
@@ -241,7 +248,7 @@ function Main() {
                         </Text>
                         <>
                             {
-                                types.map((item, index) => {
+                                dateTypes.map((item, index) => {
                                     return <DateFilterButton
                                         key={index}
                                         text={item.label}
@@ -253,6 +260,63 @@ function Main() {
                                 })
                             }
                         </>
+                    </HStack>
+                    {/* Deal Type Filter */}
+                    <HStack w='full' spacing='0' alignSelf='start'>
+                        <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
+                            DEAL:
+                        </Text>
+                        <>
+                            {
+                                dealTypes.map((item, index) => {
+                                    return <DateFilterButton
+                                        key={index}
+                                        text={item.label}
+                                        fontSize={styles.fontSize}
+                                        padding={styles.buttonPadding}
+                                        onClick={() => {setDealType(item)}}
+                                        active={dealType.value === item.value}
+                                    />
+                                })
+                            }
+                        </>
+                    </HStack>
+                </VStack>
+                <VStack spacing={styles.buttonPadding}>
+                    {/* When Filter */}
+                    <HStack spacing='0' alignSelf='start'>
+                        <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
+                            WHEN:
+                        </Text>
+                        {
+                            timeframes.map((item, index) => {
+                                return item === 'Custom' &&
+                                <CustomDatePopover
+                                    key={index}
+                                    text={item}
+                                    fontSize={styles.fontSize}
+                                    inputHeight={styles.titleFontSize}
+                                    when={when}
+                                    setWhen={doSetWhen}
+                                    prevWhen={prevWhen}
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                    setStartDate={setStartDate}
+                                    setEndDate={setEndDate}
+                                    isOpen={isOpenCustomDate}
+                                    onOpen={onOpenCustomDate}
+                                    onClose={onCloseCustomDate}
+                                /> ||
+                                <DateFilterButton
+                                    key={index}
+                                    text={item}
+                                    fontSize={styles.fontSize}
+                                    padding={styles.buttonPadding}
+                                    onClick={() => {doSetWhen(item)}}
+                                    active={when === item}
+                                />
+                            })
+                        }
                     </HStack>
                     {/* Status Filter */}
                     <HStack w='full' spacing='0' alignSelf='start'>
@@ -275,42 +339,6 @@ function Main() {
                         </>
                     </HStack>
                 </VStack>
-                
-                {/* When Filter */}
-                <HStack spacing='0' alignSelf='start'>
-                    <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
-                        WHEN:
-                    </Text>
-                    {
-                        timeframes.map((item, index) => {
-                            return item === 'Custom' &&
-                            <CustomDatePopover
-                                key={index}
-                                text={item}
-                                fontSize={styles.fontSize}
-                                inputHeight={styles.titleFontSize}
-                                when={when}
-                                setWhen={doSetWhen}
-                                prevWhen={prevWhen}
-                                startDate={startDate}
-                                endDate={endDate}
-                                setStartDate={setStartDate}
-                                setEndDate={setEndDate}
-                                isOpen={isOpenCustomDate}
-                                onOpen={onOpenCustomDate}
-                                onClose={onCloseCustomDate}
-                            /> ||
-                            <DateFilterButton
-                                key={index}
-                                text={item}
-                                fontSize={styles.fontSize}
-                                padding={styles.buttonPadding}
-                                onClick={() => {doSetWhen(item)}}
-                                active={when === item}
-                            />
-                        })
-                    }
-                </HStack>
             </Stack>
             
             <HStack w='full' justifyContent='center'>
