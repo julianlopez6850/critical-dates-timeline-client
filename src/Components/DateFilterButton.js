@@ -8,22 +8,31 @@ const DateFilterButton = forwardRef((props, ref) => {
     const { profile } = useContext(profileContext);
 
     return (
-        <Button ref={ref}
+        <Button
+            ref={ref}
+            display='inline-block'
+            _before={{
+                display:'block',
+                height:0,
+                fontWeight:'bold',
+                visibility:'hidden',
+                content:`"${props.text}"`
+            }}
             fontSize={props.fontSize || 16}
             variant='link'
-            color={(profile.darkMode) ? 
+            color={(profile.darkMode) ?
                 (props.active) ? 'white' : 'gray.400' :
                 (props.active) ? 'black' : 'gray.500'
             }
-            borderBottom={(profile.darkMode) ? 
+            borderBottom={(profile.darkMode) ?
                 (props.active) ? '2px solid white' : '2px solid transparent' :
                 (props.active) ? '2px solid black' : '2px solid transparent'
             }
             borderRadius='0'
-            textShadow={(props.active) ? '0px 0px 1px' : ''}
-            _hover={(props.active) ? { cursor:'default' } : 
+            fontWeight={(props.active) ? 'bold' : 'normal'}
+            _hover={(props.active) ? { cursor:'default' } :
                 {
-                    textShadow:'0px 0px 1px',
+                    fontWeight:'bold',
                     cursor:'pointer'
                 }
             }
