@@ -141,9 +141,9 @@ function Main() {
     ];
     const dealTypes = [
         {label: 'All', value: ''},
-        {label: 'Sale', value: 'Sale'},
-        {label: 'Purchase', value: 'Purchase'},
-        {label: 'Refinance', value: 'Refinance'},
+        {label: 'Sales', value: 'Sale'},
+        {label: 'Purchases', value: 'Purchase'},
+        {label: 'Refinances', value: 'Refinance'},
     ];
     const statuses = ['All', 'Open', 'Closed'];
     const timeframes = ['All', 'Past Due', 'Today', 'This Week', 'Upcoming', 'Custom'];
@@ -358,6 +358,7 @@ function Main() {
                             loggedIn={profile.loggedIn}
                             error={error}
                             type={dateType.label}
+                            dealType={dealType.label}
                             when={when}
                             dates={criticalDates}
                             status={status}

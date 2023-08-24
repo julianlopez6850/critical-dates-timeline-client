@@ -109,11 +109,35 @@ const DatesTable = (props) => {
         },
     ]
 
+    const deal = props.dealType
+    const event = props.type
+    const when = props.when
+    const status = props.status
+    var filterString = ''
+
+    // Count the number of table filters that are not set to 'All'
+    const filterCount = () => {
+        filterString = '';
+        var count = 0;
+        [status, deal, event, when].forEach((item) => {
+            if(item !== 'All') {
+                filterString += item + ' | ';
+                count++;
+            }
+        })
+        filterString = filterString.slice(0,-3);
+        return count;
+    }
+
     return (
         <VStack fontSize={props.fontSize}>
             <VStack spacing={props.headerMargin}>
+                {/* Dates Table Title */}
                 <Text fontSize={props.titleFontSize} fontWeight='bold'>
-                    {`${props.type} | ${props.when}`}
+                    {`${filterCount() === 0  ? 'All' :
+                        filterCount() === 1  ? `All ${filterString}` :
+                        filterString
+                    }`}
                 </Text>
 
                 <Divider w={props.tableWidth} borderColor='red' marginTop='4px !important'/>
@@ -164,7 +188,7 @@ const DatesTable = (props) => {
                                 </Text>
                             ) : (
                                 <Text>
-                                    {`No critical dates found matching the given criteria: { type: ${props.type} | when: ${props.when} | status: ${props.status} }`}
+                                    {`No critical dates found matching the given criteria: { deal: ${deal} | type: ${event} | when: ${when} | status: ${status} }`}
                                 </Text>
                             )
                         ) : (
