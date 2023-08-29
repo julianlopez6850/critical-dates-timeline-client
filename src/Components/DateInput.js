@@ -21,8 +21,10 @@ const DateInput = (props) => {
                 maxDate={'2049-12-31'}
                 defaultValue={props.value}
                 onChange={() =>
-                    setTimeout(() =>
-                        trySetDate(document.getElementById(props.elementID).value, props.setDate, false, false)
+                    setTimeout(() => {
+                        trySetDate(document.getElementById(props.elementID).value, props.setDate, false, false);
+                        props.setPageNum && props.setPageNum(1);
+                    }
                 )}
                 id={props.elementID}
                 sx={{

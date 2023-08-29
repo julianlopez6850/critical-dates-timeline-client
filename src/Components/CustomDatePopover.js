@@ -47,6 +47,7 @@ const CustomDatePopover = (props) => {
                                 fontSize={props.fontSize}
                                 width={`${parseInt(props.inputHeight.slice(0,-2)) * 5.5}px`}
                                 height={props.inputHeight}
+                                setPageNum={props.setPageNum}
                             />
                         </HStack>
                         <HStack w='full' justifyContent='space-between'>
@@ -57,6 +58,7 @@ const CustomDatePopover = (props) => {
                                 fontSize={props.fontSize}
                                 width={`${parseInt(props.inputHeight.slice(0,-2)) * 5.5}px`}
                                 height={props.inputHeight}
+                                setPageNum={props.setPageNum}
                             />
                         </HStack>
                         <Text fontSize={props.fontSize}>

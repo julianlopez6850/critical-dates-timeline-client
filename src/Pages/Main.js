@@ -27,7 +27,8 @@ function Main() {
             headers:{ dateHeaderW: '110px', fileNoHeaderW: '66px', eventHeaderW: '98px', infoHeaderW: '242px', statusHeaderW: '62px' },
             columns:{ dateColW: '90px', fileNoColW: '50px', eventColW: '81px', infoColW: '225px', statusColW: '59px',
                 dateColPadding: '10px', numLines:1, margin: '8px', iconSize: '16px' }
-        }
+        },
+        paginationFontSize: '16px', paginationH: '36px', paginationPadding: '8px'
     });
 
     useEffect(() => {
@@ -41,6 +42,7 @@ function Main() {
                         columns:{ dateColW: '90px', fileNoColW: '50px', eventColW: '81px', infoColW: '225px', statusColW: '59px',
                             dateColPadding: '10px', numLines:1, margin: '8px', iconSize: '16px' }
                     },
+                    paginationFontSize: '16px', paginationH: '36px', paginationPadding: '8px'
                 });
             } else if(window.innerWidth >= 1150) {
                 setStyles({
@@ -51,6 +53,7 @@ function Main() {
                         columns:{ dateColW: '90px', fileNoColW: '50px', eventColW: '87px', infoColW: '223px', statusColW: '59px',
                             dateColPadding: '10px', numLines:1, margin: '8px', iconSize: '16px' }
                     },
+                    paginationFontSize: '16px', paginationH: '36px', paginationPadding: '8px'
                 });
             } else if(window.innerWidth >= 900) {
                 setStyles({
@@ -61,6 +64,7 @@ function Main() {
                         columns:{ dateColW: '80px', fileNoColW: '44px', eventColW: '78px', infoColW: '163px', statusColW: '59px',
                             dateColPadding: '8px', numLines:1, margin: '8px', iconSize: '16px' }
                     },
+                    paginationFontSize: '14px', paginationH: '34px', paginationPadding: '6px'
                 });
             } else if(window.innerWidth >= 650) {
                 setStyles({
@@ -71,6 +75,7 @@ function Main() {
                         columns:{ dateColW: '65px', fileNoColW: '40px', eventColW: '60px', infoColW: '104px', statusColW: '49px',
                             dateColPadding: '5px', numLines:2, lineHeight:15, margin: '6px', iconSize: '14px' }
                     },
+                    paginationFontSize: '12px', paginationH: '32px', paginationPadding: '4px'
                 });
             } else if(window.innerWidth >= 530) {
                 setStyles({
@@ -81,6 +86,7 @@ function Main() {
                         columns:{ dateColW: '55px', fileNoColW: '38px', eventColW: '53px', infoColW: '80px', statusColW: '40px',
                             dateColPadding: '5px', numLines:2, lineHeight:15, margin: '4px', iconSize: '12px' }
                     },
+                    paginationFontSize: '12px', paginationH: '28px', paginationPadding: '4px'
                 });
             } else if(window.innerWidth >= 420) {
                 setStyles({
@@ -91,6 +97,7 @@ function Main() {
                         columns:{ dateColW: '44px', fileNoColW: '37px', eventColW: '42px', infoColW: '65px', statusColW: '40px',
                             dateColPadding: '4px', numLines:2, lineHeight:15, margin: '3px', iconSize: '12px' }
                     },
+                    paginationFontSize: '10px', paginationH: '24px', paginationPadding: '4px'
                 });
             } else {
                 setStyles({
@@ -101,6 +108,7 @@ function Main() {
                         columns:{ dateColW: '44px', fileNoColW: '32px', eventColW: '42px', infoColW: '43px', statusColW: '33px',
                         dateColPadding: '3px', numLines:3, lineHeight:10, margin: '3px', iconSize: '10px' }
                     },
+                    paginationFontSize: '10px', paginationH: '24px', paginationPadding: '4px'
                 })
             };
         };
@@ -126,6 +134,10 @@ function Main() {
     const [prevWhen, setPrevWhen] = useState();
     const [customDates, setCustomDates] = useState();
     const [sort, setSort] = useState({ by: 'Date', dir: 'ASC' });
+    const [pageNum, setPageNum] = useState(1)
+    const [pageLimit, setPageLimit] = useState(50);
+    const [bounds, setBounds] = useState([1,1]);
+    const [total, setTotal] = useState(1);
 
     const { 
         isOpen: isOpenCustomDate, 
@@ -167,14 +179,18 @@ function Main() {
             else
                 console.warn('ERROR: Server is currently unavailable. Please try again later.');
         });
-    }, [startDate, endDate, dateType, dealType, isClosed, sort]);
+    }, [startDate, endDate, dateType, dealType, isClosed, sort, pageNum, pageLimit]);
 
     useEffect(() => {
         if(!profile.loggedIn) {
             setCriticalDates([]);
         } else {
-            axiosInstance.get(`${process.env.REACT_APP_API_URL}/dates?type=${dateType.value}&dealType=${dealType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}&sort=${sort.by},${sort.dir}`).then((response) => {
-                setCriticalDates(response.data.dates);
+            axiosInstance.get(`${process.env.REACT_APP_API_URL}/dates?type=${dateType.value}&dealType=${dealType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}&sort=${sort.by},${sort.dir}&limit=${pageLimit}&pageNum=${pageNum}`).then((response) => {
+                const data = response.data;
+                if(data.start && data.start !== 1 && data.dates.length === 0) return;
+                setBounds([data.start, data.end]);
+                setTotal(data.total);
+                setCriticalDates(data.dates);
                 setLoading(false);
             }).catch(() => {
                 setCriticalDates([]);
@@ -254,7 +270,7 @@ function Main() {
                                         text={item.label}
                                         fontSize={styles.fontSize}
                                         padding={styles.buttonPadding}
-                                        onClick={() => {setDateType(item)}}
+                                        onClick={() => {setDateType(item); setPageNum(1)}}
                                         active={dateType.value === item.value}
                                     />
                                 })
@@ -274,7 +290,7 @@ function Main() {
                                         text={item.label}
                                         fontSize={styles.fontSize}
                                         padding={styles.buttonPadding}
-                                        onClick={() => {setDealType(item)}}
+                                        onClick={() => {setDealType(item); setPageNum(1)}}
                                         active={dealType.value === item.value}
                                     />
                                 })
@@ -306,13 +322,14 @@ function Main() {
                                     isOpen={isOpenCustomDate}
                                     onOpen={onOpenCustomDate}
                                     onClose={onCloseCustomDate}
+                                    setPageNum={setPageNum}
                                 /> ||
                                 <DateFilterButton
                                     key={index}
                                     text={item}
                                     fontSize={styles.fontSize}
                                     padding={styles.buttonPadding}
-                                    onClick={() => {doSetWhen(item)}}
+                                    onClick={() => {doSetWhen(item); setPageNum(1)}}
                                     active={when === item}
                                 />
                             })
@@ -331,7 +348,7 @@ function Main() {
                                         text={item}
                                         fontSize={styles.fontSize}
                                         padding={styles.buttonPadding}
-                                        onClick={() => {setStatus(item)}}
+                                        onClick={() => {setStatus(item); setPageNum(1)}}
                                         active={status === item}
                                     />
                                 })
@@ -353,6 +370,9 @@ function Main() {
                             colWidths={styles.columnStyles}
                             fontSize={styles.fontSize}
                             titleFontSize={styles.titleFontSize}
+                            paginationFontSize={styles.paginationFontSize}
+                            paginationH={styles.paginationH}
+                            paginationPadding={styles.paginationPadding}
                             rowFontSize={styles.rowFontSize}
                             headerMargin={styles.tableHeaderMargin}
                             loggedIn={profile.loggedIn}
@@ -364,6 +384,13 @@ function Main() {
                             status={status}
                             sort={sort}
                             setSort={setSort}
+                            pageNum={pageNum}
+                            setPageNum={setPageNum}
+                            limit={pageLimit}
+                            setLimit={setPageLimit}
+                            bounds={bounds}
+                            total={total}
+                            setLoading={setLoading}
                         /> )
                     }
                 </Box>

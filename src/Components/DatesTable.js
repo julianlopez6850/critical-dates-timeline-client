@@ -1,4 +1,6 @@
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { profileContext } from '../Helpers/profileContext';
 
 import {
     Box,
@@ -13,10 +15,12 @@ import { InfoIcon, LockIcon, MinusIcon, TriangleDownIcon, TriangleUpIcon, Unlock
 
 import TableRow from './TableRow';
 import DateFilterButton from './DateFilterButton';
+import PaginationButtons from './PaginationButtons';
 
 const DatesTable = (props) => {
     
     const navigate = useNavigate();
+    const { profile } = useContext(profileContext);
 
     const updateSort = (col) => {
         props.setSort(sort => {
@@ -139,6 +143,20 @@ const DatesTable = (props) => {
                         filterString
                     }`}
                 </Text>
+                <PaginationButtons
+                    profile={profile}
+                    paginationH={props.paginationH}
+                    paginationFontSize={props.paginationFontSize}
+                    paginationPadding={props.paginationPadding}
+                    popoverDir='bottom'
+                    pageNum={props.pageNum}
+                    setPageNum={props.setPageNum}
+                    limit={props.limit}
+                    setLimit={props.setLimit}
+                    bounds={props.bounds}
+                    total={props.total}
+                    setLoading={props.setLoading}
+                />
 
                 <Divider w={props.tableWidth} borderColor='red' marginTop='4px !important'/>
 
@@ -170,17 +188,35 @@ const DatesTable = (props) => {
 
             <VStack>
                 {
-                    props.dates.length > 0 ? props.dates.map((item) => {
-                        return (
-                            <TableRow
-                                tableWidth={props.tableWidth}
-                                colWidths={props.colWidths}
-                                fontSize={props.rowFontSize}
-                                key={item.fileNumber + item.prefix + item.type}
-                                dateInfo={item}
+                    props.dates.length > 0 ? (
+                        <>
+                            {props.dates.map((item) => {
+                                return (
+                                    <TableRow
+                                        tableWidth={props.tableWidth}
+                                        colWidths={props.colWidths}
+                                        fontSize={props.rowFontSize}
+                                        key={item.fileNumber + item.prefix + item.type}
+                                        dateInfo={item}
+                                    />
+                                )
+                            })}
+                            <PaginationButtons
+                                profile={profile}
+                                paginationH={props.paginationH}
+                                paginationFontSize={props.paginationFontSize}
+                                paginationPadding={props.paginationPadding}
+                                popoverDir='top'
+                                pageNum={props.pageNum}
+                                setPageNum={props.setPageNum}
+                                limit={props.limit}
+                                setLimit={props.setLimit}
+                                bounds={props.bounds}
+                                total={props.total}
+                                setLoading={props.setLoading}
                             />
-                        )
-                    }) : (
+                        </>
+                    ) : (
                         props.loggedIn ? (
                             props.error ? (
                                 <Text>
