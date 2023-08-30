@@ -8,14 +8,14 @@ import {
 
 const FileNoAndRefInput = (props) => {
     return (
-        <Stack direction={props.stackDir} fontSize={props.fontSize} spacing={props.spacing}>
+        <Stack direction={props.headerStackDir} fontSize={props.headerFontSize} spacing={props.spacing}>
             <HStack w='fit-content'>
                 <Text minW='fit-content'>File No.</Text>
                 <Tooltip label={props.isFileNoError || ''}>
                     <Input
                         w={props.fileNoW}
                         minW={props.fileNoW}
-                        h={props.height}
+                        h={props.headerInputHeight}
                         paddingInline='0'
                         borderRadius='5px'
                         fontSize='inherit'
@@ -28,13 +28,13 @@ const FileNoAndRefInput = (props) => {
                     />
                 </Tooltip>
             </HStack>
-            <HStack w={props.stackDir === 'column' ? 'full' : ''}>
+            <HStack w={props.headerStackDir === 'column' ? 'full' : ''}>
                 <Text>Ref:</Text>
                 <Tooltip label={props.isFileRefError || ''}>
                     <Input
                         w={props.fileRefW}
-                        h={props.height}
-                        paddingInline={props.padding}
+                        h={props.headerInputHeight}
+                        paddingInline={props.inputPadding}
                         borderRadius='5px'
                         fontSize='inherit'
                         value={props.fileRef}

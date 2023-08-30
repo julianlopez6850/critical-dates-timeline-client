@@ -7,10 +7,22 @@ import {
 const FileStatus = (props) => {
     return (
         <HStack fontSize={props.fontSize}>
-            {props.isClosed && <Button w={props.statusButtonW} height={props.statusButtonH} fontSize={props.fontSize} colorScheme='green' onClick={()=>{props.setIsClosed(false)}}>
+            {props.isClosed && 
+                <Button
+                    w={props.statusButtonW}
+                    height={props.statusButtonH}
+                    fontSize={props.fontSize}
+                    colorScheme='green'
+                    onClick={()=>{props.setIsClosed(false)}}
+                >
                     RE-OPEN FILE
                 </Button> ||
-                <Button w={props.statusButtonW} height={props.statusButtonH} colorScheme='red' fontSize={props.fontSize} onClick={()=>{props.setIsClosed(true)}}>
+                <Button
+                    w={props.statusButtonW}
+                    height={props.statusButtonH}
+                    colorScheme='red'
+                    fontSize={props.fontSize}
+                    onClick={()=>{props.setIsClosed(true)}}>
                     CLOSE FILE
                 </Button>
             }

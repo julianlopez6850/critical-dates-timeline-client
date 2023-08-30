@@ -529,7 +529,7 @@ const FileModal = (props) => {
             scrollBehavior='outside'
             allowPinchZoom={true}
         >
-            <ModalOverlay />
+            <ModalOverlay/>
             <ModalContent
                 color='white'
                 bgColor='gray.800'
@@ -555,13 +555,7 @@ const FileModal = (props) => {
                                     fileRef={fileRef}
                                     setFileRef={setFileRef}
                                     isFileRefError={isFileRefError}
-                                    fontSize={styles.headerFontSize}
-                                    fileNoW={styles.fileNoW}
-                                    fileRefW={styles.fileRefW}
-                                    height={styles.headerInputHeight}
-                                    spacing={styles.spacing}
-                                    padding={styles.inputPadding}
-                                    stackDir={styles.headerStackDir}
+                                    {...styles}
                                 />
 
                                 <VStack w='full' spacing='0px' fontSize={styles.bodyFontSize}>
@@ -571,17 +565,10 @@ const FileModal = (props) => {
                                         whoRepresenting={whoRepresenting}
                                         setWhoRepresenting={setWhoRepresenting}
                                         rolesButtons={rolesButtons}
-                                        fontSize={styles.bodyFontSize}
-                                        height={styles.bodyInputHeight}
-                                        spacing={styles.spacing}
-                                        padding={styles.inputPadding}
-                                        fileTypeTabsW={styles.fileTypeTabsW}
-                                        fileRepTabsW={styles.fileRepTabsW}
-                                        tabsPadding={styles.tabsPadding}
-                                        stackDir={styles.secondStacksDir}
+                                        {...styles}
                                     />
 
-                                    <Divider marginBlock='8px !important' />
+                                    <Divider marginBlock='8px !important'/>
 
                                     <FileBuyerAndSeller
                                         isPurchase={isPurchase}
@@ -592,12 +579,7 @@ const FileModal = (props) => {
                                         seller={seller}
                                         setSeller={setSeller}
                                         isSellerError={isSellerError}
-                                        fontSize={styles.bodyFontSize}
-                                        height={styles.bodyInputHeight}
-                                        stackDir={styles.firstStacksDir}
-                                        minW={styles.beginningMinW}
-                                        spacing={styles.spacing}
-                                        padding={styles.inputPadding}
+                                        {...styles}
                                     />
                                     
                                     <FilePropertyInfo
@@ -606,34 +588,31 @@ const FileModal = (props) => {
                                         isPropertyError={isPropertyError}
                                         folioNo={folioNo}
                                         setFolioNo={setFolioNo}
-                                        fontSize={styles.bodyFontSize}
-                                        height={styles.bodyInputHeight}
-                                        stackDir={styles.firstStacksDir}
-                                        minW={styles.beginningMinW}
-                                        spacing={styles.spacing}
-                                        padding={styles.inputPadding}
+                                        {...styles}
                                     />
 
                                     <Divider marginBlock='8px !important'/>
 
-                                    <Stack direction={styles.firstStacksDir} w='full' h={styles.firstStacksDir === 'row' ? styles.sec3height : ''} m='0px !important' spacing='0px'>
-                                        <Stack direction={styles.secondStacksDir} h={styles.secondStacksDir === 'row' ? styles.sec3height : ''}>
-                                            <HStack w={styles.firstStacksDir === 'column' ? '50%' : ''} h={styles.sec3height}>
+                                    <Stack
+                                        direction={styles.firstStacksDir}
+                                        w='full' h={styles.firstStacksDir === 'row' ? styles.sec3height : ''}
+                                        m='0px !important'
+                                        spacing='0px'
+                                    >
+                                        <Stack
+                                            direction={styles.secondStacksDir}
+                                            h={styles.secondStacksDir === 'row' ? styles.sec3height : ''}
+                                        >
+                                            <HStack
+                                                w={styles.firstStacksDir === 'column' ? '50%' : ''}
+                                                h={styles.sec3height}
+                                            >
                                                 <FileDates
                                                     dates={dates}
                                                     isEffectiveError={isEffectiveError}
                                                     isClosingError={isClosingError}
                                                     isClosed={isClosed}
-                                                    textFontSize={styles.bodyFontSize}
-                                                    datesFontSize={styles.headerFontSize}
-                                                    height={styles.bodyInputHeight}
-                                                    dateTypeW={styles.dateTypeW}
-                                                    dateW={styles.dateW}
-                                                    spacing={styles.datesSpacing}
-                                                    padding={styles.inputPadding}
-                                                    calculatorIconSize={styles.calculatorIconSize}
-                                                    lockIconSize={styles.lockIconSize}
-                                                    buttonH={styles.footerButtonH}
+                                                    {...styles}
                                                 />
                                             </HStack>
 
@@ -646,10 +625,7 @@ const FileModal = (props) => {
 
                                             <FileMilestones
                                                 milestonesChecks={milestonesChecks}
-                                                height={styles.sec3height}
                                                 fontSize={styles.bodyFontSize}
-                                                boxSize={styles.checkboxSize}
-                                                spacing={styles.spacing}
                                             />
                                         </Stack>
 
@@ -668,7 +644,7 @@ const FileModal = (props) => {
                                         />
                                     </Stack>
                                     
-                                    <Divider marginBlock='8px !important' />
+                                    <Divider marginBlock='8px !important'/>
                                 </VStack>
                             </ModalBody>
 
@@ -678,7 +654,6 @@ const FileModal = (props) => {
                                         <FileStatus
                                             isClosed={isClosed}
                                             setIsClosed={setIsClosed}
-                                            closeFileButtonW={styles.otherFooterButtonsW}
                                             fontSize={styles.footerFontSize}
                                             statusButtonW={styles.otherFooterButtonsW}
                                             statusButtonH={styles.footerButtonH}

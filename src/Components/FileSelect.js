@@ -48,10 +48,10 @@ const FileSelect = (props) => {
             styles={{
                 container: (baseStyles) => ({
                     ...baseStyles,
-                    width: props.width,
-                    minWidth: props.width,
+                    width: props.fileSelectWidth,
+                    minWidth: props.fileSelectWidth,
                     minHeight:'unset',
-                    height: props.height + ' !important',
+                    height: props.buttonSize + ' !important',
                     transition:'0s'
                 }),
                 control: (baseStyles) => ({
@@ -81,7 +81,7 @@ const FileSelect = (props) => {
                 }),
                 placeholder: (baseStyles) => ({
                     ...baseStyles,
-                    fontSize:props.fontSize,
+                    fontSize:props.fileSelectFontSize,
                     textAlign:'center'
                 }),
                 valueContainer: (baseStyles) => ({
@@ -115,7 +115,7 @@ const FileSelect = (props) => {
                     backgroundColor: 'var(--navbar-seperator)',
                     borderBottom:'1px solid',
                     paddingBlock:'4px',
-                    fontSize:props.fontSize,
+                    fontSize:props.fileSelectFontSize,
                     minWidth:'160px'
                 }),
                 menuList: (baseStyles) => ({

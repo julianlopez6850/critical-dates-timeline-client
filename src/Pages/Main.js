@@ -22,8 +22,8 @@ function Main() {
 
     const [styles, setStyles] = useState({
         pageW: '1200px', pageMarginBlock: '25px', fontSize: '16px', stackDir: 'row', titleFontSize: '20px', inputHeight: '30px',
-        buttonTitleW: '65px', buttonPadding: '10px', tableW: '1060px', tableHeaderMargin: '8px', rowFontSize: '16px',
-        columnStyles: {
+        buttonTitleW: '65px', buttonPadding: '10px', tableW: '1060px', headerMargin: '8px', rowFontSize: '16px',
+        tableStyles: {
             headers:{ dateHeaderW: '110px', fileNoHeaderW: '66px', eventHeaderW: '98px', infoHeaderW: '242px', statusHeaderW: '62px' },
             columns:{ dateColW: '90px', fileNoColW: '50px', eventColW: '81px', infoColW: '225px', statusColW: '59px',
                 dateColPadding: '10px', numLines:1, margin: '8px', iconSize: '16px' }
@@ -36,8 +36,8 @@ function Main() {
             if(window.innerWidth >= 1300) {
                 setStyles({
                     pageW: '1200px', pageMarginBlock: '25px', fontSize: '16px', stackDir: 'row', titleFontSize: '20px', inputHeight: '30px',
-                    buttonTitleW: '65px', buttonPadding: '10px', tableW: '1060px', tableHeaderMargin: '8px', rowFontSize: '16px',
-                    columnStyles: {
+                    buttonTitleW: '65px', buttonPadding: '10px', tableW: '1060px', headerMargin: '8px', rowFontSize: '16px',
+                    tableStyles: {
                         headers:{ dateHeaderW: '110px', fileNoHeaderW: '66px', eventHeaderW: '98px', infoHeaderW: '242px', statusHeaderW: '62px' },
                         columns:{ dateColW: '90px', fileNoColW: '50px', eventColW: '81px', infoColW: '225px', statusColW: '59px',
                             dateColPadding: '10px', numLines:1, margin: '8px', iconSize: '16px' }
@@ -47,8 +47,8 @@ function Main() {
             } else if(window.innerWidth >= 1150) {
                 setStyles({
                     pageW: '1060px', pageMarginBlock: '25px', fontSize: '16px', stackDir: 'row', titleFontSize: '20px', inputHeight: '30px',
-                    buttonTitleW: '65px', buttonPadding: '10px', tableW: '1060px', tableHeaderMargin: '8px', rowFontSize: '16px',
-                    columnStyles: {
+                    buttonTitleW: '65px', buttonPadding: '10px', tableW: '1060px', headerMargin: '8px', rowFontSize: '16px',
+                    tableStyles: {
                         headers:{ dateHeaderW: '110px', fileNoHeaderW: '66px', eventHeaderW: '104px', infoHeaderW: '240px', statusHeaderW: '62px' },
                         columns:{ dateColW: '90px', fileNoColW: '50px', eventColW: '87px', infoColW: '223px', statusColW: '59px',
                             dateColPadding: '10px', numLines:1, margin: '8px', iconSize: '16px' }
@@ -58,8 +58,8 @@ function Main() {
             } else if(window.innerWidth >= 900) {
                 setStyles({
                     pageW: '850px', pageMarginBlock: '25px', fontSize: '14px', stackDir: 'row', titleFontSize: '20px', inputHeight: '28px',
-                    buttonTitleW: '65px', buttonPadding: '6px', tableW: '850px', tableHeaderMargin: '8px', rowFontSize: '14px',
-                    columnStyles: {
+                    buttonTitleW: '65px', buttonPadding: '6px', tableW: '850px', headerMargin: '8px', rowFontSize: '14px',
+                    tableStyles: {
                         headers:{ dateHeaderW: '96px', fileNoHeaderW: '61px', eventHeaderW: '94px', infoHeaderW: '180px', statusHeaderW: '59px' },
                         columns:{ dateColW: '80px', fileNoColW: '44px', eventColW: '78px', infoColW: '163px', statusColW: '59px',
                             dateColPadding: '8px', numLines:1, margin: '8px', iconSize: '16px' }
@@ -69,8 +69,8 @@ function Main() {
             } else if(window.innerWidth >= 650) {
                 setStyles({
                     pageW: '600px', pageMarginBlock: '10px', fontSize: '12px', stackDir: 'column', titleFontSize: '18px', inputHeight: '26px',
-                    buttonTitleW: '65px', buttonPadding: '6px', tableW: '600px', tableHeaderMargin: '4px', rowFontSize: '12px',
-                    columnStyles: {
+                    buttonTitleW: '65px', buttonPadding: '6px', tableW: '600px', headerMargin: '4px', rowFontSize: '12px',
+                    tableStyles: {
                         headers:{ dateHeaderW: '75px', fileNoHeaderW: '53px', eventHeaderW: '72px', infoHeaderW: '117px', statusHeaderW: '49px' },
                         columns:{ dateColW: '65px', fileNoColW: '40px', eventColW: '60px', infoColW: '104px', statusColW: '49px',
                             dateColPadding: '5px', numLines:2, lineHeight:15, margin: '6px', iconSize: '14px' }
@@ -80,8 +80,8 @@ function Main() {
             } else if(window.innerWidth >= 530) {
                 setStyles({
                     pageW: '480px', pageMarginBlock: '10px', fontSize: '10px', stackDir: 'column', titleFontSize: '16px', inputHeight: '24px',
-                    buttonTitleW: '50px', buttonPadding: '4px', tableW: '480px', tableHeaderMargin: '2px', rowFontSize: '10px',
-                    columnStyles: {
+                    buttonTitleW: '50px', buttonPadding: '4px', tableW: '480px', headerMargin: '2px', rowFontSize: '10px',
+                    tableStyles: {
                         headers:{ dateHeaderW: '65px', fileNoHeaderW: '47px', eventHeaderW: '61px', infoHeaderW: '89px', statusHeaderW: '40px' },
                         columns:{ dateColW: '55px', fileNoColW: '38px', eventColW: '53px', infoColW: '80px', statusColW: '40px',
                             dateColPadding: '5px', numLines:2, lineHeight:15, margin: '4px', iconSize: '12px' }
@@ -91,8 +91,8 @@ function Main() {
             } else if(window.innerWidth >= 420) {
                 setStyles({
                     pageW: '400px', pageMarginBlock: '10px', fontSize: '10px', stackDir: 'column', titleFontSize: '14px', inputHeight: '22px',
-                    buttonTitleW: '50px', buttonPadding: '4px', tableW: '400px', tableHeaderMargin: '0px', rowFontSize: '8px',
-                    columnStyles: {
+                    buttonTitleW: '50px', buttonPadding: '4px', tableW: '400px', headerMargin: '0px', rowFontSize: '8px',
+                    tableStyles: {
                         headers:{ dateHeaderW: '52px', fileNoHeaderW: '44px', eventHeaderW: '48px', infoHeaderW: '72px', statusHeaderW: '40px' },
                         columns:{ dateColW: '44px', fileNoColW: '37px', eventColW: '42px', infoColW: '65px', statusColW: '40px',
                             dateColPadding: '4px', numLines:2, lineHeight:15, margin: '3px', iconSize: '12px' }
@@ -102,8 +102,8 @@ function Main() {
             } else {
                 setStyles({
                     pageW: '320px', pageMarginBlock: '5px', fontSize: '8px', stackDir: 'column', titleFontSize: '14px', inputHeight: '20px',
-                    buttonTitleW: '40px', buttonPadding: '4px', tableW: '320px', tableHeaderMargin: '-2px', rowFontSize: '8px',
-                    columnStyles: {
+                    buttonTitleW: '40px', buttonPadding: '4px', tableW: '320px', headerMargin: '-2px', rowFontSize: '8px',
+                    tableStyles: {
                         headers:{ dateHeaderW: '50px', fileNoHeaderW: '39px', eventHeaderW: '48px', infoHeaderW: '50px', statusHeaderW: '33px' },
                         columns:{ dateColW: '44px', fileNoColW: '32px', eventColW: '42px', infoColW: '43px', statusColW: '33px',
                         dateColPadding: '3px', numLines:3, lineHeight:10, margin: '3px', iconSize: '10px' }
@@ -366,15 +366,7 @@ function Main() {
                             <Spinner/>
                         </Box> ) || (
                         <DatesTable
-                            tableWidth={styles.tableW}
-                            colWidths={styles.columnStyles}
-                            fontSize={styles.fontSize}
-                            titleFontSize={styles.titleFontSize}
-                            paginationFontSize={styles.paginationFontSize}
-                            paginationH={styles.paginationH}
-                            paginationPadding={styles.paginationPadding}
-                            rowFontSize={styles.rowFontSize}
-                            headerMargin={styles.tableHeaderMargin}
+                            {...styles}
                             loggedIn={profile.loggedIn}
                             error={error}
                             type={dateType.label}

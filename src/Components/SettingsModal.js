@@ -120,14 +120,14 @@ const SettingsModal = (props) => {
             scrollBehavior='outside'
             allowPinchZoom={true}
         >
-            <ModalOverlay />
+            <ModalOverlay/>
             <ModalContent
                 color='white'
                 bgColor='gray.800'
                 h='fit-content'
                 w='fit-content'
             >
-                <ModalCloseButton />
+                <ModalCloseButton/>
                 <ModalHeader fontSize={styles.headerFontSize}>
                     SETTINGS
                 </ModalHeader>
@@ -163,7 +163,9 @@ const SettingsModal = (props) => {
                                         })
                                     )}
                                 >
-                                    <Text fontSize={styles.bodyFontSize}>All Days</Text>
+                                    <Text fontSize={styles.bodyFontSize}>
+                                        All Days
+                                    </Text>
                                 </Checkbox>
                                 <Divider/>
                                 <Stack pl='20px' mt='8px'>

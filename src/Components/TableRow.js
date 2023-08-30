@@ -66,23 +66,23 @@ const TableRow = (props) => {
     }, [isClosed, update]);
 
     return (
-        <HStack w={props.tableWidth} h='30px' borderRadius='10px' textAlign='left' bgColor={dateInfo.File.isPurchase ? '#0077cc' : '#0055aa'} color='white' fontSize={props.fontSize} spacing={props.colWidths.columns.margin}
+        <HStack w={props.tableW} h='30px' borderRadius='10px' textAlign='left' bgColor={dateInfo.File.isPurchase ? '#0077cc' : '#0055aa'} color='white' fontSize={props.rowFontSize} spacing={props.tableStyles.columns.margin}
             _hover={{cursor:'pointer'}} 
             onClick={()=>{onOpen()}}
         >
-            <Box h='full' w='fit-content' p={props.colWidths.columns.dateColPadding} bgColor={dateColor} display='flex' alignItems='center' borderRadius='10px'>
-                <Text w={props.colWidths.columns.dateColW} textAlign='center' fontWeight='bold'>
+            <Box h='full' w='fit-content' p={props.tableStyles.columns.dateColPadding} bgColor={dateColor} display='flex' alignItems='center' borderRadius='10px'>
+                <Text w={props.tableStyles.columns.dateColW} textAlign='center' fontWeight='bold'>
                     {dateInfo.date.slice(5) + '-' + dateInfo.date.slice(2,4)}
                 </Text>
             </Box>
 
-            <Text w={props.colWidths.columns.fileNoColW} textAlign='center'>
+            <Text w={props.tableStyles.columns.fileNoColW} textAlign='center'>
                 {dateInfo.fileNumber}
             </Text>
 
-            <Divider orientation='vertical' h='70%' />
+            <Divider orientation='vertical' h='70%'/>
 
-            <Text w={props.colWidths.columns.eventColW} textAlign='center'>
+            <Text w={props.tableStyles.columns.eventColW} textAlign='center'>
                 {
                     dateInfo.prefix && (
                         dateInfo.prefix === 'First ' && '1st ' || 
@@ -100,21 +100,21 @@ const TableRow = (props) => {
                         (index === 0 && whoRepresenting === 'Buyer') ||
                         (index === 1 && whoRepresenting === 'Seller'))
                     return <Fragment key={index}>
-                        <Divider orientation='vertical' h='70%' />
+                        <Divider orientation='vertical' h='70%'/>
                         <Tooltip
                             label={item}
-                            fontSize={props.fontSize}
+                            fontSize={props.rowFontSize}
                             // Max Width of Tooltip changes based on cell's numLines and fontSize.
-                            maxW={`${275 - (props.colWidths.columns.numLines * 25) - ((14 - Math.min(parseInt(props.fontSize.slice(0,-2)), 14)) * 15)}px`}
+                            maxW={`${275 - (props.tableStyles.columns.numLines * 25) - ((14 - Math.min(parseInt(props.rowFontSize.slice(0,-2)), 14)) * 15)}px`}
                             gutter='2'
                         >
                             <Box h='100%' display='flex'>
                                 <Text
-                                    w={props.colWidths.columns.infoColW}
+                                    w={props.tableStyles.columns.infoColW}
                                     h='fit-content'
                                     alignSelf='center'
-                                    noOfLines={props.colWidths.columns.numLines}
-                                    lineHeight={`${props.colWidths.columns.lineHeight}px`}
+                                    noOfLines={props.tableStyles.columns.numLines}
+                                    lineHeight={`${props.tableStyles.columns.lineHeight}px`}
                                     /* Make the represented party of each Date's File stand out. */
                                     fontStyle={represented ? 'italic' : 'normal'}
                                     fontWeight={represented ? 'bold' : 'normal'}
@@ -127,9 +127,9 @@ const TableRow = (props) => {
                     </Fragment>
                 })
             }
-            <Divider orientation='vertical' h='70%' />
+            <Divider orientation='vertical' h='70%'/>
 
-            <Button m='0px !important' minW='32px' w={props.colWidths.columns.statusColW} h='30px' bgColor='transparent'
+            <Button m='0px !important' minW='32px' w={props.tableStyles.columns.statusColW} h='30px' bgColor='transparent'
                 _hover={{bgColor:'transparent'}}
                 isDisabled={dateInfo.File.isClosed}
                 onClick={(e)=>{
@@ -139,7 +139,7 @@ const TableRow = (props) => {
                 }}
             >
                 <Text textAlign='center'>
-                    { (dateInfo.File.isClosed || isClosed) && <LockIcon color='red' boxSize={props.colWidths.columns.iconSize}/> || <UnlockIcon boxSize={props.colWidths.columns.iconSize}/> }
+                    { (dateInfo.File.isClosed || isClosed) && <LockIcon color='red' boxSize={props.tableStyles.columns.iconSize}/> || <UnlockIcon boxSize={props.tableStyles.columns.iconSize}/> }
                 </Text>
             </Button>
             

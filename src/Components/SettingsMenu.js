@@ -45,20 +45,20 @@ const SettingsMenu = (props) => {
                 <MenuButton
                     as={NavbarButton}
                     icon={<SettingsIcon/>}
-                    size={props.size}
+                    size={props.buttonSize}
                     iconSize={props.iconSize}
                 />
-                <MenuList bgColor={'gray.800'} minWidth={props.width} width={props.width} fontSize={props.fontSize}>
+                <MenuList bgColor={'gray.800'} minWidth={props.menuWidth} width={props.menuWidth} fontSize={props.menuFontSize}>
                     <Text h='30px' textAlign='center' padding='4px'>
                         HELLO, {profile.user ? profile.user.toUpperCase() : 'GUEST'}
                     </Text>
-                    <MenuDivider marginInline='5px' marginBlock={props.margin}/>
+                    <MenuDivider marginInline='5px' marginBlock={props.menuMargin}/>
                     {profile.loggedIn ? 
                         <>
                             <MenuItem bgColor={'gray.800'} _hover={{bgColor:'gray.600'}} onClick={onOpenSettingsModal}>
                                 Settings
                             </MenuItem>
-                            <MenuDivider marginInline='5px' marginBlock={props.margin}/>
+                            <MenuDivider marginInline='5px' marginBlock={props.menuMargin}/>
                             <MenuItem bgColor={'gray.800'} _hover={{bgColor:'gray.600'}} onClick={()=>{logoutUser()}}>
                                 Logout
                             </MenuItem>

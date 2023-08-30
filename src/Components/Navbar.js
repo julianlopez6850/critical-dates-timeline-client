@@ -114,19 +114,12 @@ const Navbar = () => {
                         {/* Search for Specific File */}
                         <FileSelect
                             options={files}
-                            isSearchable={styles.isSearchable}
                             value={selectedFile}
                             onChange={(selection) => {
                                 setSelectedFile(selection);
                             }}
                             openFile={onOpenFileEditor}
-                            height={styles.buttonSize}
-                            width={styles.fileSelectWidth}
-                            fontSize={styles.fileSelectFontSize}
-                            indicatorSize={styles.indicatorSize}
-                            placeholder={styles.placeholder}
-                            arrowMargin={styles.arrowMargin}
-                            removeWidth={styles.removeWidth}
+                            {...styles}
                         />
                         {styles.isSearchable &&
                             <Box>
@@ -163,15 +156,11 @@ const Navbar = () => {
                 <HStack display='flex' justifyContent='right' w='0px' minW='0px'>
                     {/* Button: Open Settings */}
                     <SettingsMenu
-                        size={styles.buttonSize}
-                        width={styles.menuWidth}
-                        fontSize={styles.menuFontSize}
-                        margin={styles.menuMargin}
-                        iconSize={styles.iconSize}
+                        {...styles}
                     />
                 </HStack>
             </HStack>
-            <Box w='full' h='2px' bgColor='var(--navbar-seperator)' />
+            <Box w='full' h='2px' bgColor='var(--navbar-seperator)'/>
 
             <FileModal
                 new={true}

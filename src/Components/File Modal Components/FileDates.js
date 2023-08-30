@@ -37,7 +37,7 @@ const FileDates = (props) => {
     }
 
     return (
-        <VStack w='fit-content' h='full' fontSize={props.mainFontSize} spacing={props.spacing}>
+        <VStack w='fit-content' h='full' fontSize={props.mainFontSize} spacing={props.datesSpacing}>
             <Text fontWeight='bold'>
                 Critical Dates:
             </Text>
@@ -62,7 +62,7 @@ const FileDates = (props) => {
                                 item.label === 'Effective' ? props.isEffectiveError || '' : item.label === 'Closing' ? props.isClosingError || '' : ''
                             }
                         >
-                            <Input w={props.dateW} h={props.height} paddingInline='8px' borderRadius='10px' type='date' fontSize={props.datesFontSize} 
+                            <Input w={props.dateW} h={props.bodyInputHeight} paddingInline='8px' borderRadius='10px' type='date' fontSize={props.headerFontSize} 
                                 value={item.value}
                                 onChange={(e)=>{item.setValue(e.target.value)}}
                                 transition='0s'
@@ -74,17 +74,12 @@ const FileDates = (props) => {
                             />
                         </Tooltip>
                         <CalculateDatePopover
-                            dates={props.dates}
+                            {...props}
                             setDate={item.setValue}
                             isCalculated={item.isCalculated}
                             setIsCalculated={item.setIsCalculated}
                             type={item.label}
                             isDateClosed={item.isClosed}
-                            isFileClosed={props.isClosed}
-                            boxSize={props.calculatorIconSize}
-                            fontSize={props.textFontSize}
-                            inputHeight={props.height}
-                            buttonH={props.buttonH}
                         />
                         <Tooltip
                             w='fit-content'
@@ -93,7 +88,7 @@ const FileDates = (props) => {
                             whiteSpace='pre-wrap'
                             label={props.isClosed ? 'File status is Closed or Cancelled.\nRe-open it to update Date.' : ''}
                         >
-                            <Button p='0px !important' minW='unset' boxSize={props.height} bgColor='transparent' mr='4px !important'
+                            <Button p='0px !important' minW='unset' boxSize={props.bodyInputHeight} bgColor='transparent' mr='4px !important'
                                 _hover={{bgColor:'#FFFFFF15'}}
                                 onClick={(e)=>{
                                     e.stopPropagation();
