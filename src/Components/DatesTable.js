@@ -34,20 +34,24 @@ const DatesTable = (props) => {
             text: <Tooltip borderRadius='5px' mt='-5px' closeOnClick={false} label={
                 <VStack fontSize={props.fontSize}>
                     <HStack w='full'>
-                        <Box w='10px' h='10px' mb='-3px' bgColor='red'></Box>
+                        <Box w='10px' h='10px' mb='-3px' bgColor='red'/>
                         <Text>: Past Due</Text>
                     </HStack>
                     <HStack w='full'>
-                        <Box w='10px' h='10px' mb='-3px' bgColor='orange'></Box>
+                        <Box w='10px' h='10px' mb='-3px' bgColor='orange'/>
                         <Text>: Today</Text>
                     </HStack>
                     <HStack w='full'>
-                        <Box w='10px' h='10px' mb='-3px' bgColor='green'></Box>
+                        <Box w='10px' h='10px' mb='-3px' bgColor='green'/>
                         <Text>: Upcoming</Text>
                     </HStack>
                     <HStack w='full'>
-                        <Box w='10px' h='10px' mb='-3px' bgColor='black'></Box>
+                        <Box w='10px' h='10px' mb='-3px' bgColor='black'/>
                         <Text>: Completed</Text>
+                    </HStack>
+                    <HStack w='full'>
+                        <Box w='10px' h='10px' mb='-3px' bgColor='#444466'/>
+                        <Text>: Cancelled </Text>
                     </HStack>
                 </VStack>
             }>
@@ -95,12 +99,16 @@ const DatesTable = (props) => {
                         <Text>: Ongoing</Text>
                     </HStack>
                     <HStack w='full'>
-                        <Text mb='1px' color='red'><LockIcon/></Text>
+                        <Text mb='1px' color='red.500'><LockIcon/></Text>
                         <Text>: Completed</Text>
                     </HStack>
                     <HStack w='full'>
                         <Text mb='1px' color='red.800'><LockIcon/></Text>
                         <Text>: File Closed </Text>
+                    </HStack>
+                    <HStack w='full'>
+                        <Text mb='1px' color='#444466'><LockIcon/></Text>
+                        <Text>: File Cancelled </Text>
                     </HStack>
                 </VStack>
             }>

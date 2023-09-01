@@ -171,7 +171,7 @@ const FileModal = (props) => {
         { label: 'Buyer Docs Approved?', role: isBuyerDocs, value: isBuyerDocsApproved, set: setIsBuyerDocsApproved },
     ]
 
-    const [isClosed, setIsClosed] = useState(false);
+    const [status, setStatus] = useState('Open');
     const [isClosedEffective, setIsClosedEffective] = useState(false);
     const [isClosedDepositInit, setIsClosedDepositInit] = useState(false);
     const [isClosedDepositSecond, setIsClosedDepositSecond] = useState(false);
@@ -273,7 +273,7 @@ const FileModal = (props) => {
                     setIsPurchase(file.isPurchase);
                     setWhoRepresenting(file.whoRepresenting);
                     setNotes(file.notes);
-                    setIsClosed(file.isClosed);
+                    setStatus(file.status);
     
                     const responseRoles = JSON.parse(file.roles);
                     setIsSellerDocs(responseRoles.isSellerDocs);
@@ -486,7 +486,7 @@ const FileModal = (props) => {
         setIsSellerDocsApproved(false);
         setIsBuyerDocsDrafted(false);
         setIsBuyerDocsApproved(false);
-        setIsClosed(false);
+        setStatus('Open');
     }
 
     useEffect(() => {
@@ -611,7 +611,7 @@ const FileModal = (props) => {
                                                     dates={dates}
                                                     isEffectiveError={isEffectiveError}
                                                     isClosingError={isClosingError}
-                                                    isClosed={isClosed}
+                                                    status={status}
                                                     {...styles}
                                                 />
                                             </HStack>
@@ -652,11 +652,12 @@ const FileModal = (props) => {
                                 <VStack w='full' h='full' align='left'>
                                     <HStack w='full' h={styles.footerButtonH} justifyContent='space-between'>
                                         <FileStatus
-                                            isClosed={isClosed}
-                                            setIsClosed={setIsClosed}
+                                            status={status}
+                                            setStatus={setStatus}
                                             fontSize={styles.footerFontSize}
                                             statusButtonW={styles.otherFooterButtonsW}
                                             statusButtonH={styles.footerButtonH}
+                                            {...styles}
                                         />
                                         <FileClearAndSave
                                             new={props.new}
@@ -686,7 +687,7 @@ const FileModal = (props) => {
                                             isCalculatedLoanApproval={isCalculatedLoanApproval}
                                             isCalculatedInspection={isCalculatedInspection}
                                             isCalculatedClosing={isCalculatedClosing}
-                                            isClosed={isClosed}
+                                            status={status}
                                             roles={roles}
                                             milestones={milestones}
                                             notes={notes}

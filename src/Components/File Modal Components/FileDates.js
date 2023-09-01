@@ -44,8 +44,8 @@ const FileDates = (props) => {
             {props.dates.map((item, index) => {
                 return (
                     <HStack w='fit-content' spacing='0' key={index}
-                        color={(props.isClosed || item.isClosed) ? 'red' : ''}
-                        borderColor={(props.isClosed || item.isClosed) ? 'red' : ''}
+                        color={(props.status !== 'Open' || item.isClosed) ? 'red' : ''}
+                        borderColor={(props.status !== 'Open' || item.isClosed) ? 'red' : ''}
                     >
                         <Text w={props.dateTypeW}>
                             {item.label}
@@ -56,7 +56,7 @@ const FileDates = (props) => {
                             textAlign='center'
                             whiteSpace='pre-wrap'
                             label={
-                                props.isClosed ? 'File status is Closed or Cancelled.\nRe-open it to update Date.' :
+                                props.status !== 'Open' ? 'File status is Closed or Cancelled.\nRe-open it to update Date.' :
                                 item.isClosed ? 'Date status is Closed.\nRe-open it to update Date.' :
                                 item.isCalculated && item.isCalculated.isCalculated ? 'Date is controlled by a calculation.\nRemove it to update Date manually.' :
                                 item.label === 'Effective' ? props.isEffectiveError || '' : item.label === 'Closing' ? props.isClosingError || '' : ''
@@ -66,8 +66,8 @@ const FileDates = (props) => {
                                 value={item.value}
                                 onChange={(e)=>{item.setValue(e.target.value)}}
                                 transition='0s'
-                                isDisabled={props.isClosed || item.isClosed || item.isCalculated && item.isCalculated.isCalculated}
-                                _disabled={!(props.isClosed || item.isClosed) ? {cursor:'not-allowed'} : {opacity:0.4, cursor:'not-allowed'}}
+                                isDisabled={props.status !== 'Open' || item.isClosed || item.isCalculated && item.isCalculated.isCalculated}
+                                _disabled={!(props.status !== 'Open' || item.isClosed) ? {cursor:'not-allowed'} : {opacity:0.4, cursor:'not-allowed'}}
                                 _hover={{}}
                                 onBlur={(e)=>{forceResetDate(e.target.value, item.setValue)}}
                                 isInvalid={item.label === 'Effective' && props.isEffectiveError || item.label === 'Closing' && props.isClosingError}
@@ -86,21 +86,21 @@ const FileDates = (props) => {
                             maxW='250px'
                             textAlign='center'
                             whiteSpace='pre-wrap'
-                            label={props.isClosed ? 'File status is Closed or Cancelled.\nRe-open it to update Date.' : ''}
+                            label={props.status !== 'Open' ? 'File status is Closed or Cancelled.\nRe-open it to update Date.' : ''}
                         >
                             <Button p='0px !important' minW='unset' boxSize={props.bodyInputHeight} bgColor='transparent' mr='4px !important'
                                 _hover={{bgColor:'#FFFFFF15'}}
                                 onClick={(e)=>{
                                     e.stopPropagation();
-                                    if(!props.isClosed)
+                                    if(props.status === 'Open')
                                         item.setIsClosed((isClosed) => !isClosed);
                                 }}
-                                isDisabled={props.isClosed}
+                                isDisabled={props.status !== 'Open'}
                                 transition='0s'
                                 tabIndex={-1}
                             >
                                 <Text display='flex'>
-                                    { (props.isClosed || item.isClosed) && <LockIcon boxSize={props.lockIconSize}/> || <UnlockIcon boxSize={props.lockIconSize}/> }
+                                    { (props.status !== 'Open' || item.isClosed) && <LockIcon boxSize={props.lockIconSize}/> || <UnlockIcon boxSize={props.lockIconSize}/> }
                                 </Text>
                             </Button>
                         </Tooltip>

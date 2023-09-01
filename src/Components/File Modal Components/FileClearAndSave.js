@@ -80,7 +80,6 @@ const FileClearAndSaveButtons = (props) => {
             isClosedLoanApproval: props.isClosedLoanApproval,
             isClosedInspection: props.isClosedInspection,
             isClosedClosing: props.isClosedClosing,
-            isClosed: props.isClosed,
             isCalculatedDepositInitial: props.isCalculatedDepositInit,
             isCalculatedDepositSecond: props.isCalculatedDepositSecond,
             isCalculatedLoanApproval: props.isCalculatedLoanApproval,
@@ -91,6 +90,7 @@ const FileClearAndSaveButtons = (props) => {
             isPurchase: props.isPurchase,
             roles: JSON.stringify(props.roles),
             milestones: JSON.stringify(props.milestones),
+            status: props.status,
         }
 
         // if new file, POST to database.

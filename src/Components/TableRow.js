@@ -39,7 +39,9 @@ const TableRow = (props) => {
         const d = new Date();
         const todayString = `${d.getFullYear()}-${leadingZero(d.getMonth() + 1)}-${leadingZero(d.getDate())}`;
 
-        if(dateInfo.File.isClosed || isClosed)
+        if(dateInfo.File.status === 'Cancelled')
+            setDateColor('#444466');
+        else if(dateInfo.File.status !== 'Open' || isClosed)
             setDateColor('black');
         else if(dateInfo.date === todayString)
             setDateColor('yellow.500');
@@ -66,11 +68,27 @@ const TableRow = (props) => {
     }, [isClosed, update]);
 
     return (
-        <HStack w={props.tableW} h='30px' borderRadius='10px' textAlign='left' bgColor={dateInfo.File.isPurchase ? '#0077cc' : '#0055aa'} color='white' fontSize={props.rowFontSize} spacing={props.tableStyles.columns.margin}
+        <HStack
+            w={props.tableW}
+            h='30px'
+            borderRadius='10px'
+            bgColor={dateInfo.File.isPurchase ? '#0077cc' : '#0055aa'}
+            color='white'
+            fontSize={props.rowFontSize}
+            textAlign='left'
+            spacing={props.tableStyles.columns.margin}
             _hover={{cursor:'pointer'}} 
             onClick={()=>{onOpen()}}
         >
-            <Box h='full' w='fit-content' p={props.tableStyles.columns.dateColPadding} bgColor={dateColor} display='flex' alignItems='center' borderRadius='10px'>
+            <Box
+                w='fit-content'
+                h='full'
+                p={props.tableStyles.columns.dateColPadding}
+                bgColor={dateColor}
+                display='flex'
+                alignItems='center'
+                borderRadius='10px'
+            >
                 <Text w={props.tableStyles.columns.dateColW} textAlign='center' fontWeight='bold'>
                     {dateInfo.date.slice(5) + '-' + dateInfo.date.slice(2,4)}
                 </Text>
@@ -129,9 +147,15 @@ const TableRow = (props) => {
             }
             <Divider orientation='vertical' h='70%'/>
 
-            <Button m='0px !important' minW='32px' w={props.tableStyles.columns.statusColW} h='30px' bgColor='transparent'
+            <Button
+                w={props.tableStyles.columns.statusColW}
+                h='30px'
+                minW='32px'
+                m='0px !important'
+                bgColor='transparent'
                 _hover={{bgColor:'transparent'}}
-                isDisabled={dateInfo.File.isClosed}
+                isDisabled={dateInfo.File.status !== 'Open'}
+                _disabled={{opacity: 1, cursor: 'not-allowed'}}
                 onClick={(e)=>{
                     e.stopPropagation();
                     setIsClosed((isClosed) => !isClosed);
@@ -139,7 +163,10 @@ const TableRow = (props) => {
                 }}
             >
                 <Text textAlign='center'>
-                    { (dateInfo.File.isClosed || isClosed) && <LockIcon color='red' boxSize={props.tableStyles.columns.iconSize}/> || <UnlockIcon boxSize={props.tableStyles.columns.iconSize}/> }
+                    {(dateInfo.File.status !== 'Open' || isClosed) &&
+                        <LockIcon color={dateInfo.File.status === 'Cancelled' ? '#444466' : dateInfo.File.status === 'Closed' ? 'red.800' : 'red.500'} boxSize={props.tableStyles.columns.iconSize}/> ||
+                        <UnlockIcon boxSize={props.tableStyles.columns.iconSize}/>
+                    }
                 </Text>
             </Button>
             

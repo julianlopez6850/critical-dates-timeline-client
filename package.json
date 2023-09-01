@@ -1,6 +1,6 @@
 {
   "name": "critical-dates-schedule-client",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "private": true,
   "dependencies": {
     "@chakra-ui/icons": "^2.0.18",

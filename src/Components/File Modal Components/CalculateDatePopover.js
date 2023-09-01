@@ -156,8 +156,8 @@ const CalculateDatePopover = (props) => {
                     minW='unset'
                     minH='unset'
                     boxSize={props.calculatorIconSize}
-                    isDisabled={props.isClosed || props.isDateClosed || (props.type === 'Effective')}
-                    color={(props.isClosed || props.isDateClosed) ? 'red' : (props.isCalculated && props.isCalculated.isCalculated) ? '#EECC33' : '#B1B1B1'}
+                    isDisabled={props.status !== 'Open' || props.isDateClosed || (props.type === 'Effective')}
+                    color={(props.status !== 'Open' || props.isDateClosed) ? 'red' : (props.isCalculated && props.isCalculated.isCalculated) ? '#EECC33' : '#B1B1B1'}
                     bg='transparent'
                     _hover={{bg:'#FFFFFF15'}}
                     transition='0s'
@@ -170,7 +170,7 @@ const CalculateDatePopover = (props) => {
                         whiteSpace='pre-wrap'
                         label={
                             props.type === 'Effective' ? 'Effective Date cannot use Calculator' :
-                            props.isClosed ? 'File status is Closed or Cancelled.\nRe-open it to update Date.' :
+                            props.status !== 'Open' ? 'File status is Closed or Cancelled.\nRe-open it to update Date.' :
                             props.isDateClosed ? 'Date status is Closed.\nRe-open it to update Date.' : ''
                     }>
                         <Box display='flex' justifyContent='center' alignItems='center'>

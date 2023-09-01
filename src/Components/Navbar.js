@@ -89,8 +89,7 @@ const Navbar = () => {
             response.data.files.map((file) => {
                 setFiles((files) => [...files, {
                     value: file.fileNumber,
-                    label: `${file.fileNumber} - ${file.fileRef}`,
-                    ...file
+                    label: `${file.fileNumber} - ${file.fileRef}`
                 }]);
             });
         }).catch(() => {
