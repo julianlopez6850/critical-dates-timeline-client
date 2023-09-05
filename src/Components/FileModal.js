@@ -160,7 +160,6 @@ const FileModal = (props) => {
     })
 
     const milestonesChecks = [
-        { label: 'Escrow Fully Received?', role: true, value: isEscrowReceived, set: setIsEscrowReceived },
         { label: 'Lien Search Requested?', role: isTitleAgent, value: isLienRequested, set: setIsLienRequested },
         { label: 'Title Work Ordered?', role: isTitleAgent, value: isTitleOrdered, set: setIsTitleOrdered },
         { label: 'Lien Search Received?', role: isTitleAgent, value: isLienReceived, set: setIsLienReceived },

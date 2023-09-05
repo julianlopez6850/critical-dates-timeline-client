@@ -12,6 +12,12 @@ const FileMilestones = (props) => {
                 Milestones:
             </Text>
             <VStack spacing='0'>
+                <Checkbox
+                    h='0px'
+                    visibility='hidden'
+                >
+                    <Text w='max-content' noOfLines={1} fontSize={props.fontSize}>This Is Placeholder Text</Text>
+                </Checkbox>
                 {props.milestonesChecks.map((item, index) => {
                     if(item.role)
                         return (
