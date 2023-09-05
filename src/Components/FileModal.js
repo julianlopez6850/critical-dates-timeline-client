@@ -172,12 +172,12 @@ const FileModal = (props) => {
     ]
 
     const [status, setStatus] = useState('Open');
-    const [isClosedEffective, setIsClosedEffective] = useState(false);
-    const [isClosedDepositInit, setIsClosedDepositInit] = useState(false);
-    const [isClosedDepositSecond, setIsClosedDepositSecond] = useState(false);
-    const [isClosedLoanApproval, setIsClosedLoanApproval] = useState(false);
-    const [isClosedInspection, setIsClosedInspection] = useState(false);
-    const [isClosedClosing, setIsClosedClosing] = useState(false);
+    const [isClosedEffective, setIsClosedEffective] = useState(props.new ? false : true);
+    const [isClosedDepositInit, setIsClosedDepositInit] = useState(props.new ? false : true);
+    const [isClosedDepositSecond, setIsClosedDepositSecond] = useState(props.new ? false : true);
+    const [isClosedLoanApproval, setIsClosedLoanApproval] = useState(props.new ? false : true);
+    const [isClosedInspection, setIsClosedInspection] = useState(props.new ? false : true);
+    const [isClosedClosing, setIsClosedClosing] = useState(props.new ? false : true);
 
     const [isCalculatedDepositInit, setIsCalculatedDepositInit] = useState({});
     const [isCalculatedDepositSecond, setIsCalculatedDepositSecond] = useState({});
@@ -466,12 +466,12 @@ const FileModal = (props) => {
         setLoanApproval('00-00-0000');
         setInspection('00-00-0000');
         setClosing('00-00-0000');
-        setIsClosedEffective(false);
-        setIsClosedDepositInit(false);
-        setIsClosedDepositSecond(false);
-        setIsClosedLoanApproval(false);
-        setIsClosedInspection(false);
-        setIsClosedClosing(false);
+        setIsClosedEffective(props.new ? false : true);
+        setIsClosedDepositInit(props.new ? false : true);
+        setIsClosedDepositSecond(props.new ? false : true);
+        setIsClosedLoanApproval(props.new ? false : true);
+        setIsClosedInspection(props.new ? false : true);
+        setIsClosedClosing(props.new ? false : true);
         setIsCalculatedDepositInit({});
         setIsCalculatedDepositSecond({});
         setIsCalculatedLoanApproval({});
