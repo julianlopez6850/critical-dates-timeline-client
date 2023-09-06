@@ -8,7 +8,7 @@ import {
     Button,
 } from '@chakra-ui/react'
 
-const FileDeleteDialog = (props) => {
+const FileDialogBox = (props) => {
     return (
         <AlertDialog
             isOpen={props.isOpen}
@@ -17,11 +17,10 @@ const FileDeleteDialog = (props) => {
             <AlertDialogOverlay>
                 <AlertDialogContent w='fit-content' h='fit-content' bgColor='gray.700' color='white' fontSize={props.fontSize}>
                     <AlertDialogHeader fontSize={props.fontSize} fontWeight='bold'>
-                        Delete File {props.fileNo}?
+                        {props.header}
                     </AlertDialogHeader>
                     <AlertDialogBody whiteSpace='pre-line'>
-                        Are you sure you want to delete this file?{'\n'}
-                        This action cannot be undone.
+                        {props.body}
                     </AlertDialogBody>
                     <AlertDialogFooter>
                         <Button
@@ -37,9 +36,9 @@ const FileDeleteDialog = (props) => {
                             ml={3}
                             fontSize={props.fontSize}
                             colorScheme='red'
-                            onClick={()=>{props.onClose(); props.deleteFile()}}
+                            onClick={()=>{props.onClose(); props.action()}}
                         >
-                            Delete
+                            {props.confirmButton}
                         </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
@@ -48,4 +47,4 @@ const FileDeleteDialog = (props) => {
     )
 }
 
-export default FileDeleteDialog;
+export default FileDialogBox;

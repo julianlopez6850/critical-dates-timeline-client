@@ -8,7 +8,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 
-import FileDeleteDialog from './FileDeleteDialog';
+import FileDialogBox from './FileDialogBox';
 
 const FileClearAndSaveButtons = (props) => {
 
@@ -18,7 +18,12 @@ const FileClearAndSaveButtons = (props) => {
         isOpen: isOpenDeleteFile, 
         onOpen: onOpenDeleteFile,
         onClose: onCloseDeleteFile
-    } = useDisclosure()
+    } = useDisclosure();
+    const {
+        isOpen: isOpenClearFields, 
+        onOpen: onOpenClearFields,
+        onClose: onCloseClearFields
+    } = useDisclosure();
 
     const deleteFile = () => {
         axiosInstance.delete(`${process.env.REACT_APP_API_URL}/files`, { data: {fileNumber: props.fileNo}}).then(() => {
@@ -152,7 +157,7 @@ const FileClearAndSaveButtons = (props) => {
         <HStack h='40px'>
             {/* If adding a new file, show Clear Fields Button. If updating an existing file, show Delete File Button */}
             {props.new &&
-                <Button w={props.otherButtonsW} height={props.buttonH} colorScheme='red' fontSize={props.fontSize} onClick={()=>{props.resetAllValues()}}>
+                <Button w={props.otherButtonsW} height={props.buttonH} colorScheme='red' fontSize={props.fontSize} onClick={()=>{onOpenClearFields()}}>
                     CLEAR FIELDS
                 </Button> ||
                 <Button w={props.otherButtonsW} height={props.buttonH} colorScheme='red' fontSize={props.fontSize} onClick={()=>{onOpenDeleteFile()}}>
@@ -163,14 +168,27 @@ const FileClearAndSaveButtons = (props) => {
                 SAVE
             </Button>
 
-            <FileDeleteDialog
+            <FileDialogBox
                 isOpen={isOpenDeleteFile}
                 onOpen={onOpenDeleteFile}
                 onClose={onCloseDeleteFile}
-                fileNo={props.fileNo}
-                deleteFile={deleteFile}
                 buttonHeight={props.buttonH}
                 fontSize={props.fontSize}
+                header={`Delete File ${props.fileNo}?`}
+                body={`Are you sure you want to delete this file?\nThis action cannot be undone.`}
+                action={deleteFile}
+                confirmButton={'Delete'}
+            />
+            <FileDialogBox
+                isOpen={isOpenClearFields}
+                onOpen={onOpenClearFields}
+                onClose={onCloseClearFields}
+                buttonHeight={props.buttonH}
+                fontSize={props.fontSize}
+                header={`Clear All Fields?`}
+                body={`Are you sure you want to clear all fields?\nThis action cannot be undone.`}
+                action={props.resetAllValues}
+                confirmButton={'Clear'}
             />
         </HStack>
     )
