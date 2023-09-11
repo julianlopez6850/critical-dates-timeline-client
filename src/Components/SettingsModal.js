@@ -71,22 +71,23 @@ const SettingsModal = (props) => {
 
     const updateTheme = (e) => {
         e.preventDefault();
-        setProfile(profile => {
-            return { ...profile, darkMode: !profile.darkMode }
-        });
-    }
-
-    useEffect(() => {
-        axiosInstance.put(`${process.env.REACT_APP_API_URL}/auth/settings`, { username: profile.user, settings: {...notificationDatesTimes, darkMode: profile.darkMode}}).then((response) => {
+        if(!profile.loggedIn || !props.isOpen)
+            return;
+        
+        axiosInstance.put(`${process.env.REACT_APP_API_URL}/auth/settings`, { username: profile.user, settings: {...notificationDatesTimes, darkMode: !profile.darkMode}}).then((response) => {
+            setProfile(profile => {
+                return { ...profile, darkMode: response.data.settings.darkMode };
+            });
             console.log('Your settings have been updated successfully.');
         }).catch(() => {
             console.warn('ERROR: A problem occurred while trying to update your settings. Please try again later.');
-        })
-    }, [profile.darkMode])
+        });
+    }
     
     const updateNotificationSettings = () => {
-        if(!profile.loggedIn)
+        if(!profile.loggedIn || !props.isOpen)
             return;
+
         axiosInstance.put(`${process.env.REACT_APP_API_URL}/auth/settings`, { username: profile.user, settings: {...notificationDatesTimes, darkMode: profile.darkMode}}).then((response) => {
             const notificationSettings = response.data.settings;
             delete notificationSettings.darkMode;
@@ -96,14 +97,13 @@ const SettingsModal = (props) => {
             console.log('Your settings have been updated successfully.');
         }).catch(() => {
             console.warn('ERROR: A problem occurred while trying to update your settings. Please try again later.');
-        })
+        });
     }
 
     useEffect(() => {
         if(Object.values(notificationDatesTimes).every(value => value.time === notificationDatesTimes.Mon.time))
             setAllAtValue(notificationDatesTimes.Mon.time);
-        if(props.isOpen)
-            updateNotificationSettings();
+        updateNotificationSettings();
     }, [notificationDatesTimes])
 
     useEffect(() => {
