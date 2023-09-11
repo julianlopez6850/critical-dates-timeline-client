@@ -541,7 +541,7 @@ const FileModal = (props) => {
                             You must be logged in to view, edit, or create Files.
                         </Text>
                     </ModalBody> : 
-                    (!props.new && fileNo === '') ? 
+                    (!props.new && oldFileNo === '') ? 
                         <ModalBody display='flex' justifyContent='center' alignItems='center'>
                             <Spinner/>
                         </ModalBody> : 
