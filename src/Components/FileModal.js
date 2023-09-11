@@ -16,6 +16,7 @@ import {
     useToast,
     Spinner,
     Text,
+    useDisclosure,
 } from '@chakra-ui/react';
 
 import FileNoAndRefInput from './File Modal Components/FileNoAndRefInput';
@@ -28,10 +29,17 @@ import FileNotes from './File Modal Components/FileNotes';
 import FileStatus from './File Modal Components/FileStatus';
 import FileClearAndSave from './File Modal Components/FileClearAndSave';
 import FileFooter from './File Modal Components/FileFooter';
+import FileDialogBox from './File Modal Components/FileDialogBox';
 
 const FileModal = (props) => {
 
     const [styles, setStyles] = useState({});
+
+    const {
+        isOpen: isOpenCancelChanges, 
+        onOpen: onOpenCancelChanges,
+        onClose: onCloseCancelChanges
+    } = useDisclosure();
 
     useEffect(() => {
         const windowListener = () => {
@@ -84,7 +92,7 @@ const FileModal = (props) => {
                     sec3height:'', dateTypeW:'60px', dateW:'120px', datesSpacing:'6px', calculatorIconSize:'18px', lockIconSize:'12px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
                     saveButtonW:'30px', otherFooterButtonsW:'60px', footerButtonH:'24px', footerFontSize:'8px', footerTooltipSize:'160px'
-                })
+                });
             };
         };
         windowListener();
@@ -101,10 +109,10 @@ const FileModal = (props) => {
     const [displayedFileNo, setDisplayedFileNo] = useState('');
     const [fileRef, setFileRef] = useState('');
     const [whoRepresenting, setWhoRepresenting] = useState('Buyer');
-    const [isPurchase, setIsPurchase] = useState(true); // true = Purchase, false = REFI
-    const [buyer, setBuyer] = useState(''); // buyer name
-    const [seller, setSeller] = useState(''); // seller name
-    const [propertyAddress, setPropertyAddress] = useState(''); // property address
+    const [isPurchase, setIsPurchase] = useState(true);
+    const [buyer, setBuyer] = useState('');
+    const [seller, setSeller] = useState('');
+    const [propertyAddress, setPropertyAddress] = useState('');
     const [folioNo, setFolioNo] = useState('');
     const [notes, setNotes] = useState('');
 
@@ -120,7 +128,7 @@ const FileModal = (props) => {
         isEscrowAgent: false,
         isTitleAgent: false,
         isClosingAgent: false,
-    })
+    });
 
     const rolesButtons = [
         { label: 'Seller Docs', value: isSellerDocs, set: setIsSellerDocs },
@@ -128,7 +136,7 @@ const FileModal = (props) => {
         { label: 'Escrow Agent', value: isEscrowAgent, set: setIsEscrowAgent },
         { label: 'Title Agent', value: isTitleAgent, set: setIsTitleAgent },
         { label: 'Closing Agent', value: isClosingAgent, set: setIsClosingAgent },
-    ]
+    ];
 
     const [effective, setEffective] = useState('');
     const [depositInit, setDepositInit] = useState('');
@@ -157,7 +165,7 @@ const FileModal = (props) => {
         isBuyerDocsDrafted: false,
         isSellerDocsApproved: false,
         isBuyerDocsApproved: false,
-    })
+    });
 
     const milestonesChecks = [
         { label: 'Lien Search Requested?', role: isTitleAgent, value: isLienRequested, set: setIsLienRequested },
@@ -168,7 +176,7 @@ const FileModal = (props) => {
         { label: 'Buyer Docs Drafted?', role: isBuyerDocs, value: isBuyerDocsDrafted, set: setIsBuyerDocsDrafted },
         { label: 'Seller Docs Approved?', role: isSellerDocs, value: isSellerDocsApproved, set: setIsSellerDocsApproved },
         { label: 'Buyer Docs Approved?', role: isBuyerDocs, value: isBuyerDocsApproved, set: setIsBuyerDocsApproved },
-    ]
+    ];
 
     const [status, setStatus] = useState('Open');
     const [isClosedEffective, setIsClosedEffective] = useState(props.new ? false : true);
@@ -237,27 +245,25 @@ const FileModal = (props) => {
             isCalculated: isCalculatedClosing,
             setIsCalculated: setIsCalculatedClosing
         }
-    ]
+    ];
 
-    const [isFileNoError, setIsFileNoError] = useState('File Number must be entered.')
-    const [isFileRefError, setIsFileRefError] = useState('File Reference must be entered.')
-    const [isBuyerError, setIsBuyerError] = useState('Buyer/Borrower must be entered.')
-    const [isSellerError, setIsSellerError] = useState('Seller/Lender must be entered.')
-    const [isPropertyError, setIsPropertyError] = useState('Property Address must be entered.')
-    const [isEffectiveError, setIsEffectiveError] = useState('File Effective Date must be entered.')
-    const [isClosingError, setIsClosingError] = useState('File Closing Date must be entered.')
+    const [isFileNoError, setIsFileNoError] = useState('File Number must be entered.');
+    const [isFileRefError, setIsFileRefError] = useState('File Reference must be entered.');
+    const [isBuyerError, setIsBuyerError] = useState('Buyer/Borrower must be entered.');
+    const [isSellerError, setIsSellerError] = useState('Seller/Lender must be entered.');
+    const [isPropertyError, setIsPropertyError] = useState('Property Address must be entered.');
+    const [isEffectiveError, setIsEffectiveError] = useState('File Effective Date must be entered.');
+    const [isClosingError, setIsClosingError] = useState('File Closing Date must be entered.');
     const [isError, setIsError] = useState();
 
     useEffect(() => {
-        if(!props.isOpen) {
-            resetAllValues();
+        if(!props.isOpen)
             return;
-        }
 
         axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then((response) => {
             setProfile(profile => {
                 return {...profile, loggedIn: true, user: response.data.username }
-            })
+            });
 
             if(!props.new && props.fileNo) {
                 axiosInstance.get(`${process.env.REACT_APP_API_URL}/files?fileNumber=${props.fileNo}`).then((response) => {
@@ -337,70 +343,65 @@ const FileModal = (props) => {
                         status: 'error',
                         duration: 2000,
                         isClosable: true,
-                    })
+                    });
                 });
             }            
         }).catch(function (error) {
             setProfile(profile => {
                 return {...profile, loggedIn: false, user: '' }
-            })
+            });
             if (error.response)
                 console.warn('You are not logged in. Please log in to view this content.');
             else
                 console.warn('ERROR: Server is currently unavailable. Please try again later.');
         });
-
     }, [props.isOpen])
 
     useEffect(() => {
-        if(fileNo.length > 2) {
-            setDisplayedFileNo(`${fileNo.slice(0,2)} - ${fileNo.slice(2, fileNo.length)}`);
-        } else {
-            setDisplayedFileNo(fileNo)
-        }
-    }, [fileNo])
-
-    useEffect(() => {
-        setRoles(
-            {
-                isSellerDocs: isSellerDocs,
-                isBuyerDocs: isBuyerDocs,
-                isEscrowAgent: isEscrowAgent,
-                isTitleAgent: isTitleAgent,
-                isClosingAgent: isClosingAgent,
-            })
+        setRoles({
+            isSellerDocs: isSellerDocs,
+            isBuyerDocs: isBuyerDocs,
+            isEscrowAgent: isEscrowAgent,
+            isTitleAgent: isTitleAgent,
+            isClosingAgent: isClosingAgent,
+        });
     }, [isSellerDocs, isBuyerDocs, isEscrowAgent, isTitleAgent, isClosingAgent]);
 
     useEffect(() => {
         setMilestones({
-                isEscrowReceived: isEscrowReceived,
-                isLienRequested: isLienRequested,
-                isTitleOrdered: isTitleOrdered,
-                isLienReceived: isLienReceived,
-                isTitleReceived: isTitleReceived,
-                isSellerDocsDrafted: isSellerDocsDrafted,
-                isBuyerDocsDrafted: isBuyerDocsDrafted,
-                isSellerDocsApproved: isSellerDocsApproved,
-                isBuyerDocsApproved: isBuyerDocsApproved,
-            })
+            isEscrowReceived: isEscrowReceived,
+            isLienRequested: isLienRequested,
+            isTitleOrdered: isTitleOrdered,
+            isLienReceived: isLienReceived,
+            isTitleReceived: isTitleReceived,
+            isSellerDocsDrafted: isSellerDocsDrafted,
+            isBuyerDocsDrafted: isBuyerDocsDrafted,
+            isSellerDocsApproved: isSellerDocsApproved,
+            isBuyerDocsApproved: isBuyerDocsApproved,
+        });
     }, [isEscrowReceived, isLienRequested, isTitleOrdered, isLienReceived, isTitleReceived, 
         isSellerDocsDrafted, isBuyerDocsDrafted, isSellerDocsApproved, isBuyerDocsApproved,]);
 
     useEffect(() => {
+        if(fileNo.length > 2)
+            setDisplayedFileNo(`${fileNo.slice(0,2)} - ${fileNo.slice(2, fileNo.length)}`);
+        else
+            setDisplayedFileNo(fileNo);
+
         const isNum = /^\d+$/.test(fileNo);
         if(fileNo === '')
-            setIsFileNoError('File Number must be entered.')
+            setIsFileNoError('File Number must be entered.');
         else if(!isNum)
-            setIsFileNoError('File Number must contain only digits.')
+            setIsFileNoError('File Number must contain only digits.');
         else if(fileNo.length < 5)
-            setIsFileNoError(`File Number must be 5 digits. ex. ${(new Date().getFullYear()).toString().slice(-2)}001`)
+            setIsFileNoError(`File Number must be 5 digits. ex. ${(new Date().getFullYear()).toString().slice(-2)}001`);
         else
-            setIsFileNoError(false)
+            setIsFileNoError(false);
     }, [fileNo])
 
     useEffect(() => {
         if(fileRef === '')
-            setIsFileRefError('File Reference must be entered')
+            setIsFileRefError('File Reference must be entered');
         else
             setIsFileRefError(false);
     }, [fileRef])
@@ -441,7 +442,7 @@ const FileModal = (props) => {
     }, [propertyAddress])
 
     useEffect(() => {
-        setIsError(isFileNoError || isFileRefError || isBuyerError || isSellerError || isPropertyError || isClosingError || false)
+        setIsError(isFileNoError || isFileRefError || isBuyerError || isSellerError || isPropertyError || isClosingError || false);
     }, [isFileNoError, isFileRefError, isBuyerError, isSellerError, isPropertyError, isEffectiveError, isClosingError])
 
     const resetAllValues = () => {
@@ -489,40 +490,39 @@ const FileModal = (props) => {
     }
 
     useEffect(() => {
-        if(effective === '00-00-0000') {
-            setEffective('')
-        }
+        if(effective === '00-00-0000')
+            setEffective('');
     }, [effective])
     useEffect(() => {
-        if(depositInit === '00-00-0000') {
-            setDepositInit('')
-        }
+        if(depositInit === '00-00-0000')
+            setDepositInit('');
     }, [depositInit])
     useEffect(() => {
-        if(depositSecond === '00-00-0000') {
-            setDepositSecond('')
-        }
+        if(depositSecond === '00-00-0000')
+            setDepositSecond('');
     }, [depositSecond])
     useEffect(() => {
-        if(loanApproval === '00-00-0000') {
-            setLoanApproval('')
-        }
+        if(loanApproval === '00-00-0000')
+            setLoanApproval('');
     }, [loanApproval])
     useEffect(() => {
-        if(inspection === '00-00-0000') {
-            setInspection('')
-        }
+        if(inspection === '00-00-0000')
+            setInspection('');
     }, [inspection])
     useEffect(() => {
-        if(closing === '00-00-0000') {
-            setClosing('')
-        }
+        if(closing === '00-00-0000')
+            setClosing('');
     }, [closing])
 
     return (
         <Modal
             isOpen={props.isOpen}
-            onClose={props.onClose}
+            onClose={() => {
+                if(!props.new)
+                    onOpenCancelChanges();
+                else
+                    props.onClose();
+            }}
             size={styles.modalSize}
             closeOnOverlayClick={false}
             scrollBehavior='outside'
@@ -711,6 +711,18 @@ const FileModal = (props) => {
                         </>
                 }
             </ModalContent>
+
+            <FileDialogBox
+                isOpen={isOpenCancelChanges}
+                onOpen={onOpenCancelChanges}
+                onClose={onCloseCancelChanges}
+                buttonHeight={props.buttonH}
+                fontSize={props.fontSize}
+                header={`Close File ${props.new ? 'Creator' : 'Editor'}?`}
+                body={`Are you sure you want to close the File ${props.new ? 'Creator' : 'Editor'}?\nAny unsaved changes will be lost.`}
+                action={props.onClose}
+                confirmButton={'Close'}
+            />
         </Modal>
     )
 }
