@@ -8,6 +8,7 @@ import {
     HStack,
     Text,
     useToast,
+    Divider,
 } from '@chakra-ui/react';
 import { SearchIcon, AddIcon} from '@chakra-ui/icons';
 
@@ -159,7 +160,7 @@ const Navbar = () => {
                     />
                 </HStack>
             </HStack>
-            <Box w='full' h='2px' bgColor='var(--navbar-seperator)'/>
+            <Divider w='full' opacity='1' borderColor='var(--navbar-seperator)'/>
 
             <FileModal
                 new={true}
