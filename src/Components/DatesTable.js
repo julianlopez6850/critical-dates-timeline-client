@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { profileContext } from '../Helpers/profileContext';
 
 import {
@@ -14,12 +13,10 @@ import {
 import { InfoIcon, LockIcon, MinusIcon, TriangleDownIcon, TriangleUpIcon, UnlockIcon } from '@chakra-ui/icons';
 
 import TableRow from './TableRow';
-import DateFilterButton from './DateFilterButton';
 import PaginationButtons from './PaginationButtons';
 
 const DatesTable = (props) => {
     
-    const navigate = useNavigate();
     const { profile } = useContext(profileContext);
 
     const updateSort = (col) => {
@@ -223,28 +220,14 @@ const DatesTable = (props) => {
                             />
                         </>
                     ) : (
-                        props.loggedIn ? (
-                            props.error ? (
-                                <Text>
-                                    {`There was an error processing this request. Please try again later.`}
-                                </Text>
-                            ) : (
-                                <Text>
-                                    {`No critical dates found matching the given criteria: { deal: ${deal} | type: ${event} | when: ${when} | status: ${status} }`}
-                                </Text>
-                            )
+                        props.error ? (
+                            <Text>
+                                {`There was an error processing this request. Please try again later.`}
+                            </Text>
                         ) : (
-                            <>
-                                <Text>
-                                    {`Please log in to access this data.`}
-                                </Text>
-                                <DateFilterButton
-                                    text={'Login'}
-                                    onClick={() => {navigate('/login')}}
-                                    active={false}
-                                    fontSize={`${parseInt(props.fontSize.slice(0,-2)) * 1.5}px`}
-                                />
-                            </>
+                            <Text>
+                                {`No critical dates found matching the given criteria: { deal: ${deal} | type: ${event} | when: ${when} | status: ${status} }`}
+                            </Text>
                         )
                     )
                 }

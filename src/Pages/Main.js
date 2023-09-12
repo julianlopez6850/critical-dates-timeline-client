@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { profileContext } from '../Helpers/profileContext'
 import { axiosInstance } from '../Helpers/axiosInstance'
 
@@ -117,6 +118,7 @@ function Main() {
         return () => window.removeEventListener('resize', windowListener);
     }, []);
 
+    const navigate = useNavigate();
     const { profile, setProfile } = useContext(profileContext);
 
     const toast = useToast();
@@ -254,139 +256,155 @@ function Main() {
         
     return (
         <VStack w='full' h='max-content' alignItems='center' marginBlock={styles.pageMarginBlock}>
-            {/* Filter Buttons */}
-            <Stack w={styles.pageW} justifyContent='space-between' direction={styles.stackDir} spacing={styles.buttonPadding}>
-                {/* Date Type Filter */}
-                <VStack spacing={styles.buttonPadding}>
-                    <HStack w='full' spacing='0' alignSelf='start'>
-                        <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
-                            TYPE:
-                        </Text>
-                        <>
+            {profile.loggedIn ? (
+            <>
+                {/* Filter Buttons */}
+                <Stack w={styles.pageW} justifyContent='space-between' direction={styles.stackDir} spacing={styles.buttonPadding}>
+                    {/* Date Type Filter */}
+                    <VStack spacing={styles.buttonPadding}>
+                        <HStack w='full' spacing='0' alignSelf='start'>
+                            <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
+                                TYPE:
+                            </Text>
+                            <>
+                                {
+                                    dateTypes.map((item, index) => {
+                                        return <DateFilterButton
+                                            key={index}
+                                            text={item.label}
+                                            fontSize={styles.fontSize}
+                                            padding={styles.buttonPadding}
+                                            onClick={() => {setDateType(item); setPageNum(1)}}
+                                            active={dateType.value === item.value}
+                                        />
+                                    })
+                                }
+                            </>
+                        </HStack>
+                        {/* Deal Type Filter */}
+                        <HStack w='full' spacing='0' alignSelf='start'>
+                            <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
+                                DEAL:
+                            </Text>
+                            <>
+                                {
+                                    dealTypes.map((item, index) => {
+                                        return <DateFilterButton
+                                            key={index}
+                                            text={item.label}
+                                            fontSize={styles.fontSize}
+                                            padding={styles.buttonPadding}
+                                            onClick={() => {setDealType(item); setPageNum(1)}}
+                                            active={dealType.value === item.value}
+                                        />
+                                    })
+                                }
+                            </>
+                        </HStack>
+                    </VStack>
+                    <VStack spacing={styles.buttonPadding}>
+                        {/* When Filter */}
+                        <HStack spacing='0' alignSelf='start'>
+                            <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
+                                WHEN:
+                            </Text>
                             {
-                                dateTypes.map((item, index) => {
-                                    return <DateFilterButton
+                                timeframes.map((item, index) => {
+                                    return item === 'Custom' &&
+                                    <CustomDatePopover
                                         key={index}
-                                        text={item.label}
+                                        text={item}
                                         fontSize={styles.fontSize}
-                                        padding={styles.buttonPadding}
-                                        onClick={() => {setDateType(item); setPageNum(1)}}
-                                        active={dateType.value === item.value}
-                                    />
-                                })
-                            }
-                        </>
-                    </HStack>
-                    {/* Deal Type Filter */}
-                    <HStack w='full' spacing='0' alignSelf='start'>
-                        <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
-                            DEAL:
-                        </Text>
-                        <>
-                            {
-                                dealTypes.map((item, index) => {
-                                    return <DateFilterButton
-                                        key={index}
-                                        text={item.label}
-                                        fontSize={styles.fontSize}
-                                        padding={styles.buttonPadding}
-                                        onClick={() => {setDealType(item); setPageNum(1)}}
-                                        active={dealType.value === item.value}
-                                    />
-                                })
-                            }
-                        </>
-                    </HStack>
-                </VStack>
-                <VStack spacing={styles.buttonPadding}>
-                    {/* When Filter */}
-                    <HStack spacing='0' alignSelf='start'>
-                        <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
-                            WHEN:
-                        </Text>
-                        {
-                            timeframes.map((item, index) => {
-                                return item === 'Custom' &&
-                                <CustomDatePopover
-                                    key={index}
-                                    text={item}
-                                    fontSize={styles.fontSize}
-                                    inputHeight={styles.titleFontSize}
-                                    when={when}
-                                    setWhen={doSetWhen}
-                                    prevWhen={prevWhen}
-                                    startDate={startDate}
-                                    endDate={endDate}
-                                    setStartDate={setStartDate}
-                                    setEndDate={setEndDate}
-                                    isOpen={isOpenCustomDate}
-                                    onOpen={onOpenCustomDate}
-                                    onClose={onCloseCustomDate}
-                                    setPageNum={setPageNum}
-                                /> ||
-                                <DateFilterButton
-                                    key={index}
-                                    text={item}
-                                    fontSize={styles.fontSize}
-                                    padding={styles.buttonPadding}
-                                    onClick={() => {doSetWhen(item); setPageNum(1)}}
-                                    active={when === item}
-                                />
-                            })
-                        }
-                    </HStack>
-                    {/* Status Filter */}
-                    <HStack w='full' spacing='0' alignSelf='start'>
-                        <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
-                            STATUS:
-                        </Text>
-                        <>
-                            {   
-                                statuses.map((item, index) => {
-                                    return <DateFilterButton
+                                        inputHeight={styles.titleFontSize}
+                                        when={when}
+                                        setWhen={doSetWhen}
+                                        prevWhen={prevWhen}
+                                        startDate={startDate}
+                                        endDate={endDate}
+                                        setStartDate={setStartDate}
+                                        setEndDate={setEndDate}
+                                        isOpen={isOpenCustomDate}
+                                        onOpen={onOpenCustomDate}
+                                        onClose={onCloseCustomDate}
+                                        setPageNum={setPageNum}
+                                    /> ||
+                                    <DateFilterButton
                                         key={index}
                                         text={item}
                                         fontSize={styles.fontSize}
                                         padding={styles.buttonPadding}
-                                        onClick={() => {setStatus(item); setPageNum(1)}}
-                                        active={status === item}
+                                        onClick={() => {doSetWhen(item); setPageNum(1)}}
+                                        active={when === item}
                                     />
                                 })
                             }
-                        </>
-                    </HStack>
-                </VStack>
-            </Stack>
-            
-            <HStack w='full' justifyContent='center'>
-                {/* Timeline Table Container */}
-                <Box w='1200px'>
-                    {loading && (
-                        <Box h='250px' display='flex' alignItems='center' justifyContent='center'>
-                            <Spinner/>
-                        </Box> ) || (
-                        <DatesTable
-                            {...styles}
-                            loggedIn={profile.loggedIn}
-                            error={error}
-                            type={dateType.label}
-                            dealType={dealType.label}
-                            when={when}
-                            dates={criticalDates}
-                            status={status}
-                            sort={sort}
-                            setSort={setSort}
-                            pageNum={pageNum}
-                            setPageNum={setPageNum}
-                            limit={pageLimit}
-                            setLimit={setPageLimit}
-                            bounds={bounds}
-                            total={total}
-                            setLoading={setLoading}
-                        /> )
-                    }
-                </Box>
-            </HStack>
+                        </HStack>
+                        {/* Status Filter */}
+                        <HStack w='full' spacing='0' alignSelf='start'>
+                            <Text w={styles.buttonTitleW} fontSize={styles.fontSize} fontWeight='bold' textAlign='left'>
+                                STATUS:
+                            </Text>
+                            <>
+                                {   
+                                    statuses.map((item, index) => {
+                                        return <DateFilterButton
+                                            key={index}
+                                            text={item}
+                                            fontSize={styles.fontSize}
+                                            padding={styles.buttonPadding}
+                                            onClick={() => {setStatus(item); setPageNum(1)}}
+                                            active={status === item}
+                                        />
+                                    })
+                                }
+                            </>
+                        </HStack>
+                    </VStack>
+                </Stack>
+                
+                <HStack w='full' justifyContent='center'>
+                    {/* Timeline Table Container */}
+                    <Box w='1200px'>
+                        {loading && (
+                            <Box h='250px' display='flex' alignItems='center' justifyContent='center'>
+                                <Spinner/>
+                            </Box> ) || (
+                            <DatesTable
+                                {...styles}
+                                loggedIn={profile.loggedIn}
+                                error={error}
+                                type={dateType.label}
+                                dealType={dealType.label}
+                                when={when}
+                                dates={criticalDates}
+                                status={status}
+                                sort={sort}
+                                setSort={setSort}
+                                pageNum={pageNum}
+                                setPageNum={setPageNum}
+                                limit={pageLimit}
+                                setLimit={setPageLimit}
+                                bounds={bounds}
+                                total={total}
+                                setLoading={setLoading}
+                            /> )
+                        }
+                    </Box>
+                </HStack>
+            </>
+            ) : !loading && (
+                <>
+                    <Text>
+                        {`Welcome Guest! Please Login to View This Page.`}
+                    </Text>
+                    <DateFilterButton
+                        text={'Login'}
+                        onClick={() => {navigate('/login')}}
+                        active={false}
+                        fontSize={`${parseInt(styles.fontSize.slice(0,-2)) * 1.5}px`}
+                    />
+                </>
+            )}
         </VStack>
     )
 }
