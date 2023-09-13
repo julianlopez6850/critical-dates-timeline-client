@@ -5,11 +5,14 @@ import {
 } from '@chakra-ui/react';
 
 const Footer = () => {
+
+    const currentYear = new Date().getFullYear();
+
     return (
         <VStack w='full' spacing='0' alignItems='center'>
             <Divider w='80%' opacity='1' borderColor='var(--navbar-seperator)'/>
             <Text h='50px' color='var(--navbar-seperator)' fontSize='16px' display='flex' alignItems='center'>
-                © 2023 · {process.env.REACT_APP_OWNER}
+                © {currentYear} · {process.env.REACT_APP_OWNER}
             </Text>
         </VStack>
     )
