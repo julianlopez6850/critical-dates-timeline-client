@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -28,6 +28,10 @@ const materialTheme = muiCreateTheme();
 function App() {
 
     const [profile, setProfile] =  useState({ loggedIn: false, user: undefined, darkMode: false, actions: 0, notificationSettings: undefined });
+
+    useEffect(() => {
+        document.body.style.backgroundColor=profile.darkMode ? 'var(--background-dark)' : 'var(--background-light)';
+    }, [profile.darkMode])
 
     return (
         <ChakraProvider theme={chakraTheme} resetCSS>
