@@ -90,7 +90,7 @@ const Navbar = () => {
             response.data.files.map((file) => {
                 setFiles((files) => [...files, {
                     value: file.fileNumber,
-                    label: `${file.fileNumber}${file.status === 'Cancelled' ? 'CX' : ''} - ${file.fileRef}`
+                    label: `${file.fileNumber}${file.status === 'Cancelled' ? 'CX' : file.status === 'Closed' ? '*' : ''} - ${file.fileRef}`
                 }]);
             });
         }).catch(() => {
