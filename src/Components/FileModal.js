@@ -267,6 +267,7 @@ const FileModal = (props) => {
 
             if(!props.new && props.fileNo) {
                 axiosInstance.get(`${process.env.REACT_APP_API_URL}/files?fileNumber=${props.fileNo}`).then((response) => {
+                    resetAllValues();
                     const file = response.data.file;
                     setOldFileNo(file.fileNumber);
                     setFileNo(file.fileNumber);
