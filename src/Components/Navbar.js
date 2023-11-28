@@ -89,6 +89,7 @@ const Navbar = () => {
         axiosInstance.get(`${process.env.REACT_APP_API_URL}/files/all`).then((response) => {
             response.data.files.map((file) => {
                 setFiles((files) => [...files, {
+                    ...file,
                     value: file.fileNumber,
                     label: `${file.fileNumber}${file.status === 'Cancelled' ? 'CX' : file.status === 'Closed' ? '*' : ''} - ${file.fileRef}`
                 }]);

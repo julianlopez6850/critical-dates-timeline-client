@@ -31,6 +31,10 @@ const FileSelect = (props) => {
             className='select'
             options={props.options}
             value={props.value}
+            filterOption={(option, input) => {
+                input = input.toLowerCase();
+                return option.label.toLowerCase().includes(input) || option.data.address.toLowerCase().includes(input);
+            }}
             onChange={(e) => {
                 props.onChange(e)
                 if(!props.isSearchable && e) {
