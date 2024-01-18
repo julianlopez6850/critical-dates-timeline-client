@@ -8,7 +8,7 @@ import {
 
 const FileBuyerAndSeller = (props) => {
     return (
-        <Stack direction={props.firstStacksDir} w='full' fontSize={props.bodyFontSize} spacing={props.spacing}>
+        <Stack direction={props.partiesStacksDir} w='full' fontSize={props.bodyFontSize} spacing={props.spacing}>
             <HStack w='full'>
                 <Text minW={props.beginningMinW}>
                     {props.isPurchase ? (props.whoRepresenting === 'Seller' ? ' Seller' : ' Buyer') : 'Borrower'}
@@ -25,8 +25,8 @@ const FileBuyerAndSeller = (props) => {
                     />
                 </Tooltip>
             </HStack>
-            <HStack w={props.firstStacksDir === 'column' ? 'full' : '97%'}>
-                <Text minW={props.firstStacksDir === 'column' ? props.beginningMinW : 'fit-content'}>
+            <HStack w='full'>
+                <Text minW={props.partiesStacksDir === 'column' ? props.beginningMinW : props.secondMinW}>
                     {props.isPurchase ? (props.whoRepresenting === 'Seller' ? 'Buyer' : 'Seller') : 'Lender'}
                 </Text>
                 <Tooltip label={props.whoRepresenting === 'Seller' ? props.isBuyerError || '' : props.isSellerError || ''}>

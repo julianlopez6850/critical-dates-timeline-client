@@ -46,50 +46,55 @@ const FileModal = (props) => {
             if(window.innerWidth >= 1150) {
                 setStyles({
                     modalSize:'5xl', modalInlinePadding:'24px', bodyFontSize: '14px', spacing:'8px',
-                    bodyInputHeight: '30px', inputPadding:'16px', firstStacksDir:'row', secondStacksDir: 'row',
+                    bodyInputHeight: '30px', inputPadding:'16px',
+                    partiesStacksDir:'row', propertyStacksDir:'row', secondStacksDir: 'row',
                     headerFontSize:'16px', headerInputHeight: '32px', headerStackDir:'row',
-                    fileNoW:'75px', fileRefW:'620px', beginningMinW:'57px',
                     sec3height:'237px', dateTypeW:'68px', dateW:'150px', datesSpacing:'6px', calculatorIconSize:'26px', lockIconSize:'16px',
+                    fileNoW:'75px', fileRefW:'620px', beginningMinW:'57px', secondMinW:'43px',
                     fileTypeTabsW:'80px', fileRepTabsW:'50px', tabsPadding:'5px',
                     saveButtonW:'100px', otherFooterButtonsW:'120px', footerButtonH:'40px', footerFontSize:'16px', footerTooltipSize:'700px'
                 });
             } else if(window.innerWidth >= 900) {
                 setStyles({
                     modalSize:'3xl', modalInlinePadding:'24px', bodyFontSize: '12px', spacing:'8px',
-                    bodyInputHeight: '26px', inputPadding:'12px', firstStacksDir:'row', secondStacksDir: 'row', 
+                    bodyInputHeight: '26px', inputPadding:'12px',
+                    partiesStacksDir:'row', propertyStacksDir:'row', secondStacksDir: 'row', 
                     headerFontSize:'14px', headerInputHeight: '28px', headerStackDir:'row', 
-                    fileNoW:'60px', fileRefW:'400px', beginningMinW:'49px',
                     sec3height:'210px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px', calculatorIconSize:'24px', lockIconSize:'14px',
+                    fileNoW:'60px', fileRefW:'400px', beginningMinW:'49px', secondMinW:'38px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
                     saveButtonW:'80px', otherFooterButtonsW:'110px', footerButtonH:'36px', footerFontSize:'14px', footerTooltipSize:'500px'
                 });
             } else if(window.innerWidth >= 650) {
                 setStyles({
                     modalSize:'xl', modalInlinePadding:'16px', bodyFontSize: '12px', spacing:'8px',
-                    bodyInputHeight: '22px', inputPadding:'10px', firstStacksDir:'column', secondStacksDir: 'row', 
+                    bodyInputHeight: '22px', inputPadding:'10px',
+                    partiesStacksDir:'column', propertyStacksDir:'row', secondStacksDir: 'row', 
                     headerFontSize:'14px', headerInputHeight: '24px', headerStackDir:'row', 
-                    fileNoW:'50px', fileRefW:'340px', beginningMinW:'49px',
                     sec3height:'186px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px', calculatorIconSize:'22px', lockIconSize:'14px',
+                    fileNoW:'50px', fileRefW:'340px', beginningMinW:'49px', secondMinW:'30px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
                     saveButtonW:'60px', otherFooterButtonsW:'90px', footerButtonH:'32px', footerFontSize:'12px', footerTooltipSize:'350px'
                 });
             } else if(window.innerWidth >= 530) {
                 setStyles({
-                    modalSize:'sm', modalInlinePadding:'12px', bodyFontSize: '10px', spacing:'4px',
-                    bodyInputHeight: '18px', inputPadding:'8px', firstStacksDir:'column', secondStacksDir: 'column',
-                    headerFontSize:'12px', headerInputHeight: '20px', headerStackDir:'row',
-                    fileNoW:'40px', fileRefW:'220px', beginningMinW:'41px',
                     sec3height:'159px', dateTypeW:'60px', dateW:'120px', datesSpacing:'6px', calculatorIconSize:'18px', lockIconSize:'12px',
+                    modalSize:'sm', modalInlinePadding:'12px', bodyFontSize: '10px', spacing:'6px',
+                    bodyInputHeight: '18px', inputPadding:'8px',
+                    partiesStacksDir:'column', propertyStacksDir:'row', secondStacksDir: 'column',
+                    headerFontSize:'12px', headerInputHeight: '20px', headerStackDir:'column',
+                    fileNoW:'40px', fileRefW:'full', beginningMinW:'41px', secondMinW:'22px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
                     saveButtonW:'40px', otherFooterButtonsW:'80px', footerButtonH:'28px', footerFontSize:'10px', footerTooltipSize:'200px'
                 });
             } else {
                 setStyles({
                     modalSize:'xs', modalInlinePadding:'12px', bodyFontSize: '10px', spacing:'4px',
-                    bodyInputHeight: '18px', inputPadding:'8px', firstStacksDir:'column', secondStacksDir: 'column',
+                    bodyInputHeight: '18px', inputPadding:'8px',
+                    partiesStacksDir:'column', propertyStacksDir:'row', secondStacksDir: 'column',
                     headerFontSize:'12px', headerInputHeight: '20px', headerStackDir:'column',
-                    fileNoW:'40px', fileRefW:'full', beginningMinW:'41px',
                     sec3height:'', dateTypeW:'60px', dateW:'120px', datesSpacing:'6px', calculatorIconSize:'18px', lockIconSize:'12px',
+                    fileNoW:'40px', fileRefW:'full', beginningMinW:'41px', secondMinW:'22px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
                     saveButtonW:'30px', otherFooterButtonsW:'60px', footerButtonH:'24px', footerFontSize:'8px', footerTooltipSize:'160px'
                 });
@@ -113,6 +118,7 @@ const FileModal = (props) => {
     const [buyer, setBuyer] = useState('');
     const [seller, setSeller] = useState('');
     const [propertyAddress, setPropertyAddress] = useState('');
+    const [county, setCounty] = useState('');
     const [folioNo, setFolioNo] = useState('');
     const [notes, setNotes] = useState('');
 
@@ -251,7 +257,7 @@ const FileModal = (props) => {
     const [isFileRefError, setIsFileRefError] = useState('File Reference must be entered.');
     const [isBuyerError, setIsBuyerError] = useState('Buyer/Borrower must be entered.');
     const [isSellerError, setIsSellerError] = useState('Seller/Lender must be entered.');
-    const [isPropertyError, setIsPropertyError] = useState('Property Address must be entered.');
+    const [isPropertyError, setIsPropertyError] = useState('Property Address or County & Folio No. must be entered.');
     const [isEffectiveError, setIsEffectiveError] = useState('File Effective Date must be entered.');
     const [isClosingError, setIsClosingError] = useState('File Closing Date must be entered.');
     const [isError, setIsError] = useState();
@@ -273,6 +279,7 @@ const FileModal = (props) => {
                     setFileNo(file.fileNumber);
                     setFileRef(file.fileRef);
                     setPropertyAddress(file.address);
+                    setCounty(file.county);
                     setFolioNo(file.folioNo);
                     setSeller(file.seller);
                     setBuyer(file.buyer);
@@ -436,11 +443,11 @@ const FileModal = (props) => {
     }, [seller])
 
     useEffect(() => {
-        if(!propertyAddress)
-            setIsPropertyError('Property Address must be entered.');
+        if(!propertyAddress && (!county || !folioNo))
+            setIsPropertyError('Property Address or County & Folio No. must be entered.');
         else
             setIsPropertyError(false);
-    }, [propertyAddress])
+    }, [propertyAddress, county, folioNo])
 
     useEffect(() => {
         setIsError(isFileNoError || isFileRefError || isBuyerError || isSellerError || isPropertyError || isClosingError || false);
@@ -454,6 +461,7 @@ const FileModal = (props) => {
         setBuyer('')
         setSeller('')
         setPropertyAddress('')
+        setCounty('');
         setFolioNo('');
         setNotes('');
         setIsSellerDocs(false);
@@ -585,17 +593,19 @@ const FileModal = (props) => {
                                     <FilePropertyInfo
                                         propertyAddress={propertyAddress}
                                         setPropertyAddress={setPropertyAddress}
-                                        isPropertyError={isPropertyError}
+                                        county={county}
+                                        setCounty={setCounty}
                                         folioNo={folioNo}
                                         setFolioNo={setFolioNo}
+                                        isPropertyError={isPropertyError}
                                         {...styles}
                                     />
 
                                     <Divider marginBlock='8px !important'/>
 
                                     <Stack
-                                        direction={styles.firstStacksDir}
-                                        w='full' h={styles.firstStacksDir === 'row' ? styles.sec3height : ''}
+                                        direction={styles.partiesStacksDir}
+                                        w='full' h={styles.partiesStacksDir === 'row' ? styles.sec3height : ''}
                                         m='0px !important'
                                         spacing='0px'
                                     >
@@ -604,7 +614,7 @@ const FileModal = (props) => {
                                             h={styles.secondStacksDir === 'row' ? styles.sec3height : ''}
                                         >
                                             <HStack
-                                                w={styles.firstStacksDir === 'column' ? '50%' : ''}
+                                                w={styles.partiesStacksDir === 'column' ? '50%' : ''}
                                                 h={styles.sec3height}
                                             >
                                                 <FileDates
@@ -630,10 +640,10 @@ const FileModal = (props) => {
                                         </Stack>
 
                                         <Divider
-                                            orientation={styles.firstStacksDir === 'row' ? 'vertical' : 'horizontal'}
-                                            h={styles.firstStacksDir === 'row' ? parseInt(styles.sec3height.slice(0,-2) - 8 + 'px') : 'full'}
-                                            marginBlock={styles.firstStacksDir === 'row' ? '0px !important' : '8px !important'}
-                                            marginInline={styles.firstStacksDir === 'row' ? '8px !important' : '0px !important'}
+                                            orientation={styles.partiesStacksDir === 'row' ? 'vertical' : 'horizontal'}
+                                            h={styles.partiesStacksDir === 'row' ? parseInt(styles.sec3height.slice(0,-2) - 8 + 'px') : 'full'}
+                                            marginBlock={styles.partiesStacksDir === 'row' ? '0px !important' : '8px !important'}
+                                            marginInline={styles.partiesStacksDir === 'row' ? '8px !important' : '0px !important'}
                                             alignSelf='end'
                                         />
 
@@ -667,6 +677,7 @@ const FileModal = (props) => {
                                             isPurchase={isPurchase}
                                             whoRepresenting={whoRepresenting}
                                             propertyAddress={propertyAddress}
+                                            county={county}
                                             folioNo={folioNo}
                                             buyer={buyer}
                                             seller={seller}

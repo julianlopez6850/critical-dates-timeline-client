@@ -1,5 +1,5 @@
 import {
-    Stack,
+    VStack,
     HStack,
     Text,
     Tooltip,
@@ -8,7 +8,7 @@ import {
 
 const FilePropertyInfo = (props) => {
     return (
-        <Stack direction={props.firstStacksDir} w='full' mt='8px !important'>
+        <VStack w='full' mt={props.spacing + '!important'} spacing={props.spacing}>
             <HStack w='full'>
                 <Text minW={props.beginningMinW}>
                     Property
@@ -25,20 +25,41 @@ const FilePropertyInfo = (props) => {
                     />
                 </Tooltip>
             </HStack>
-            <HStack minW='250px'>
-                <Text minW={props.firstStacksDir === 'column' ? props.beginningMinW : 'fit-content'}>
-                    Folio
-                </Text>
-                <Input
-                    height={props.bodyInputHeight}
-                    paddingInline={props.inputPadding}
-                    borderRadius='10px'
-                    fontSize={props.bodyFontSize}
-                    value={props.folioNo}
-                    onChange={(e) => {props.setFolioNo(e.target.value)}}
-                />
+            <HStack w='full'>
+                <HStack w='full'>
+                    <Text minW={props.beginningMinW}>
+                        County
+                    </Text>
+                    <Tooltip label={props.isPropertyError || ''}>
+                        <Input
+                            height={props.bodyInputHeight}
+                            paddingInline={props.inputPadding}
+                            borderRadius='10px'
+                            fontSize={props.bodyFontSize}
+                            value={props.county}
+                            onChange={(e) => {props.setCounty(e.target.value)}}
+                            isInvalid={props.isPropertyError}
+                        />
+                    </Tooltip>
+                </HStack>
+                <HStack w='full'>
+                    <Text minW={props.secondMinW}>
+                        Folio
+                    </Text>
+                    <Tooltip label={props.isPropertyError || ''}>
+                        <Input
+                            height={props.bodyInputHeight}
+                            paddingInline={props.inputPadding}
+                            borderRadius='10px'
+                            fontSize={props.bodyFontSize}
+                            value={props.folioNo}
+                            onChange={(e) => {props.setFolioNo(e.target.value)}}
+                            isInvalid={props.isPropertyError}
+                        />
+                    </Tooltip>
+                </HStack>
             </HStack>
-        </Stack>
+        </VStack>
     )
 }
 

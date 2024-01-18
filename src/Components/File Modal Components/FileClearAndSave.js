@@ -70,6 +70,7 @@ const FileClearAndSaveButtons = (props) => {
             fileNumber: props.fileNo,
             fileRef: props.fileRef,
             address: props.propertyAddress,
+            county: props.county,
             folioNo: props.folioNo,
             buyer: props.buyer,
             seller: props.seller,
