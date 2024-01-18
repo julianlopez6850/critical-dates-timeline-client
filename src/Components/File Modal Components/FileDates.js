@@ -7,8 +7,9 @@ import {
     Text,
     Tooltip,
     Input,
+    Icon,
 } from '@chakra-ui/react';
-import { LockIcon, UnlockIcon, } from '@chakra-ui/icons';
+import { CopyIcon, LockIcon, UnlockIcon, } from '@chakra-ui/icons';
 
 import CalculateDatePopover from './CalculateDatePopover';
 import calculateNewDate from '../../Helpers/calculateNewDate';
@@ -40,6 +41,30 @@ const FileDates = (props) => {
         <VStack w='fit-content' h='full' fontSize={props.mainFontSize} spacing={props.datesSpacing}>
             <Text fontWeight='bold'>
                 Critical Dates:
+                <Button
+                    minW='unset'
+                    w={props.bodyInputHeight}
+                    h='110%'
+                    ml='4px !important'
+                    p='0px !important'
+                    bgColor='transparent'
+                    _hover={{bgColor:'#FFFFFF15'}}
+                    tabIndex={-1}
+                    onClick={() => {
+                        const copiedDates = props.dates.map((item) => {
+                                return item.value ? (
+                                    (item.label === 'Loan ✓' ? 'Loan Approval' : item.label) + 
+                                    ':   ' + 
+                                    item.value.substring(5) + '-' +
+                                    item.value.substring(0,4) + 
+                                    '\n'
+                                ) : '';
+                            })
+                        navigator.clipboard.writeText('Critical Dates:\n' + copiedDates.join(''));
+                    }}
+                >
+                    <Icon as={CopyIcon} boxSize={props.clipboardIconSize}/>
+                </Button>
             </Text>
             {props.dates.map((item, index) => {
                 return (
@@ -88,16 +113,21 @@ const FileDates = (props) => {
                             whiteSpace='pre-wrap'
                             label={props.status !== 'Open' ? 'File status is Closed or Cancelled.\nRe-open it to update Date.' : ''}
                         >
-                            <Button p='0px !important' minW='unset' boxSize={props.bodyInputHeight} bgColor='transparent' mr='4px !important'
+                            <Button
+                                minW='unset'
+                                boxSize={props.bodyInputHeight}
+                                mr='4px !important'
+                                p='0px !important'
+                                bgColor='transparent'
                                 _hover={{bgColor:'#FFFFFF15'}}
+                                isDisabled={props.status !== 'Open'}
+                                transition='0s'
+                                tabIndex={-1}
                                 onClick={(e)=>{
                                     e.stopPropagation();
                                     if(props.status === 'Open')
                                         item.setIsClosed((isClosed) => !isClosed);
                                 }}
-                                isDisabled={props.status !== 'Open'}
-                                transition='0s'
-                                tabIndex={-1}
                             >
                                 <Text display='flex'>
                                     { (props.status !== 'Open' || item.isClosed) && <LockIcon boxSize={props.lockIconSize}/> || <UnlockIcon boxSize={props.lockIconSize}/> }

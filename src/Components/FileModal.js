@@ -45,56 +45,61 @@ const FileModal = (props) => {
         const windowListener = () => {
             if(window.innerWidth >= 1150) {
                 setStyles({
-                    modalSize:'5xl', modalInlinePadding:'24px', bodyFontSize: '14px', spacing:'8px',
-                    bodyInputHeight: '30px', inputPadding:'16px',
+                    modalSize:'5xl', modalInlinePadding:'24px', bodyFontSize: '14px',
+                    bodyInputHeight: '30px', inputPadding:'16px', spacing:'8px',
                     partiesStacksDir:'row', propertyStacksDir:'row', secondStacksDir: 'row',
                     headerFontSize:'16px', headerInputHeight: '32px', headerStackDir:'row',
-                    sec3height:'237px', dateTypeW:'68px', dateW:'150px', datesSpacing:'6px', calculatorIconSize:'26px', lockIconSize:'16px',
                     fileNoW:'75px', fileRefW:'620px', beginningMinW:'57px', secondMinW:'43px',
+                    sec3height:'237px', dateTypeW:'68px', dateW:'150px', datesSpacing:'6px',
+                    clipboardIconSize:'20px', calculatorIconSize:'26px', lockIconSize:'16px',
                     fileTypeTabsW:'80px', fileRepTabsW:'50px', tabsPadding:'5px',
                     saveButtonW:'100px', otherFooterButtonsW:'120px', footerButtonH:'40px', footerFontSize:'16px', footerTooltipSize:'700px'
                 });
             } else if(window.innerWidth >= 900) {
                 setStyles({
-                    modalSize:'3xl', modalInlinePadding:'24px', bodyFontSize: '12px', spacing:'8px',
-                    bodyInputHeight: '26px', inputPadding:'12px',
+                    modalSize:'3xl', modalInlinePadding:'24px', bodyFontSize: '12px',
+                    bodyInputHeight: '26px', inputPadding:'12px', spacing:'8px',
                     partiesStacksDir:'row', propertyStacksDir:'row', secondStacksDir: 'row', 
                     headerFontSize:'14px', headerInputHeight: '28px', headerStackDir:'row', 
-                    sec3height:'210px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px', calculatorIconSize:'24px', lockIconSize:'14px',
                     fileNoW:'60px', fileRefW:'400px', beginningMinW:'49px', secondMinW:'38px',
+                    sec3height:'210px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px',
+                    clipboardIconSize:'18px', calculatorIconSize:'24px', lockIconSize:'14px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
                     saveButtonW:'80px', otherFooterButtonsW:'110px', footerButtonH:'36px', footerFontSize:'14px', footerTooltipSize:'500px'
                 });
             } else if(window.innerWidth >= 650) {
                 setStyles({
-                    modalSize:'xl', modalInlinePadding:'16px', bodyFontSize: '12px', spacing:'8px',
-                    bodyInputHeight: '22px', inputPadding:'10px',
+                    modalSize:'xl', modalInlinePadding:'16px', bodyFontSize: '12px',
+                    bodyInputHeight: '22px', inputPadding:'10px', spacing:'8px',
                     partiesStacksDir:'column', propertyStacksDir:'row', secondStacksDir: 'row', 
                     headerFontSize:'14px', headerInputHeight: '24px', headerStackDir:'row', 
-                    sec3height:'186px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px', calculatorIconSize:'22px', lockIconSize:'14px',
                     fileNoW:'50px', fileRefW:'340px', beginningMinW:'49px', secondMinW:'30px',
+                    sec3height:'186px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px',
+                    clipboardIconSize:'16px', calculatorIconSize:'22px', lockIconSize:'14px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
                     saveButtonW:'60px', otherFooterButtonsW:'90px', footerButtonH:'32px', footerFontSize:'12px', footerTooltipSize:'350px'
                 });
             } else if(window.innerWidth >= 530) {
                 setStyles({
-                    sec3height:'159px', dateTypeW:'60px', dateW:'120px', datesSpacing:'6px', calculatorIconSize:'18px', lockIconSize:'12px',
-                    modalSize:'sm', modalInlinePadding:'12px', bodyFontSize: '10px', spacing:'6px',
-                    bodyInputHeight: '18px', inputPadding:'8px',
+                    modalSize:'sm', modalInlinePadding:'12px', bodyFontSize: '10px',
+                    bodyInputHeight: '18px', inputPadding:'8px', spacing:'6px',
                     partiesStacksDir:'column', propertyStacksDir:'row', secondStacksDir: 'column',
                     headerFontSize:'12px', headerInputHeight: '20px', headerStackDir:'column',
                     fileNoW:'40px', fileRefW:'full', beginningMinW:'41px', secondMinW:'22px',
+                    sec3height:'159px', dateTypeW:'60px', dateW:'120px', datesSpacing:'6px',
+                    clipboardIconSize:'16px', calculatorIconSize:'18px', lockIconSize:'12px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
                     saveButtonW:'40px', otherFooterButtonsW:'80px', footerButtonH:'28px', footerFontSize:'10px', footerTooltipSize:'200px'
                 });
             } else {
                 setStyles({
-                    modalSize:'xs', modalInlinePadding:'12px', bodyFontSize: '10px', spacing:'4px',
-                    bodyInputHeight: '18px', inputPadding:'8px',
+                    modalSize:'xs', modalInlinePadding:'12px', bodyFontSize: '10px',
+                    bodyInputHeight: '18px', inputPadding:'8px', spacing:'4px',
                     partiesStacksDir:'column', propertyStacksDir:'row', secondStacksDir: 'column',
                     headerFontSize:'12px', headerInputHeight: '20px', headerStackDir:'column',
-                    sec3height:'', dateTypeW:'60px', dateW:'120px', datesSpacing:'6px', calculatorIconSize:'18px', lockIconSize:'12px',
                     fileNoW:'40px', fileRefW:'full', beginningMinW:'41px', secondMinW:'22px',
+                    sec3height:'', dateTypeW:'60px', dateW:'120px', datesSpacing:'6px',
+                    clipboardIconSize:'16px', calculatorIconSize:'18px', lockIconSize:'12px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
                     saveButtonW:'30px', otherFooterButtonsW:'60px', footerButtonH:'24px', footerFontSize:'8px', footerTooltipSize:'160px'
                 });
