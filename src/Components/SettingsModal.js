@@ -23,8 +23,22 @@ import {
 const SettingsModal = (props) => {
 
     const [styles, setStyles] = useState({});
+    const [isDisabled, setIsDisabled] = useState(false);
 
     useEffect(() => {
+        // STAGING ENVIRONMENT - Get darkMode setting value
+        if(process.env.REACT_APP_ENV === 'staging') {
+            setIsDisabled(true);
+
+            var settings = JSON.parse(localStorage.getItem('settings')) || {};
+
+            setTimeout(() => {
+                setProfile(profile => {
+                    return {...profile, darkMode: settings.darkMode};
+                });
+            }, 0)
+        }
+
         const windowListener = () => {
             if(window.innerWidth >= 530) {
                 setStyles({
@@ -73,12 +87,22 @@ const SettingsModal = (props) => {
         e.preventDefault();
         if(!profile.loggedIn || !props.isOpen)
             return;
+
+        // STAGING ENVIRONMENT - Update darkMode
+        if(process.env.REACT_APP_ENV === 'staging') {
+            localStorage.setItem('settings', JSON.stringify({darkMode: !profile.darkMode}));
+            console.info('Your settings have been updated successfully.');
+            return setProfile(profile => {
+                return { ...profile, darkMode: !profile.darkMode };
+            });
+        }
         
+        // PRODUCTION ENVIRONMENT - Update darkMode
         axiosInstance.put(`${process.env.REACT_APP_API_URL}/auth/settings`, { username: profile.user, settings: {...notificationDatesTimes, darkMode: !profile.darkMode}}).then((response) => {
             setProfile(profile => {
                 return { ...profile, darkMode: response.data.settings.darkMode };
             });
-            console.log('Your settings have been updated successfully.');
+            console.info('Your settings have been updated successfully.');
         }).catch(() => {
             console.warn('ERROR: A problem occurred while trying to update your settings. Please try again later.');
         });
@@ -94,7 +118,7 @@ const SettingsModal = (props) => {
             setProfile(profile => {
                 return {...profile, notificationSettings: notificationSettings};
             });
-            console.log('Your settings have been updated successfully.');
+            console.info('Your settings have been updated successfully.');
         }).catch(() => {
             console.warn('ERROR: A problem occurred while trying to update your settings. Please try again later.');
         });
@@ -149,14 +173,15 @@ const SettingsModal = (props) => {
                     </VStack>
                     <VStack align='left' spacing='0' mt='10px'>
                         <Text fontWeight='bold'>
-                            Notifications
+                            Notifications {isDisabled ? '(Disabled on guest mode)' : ''}
                         </Text>
                         <Divider/>
                         <HStack h='fit-content' spacing='0'>
                             <VStack h='full' alignItems='normal' mt='8px'>
                                 <Checkbox
-                                    isChecked={allChecked}
-                                    isIndeterminate={partialChecked}
+                                    isDisabled={isDisabled}
+                                    isChecked={isDisabled ? false : allChecked}
+                                    isIndeterminate={isDisabled ? false : partialChecked}
                                     onChange={(e) => Object.keys(notificationDatesTimes).forEach(key => 
                                         setNotificationDatesTimes(days => {
                                             return {...days, [key]: {...notificationDatesTimes[key], active: e.target.checked } }
@@ -172,7 +197,8 @@ const SettingsModal = (props) => {
                                     {dayLabels.map((item, index) => {
                                         return <Checkbox
                                             key={index}
-                                            isChecked={notificationDatesTimes[item.short].active}
+                                            isDisabled={isDisabled}
+                                            isChecked={isDisabled ? false : notificationDatesTimes[item.short].active}
                                             onChange={(e) => setNotificationDatesTimes(days => {
                                                 return {...days, [item.short]: {...notificationDatesTimes[item.short], active:e.target.checked } }
                                             })}
@@ -185,6 +211,7 @@ const SettingsModal = (props) => {
                             <VStack h='full' w='fit-content' mt='8px !important' alignItems='normal'>
                                 <HStack>
                                     <Checkbox whiteSpace='nowrap'
+                                        isDisabled={isDisabled}
                                         isChecked={allAtMatch}
                                         onChange={(e) => !allAtMatch ? Object.keys(notificationDatesTimes).forEach(key => 
                                             setNotificationDatesTimes(days => {
@@ -200,6 +227,7 @@ const SettingsModal = (props) => {
                                         fontSize='inherit'
                                         value={allAtValue}
                                         onChange={(e) => {setAllAtValue(e.target.value)}}
+                                        isDisabled={isDisabled}
                                     />
                                 </HStack>
                                 <Divider/>
@@ -218,7 +246,7 @@ const SettingsModal = (props) => {
                                                     return {...days, [item.short]: {...notificationDatesTimes[item.short], time: e.target.value}}
                                                 })
                                             }}
-                                            isDisabled={!notificationDatesTimes[item.short]}
+                                            isDisabled={isDisabled ? true : !notificationDatesTimes[item.short]}
                                         />
                                     </HStack>
                                 })}

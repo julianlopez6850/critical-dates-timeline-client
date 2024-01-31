@@ -30,11 +30,7 @@ const TableRow = (props) => {
     }, [dateInfo])
 
     // Update the isClosed property of date in database whenever the value is updated by the user &
-    // Update the color of a row's Date column depending on its status. i.e.
-    // Past Due => red
-    // Today => orange
-    // Upcoming => green
-    // Completed => black
+    // Update the color of a row's Date column depending on its status.
     useEffect(() => {
         const d = new Date();
         const todayString = `${d.getFullYear()}-${leadingZero(d.getMonth() + 1)}-${leadingZero(d.getDate())}`;
@@ -50,21 +46,33 @@ const TableRow = (props) => {
         else
             setDateColor('red.500');
 
-        if(update) {
-            dateInfo.isClosed = isClosed;
-            axiosInstance.put(`${process.env.REACT_APP_API_URL}/dates`, dateInfo).then(() => {
-                console.info(`Updated Status of ${dateInfo.fileNumber} ${dateInfo.prefix}${dateInfo.type} to ${dateInfo.isClosed ? `CLOSED` : `OPEN`}`);
-            }).catch(() => {
-                console.warn('ERROR. We encountered a problem while trying to update this date. Please try again later.');
-                props.toast({
-                    title: 'Error.',
-                    description: `An error occurred while trying to update this date's status. Try again later.`,
-                    status: 'error',
-                    duration: 2500,
-                    isClosable: true,
-                })
-            });
+        if(!update)
+            return;
+        
+        dateInfo.isClosed = isClosed;
+
+        // STAGING ENVIRONMENT - Update date status
+        if(process.env.REACT_APP_ENV === 'staging') {
+            var storedDates = JSON.parse(localStorage.getItem('dates'));
+            storedDates[(dateInfo.fileNumber + dateInfo.type + dateInfo.prefix)].isClosed = dateInfo.isClosed ? 1 : 0;
+            localStorage.setItem('dates', JSON.stringify(storedDates));
+
+            return console.info(`Updated Status of ${dateInfo.fileNumber} ${dateInfo.prefix}${dateInfo.type} to ${dateInfo.isClosed ? `CLOSED` : `OPEN`}`);
         }
+
+        // PRODUCTION ENVIRONMENT - Update date status
+        axiosInstance.put(`${process.env.REACT_APP_API_URL}/dates`, dateInfo).then(() => {
+            console.info(`Updated Status of ${dateInfo.fileNumber} ${dateInfo.prefix}${dateInfo.type} to ${dateInfo.isClosed ? `CLOSED` : `OPEN`}`);
+        }).catch(() => {
+            console.warn('ERROR. We encountered a problem while trying to update this date. Please try again later.');
+            props.toast({
+                title: 'Error.',
+                description: `An error occurred while trying to update this date's status. Try again later.`,
+                status: 'error',
+                duration: 2500,
+                isClosable: true,
+            });
+        });
     }, [isClosed, update]);
 
     return (

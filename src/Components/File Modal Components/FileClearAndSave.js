@@ -26,6 +26,38 @@ const FileClearAndSaveButtons = (props) => {
     } = useDisclosure();
 
     const deleteFile = () => {
+        // STAGING ENVIRONMENT - Delete File (from LocalStorage)
+        if(process.env.REACT_APP_ENV === 'staging') {
+            var storedFiles = JSON.parse(localStorage.getItem('files')) || {};
+            var storedDates = JSON.parse(localStorage.getItem('dates')) || {};
+            
+            storedDates = Object.keys(storedDates).filter(storedKey => 
+                !storedKey.includes(props.fileNo)).reduce((newDates, key) =>
+                {
+                    newDates[key] = storedDates[key];
+                    return newDates;
+                }, {}
+            );
+            localStorage.setItem('dates', JSON.stringify(storedDates));
+
+            delete storedFiles[props.fileNo];
+            localStorage.setItem('files', JSON.stringify(storedFiles));
+            
+            console.info(`Successfully deleted file ${props.fileNo}`);
+            props.toast({
+                title: 'Success!',
+                description: `Successfully deleted file ${props.fileNo}`,
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+            })
+            
+            return setProfile(profile => {
+                return {...profile, actions: profile.actions + 1 }
+            });
+        }
+
+        // PRODUCTION ENVIRONMENT - Delete File (from database)
         axiosInstance.delete(`${process.env.REACT_APP_API_URL}/files`, { data: {fileNumber: props.fileNo}}).then(() => {
             setProfile(profile => {
                 return {...profile, actions: profile.actions + 1 }
@@ -99,12 +131,100 @@ const FileClearAndSaveButtons = (props) => {
             status: props.status,
         }
 
-        // if new file, POST to database.
-        if(props.new) {
-            axiosInstance.post(`${process.env.REACT_APP_API_URL}/files`, file).then(() => {
-                setProfile(profile => {
-                    return {...profile, actions: profile.actions + 1 }
-                })
+        // SAVING ON STAGING ENVIRONMENT
+        // Store new files & Edit existing files in localStorage
+        if(process.env.REACT_APP_ENV === 'staging') {
+            const dateFileInfo = {
+                buyer: file.buyer,
+                seller: file.seller,
+                address: file.address,
+                whoRepresenting: file.whoRepresenting,
+                isPurchase: file.isPurchase,
+                status: file.status
+            }
+            const dates = [
+                {
+                    fileNumber: file.fileNumber,
+                    type:'Effective',
+                    prefix: '',
+                    date: file.effective,
+                    isClosed: file.isClosedEffective ? 1 : 0,
+                    calculatedDate: null,
+                    File: dateFileInfo
+                },
+                {
+                    fileNumber: file.fileNumber,
+                    type:'Escrow',
+                    prefix: 'First ',
+                    date: file.depositInitial,
+                    isClosed: file.isClosedDepositInitial ? 1 : 0,
+                    calculatedDate: file.isCalculatedDepositInitial,
+                    File: dateFileInfo
+                },
+                {
+                    fileNumber: file.fileNumber,
+                    type:'Escrow',
+                    prefix: 'Second ',
+                    date: file.depositSecond,
+                    isClosed: file.isClosedDepositSecond ? 1 : 0,
+                    calculatedDate: file.isCalculatedDepositSecond,
+                    File: dateFileInfo
+                },
+                {
+                    fileNumber: file.fileNumber,
+                    type:'Loan ✓',
+                    prefix: '',
+                    date: file.loanApproval,
+                    isClosed: file.isClosedLoanApproval ? 1 : 0,
+                    calculatedDate: file.isCalculatedLoanApproval,
+                    File: dateFileInfo
+                },
+                {
+                    fileNumber: file.fileNumber,
+                    type:'Inspection',
+                    prefix: '',
+                    date: file.inspection,
+                    isClosed: file.isClosedInspection ? 1 : 0,
+                    calculatedDate: file.isCalculatedInspection,
+                    File: dateFileInfo
+                },
+                {
+                    fileNumber: file.fileNumber,
+                    type:'Closing',
+                    prefix: '',
+                    date: file.closing,
+                    isClosed: file.isClosedClosing ? 1 : 0,
+                    calculatedDate: file.isCalculatedClosing,
+                    File: dateFileInfo
+                }
+            ]
+
+            var storedFiles = JSON.parse(localStorage.getItem('files')) || {};
+            var storedDates = JSON.parse(localStorage.getItem('dates')) || {};
+            dates.forEach(date => {
+                if(date.date !== null)
+                    storedDates[date.fileNumber + date.type + date.prefix] = date;
+            })
+
+            // If creating a new file, or changing a file number, make sure the new file number is not already in use.
+            if(storedFiles[file.fileNumber] !== undefined && (props.new || (file.fileNumber !== file.oldFileNumber))) {
+                console.warn('ERROR: This file number is already in use.');
+                props.toast({
+                    title: 'Error.',
+                    description: 'This file number is already in use.',
+                    status: 'error',
+                    duration: 2000,
+                    isClosable: true,
+                });
+                return;
+            }
+
+            storedFiles[file.fileNumber] = file;
+
+            localStorage.setItem('files', JSON.stringify(storedFiles));
+            localStorage.setItem('dates', JSON.stringify(storedDates));
+
+            if(props.new) {
                 console.info(`Successfully created file ${props.fileNo}`);
                 props.toast({
                     title: 'Success!',
@@ -112,35 +232,26 @@ const FileClearAndSaveButtons = (props) => {
                     status: 'success',
                     duration: 2000,
                     isClosable: true,
-                })
+                });
                 props.onClose();
                 props.resetAllValues();
-            }).catch((err) => {
-                if(err.response && err.response.data.message === 'This file already exists.') {
-                    console.warn('ERROR: This file number is already in use.');
-                    props.toast({
-                        title: 'Error.',
-                        description: 'This file number is already in use.',
-                        status: 'error',
-                        duration: 2000,
-                        isClosable: true,
-                    })
-                } else {
-                    console.warn('ERROR: A problem occurred while trying to save this file. Please try again later.');
-                    props.toast({
-                        title: 'Error.',
-                        description: 'An error occurred while trying to save this file. Try again later.',
-                        status: 'error',
-                        duration: 2500,
-                        isClosable: true,
-                    })
+            } else {
+                // if the file number was changed, remove the saved file with the old file number, along with its dates.
+                if(file.fileNumber !== file.oldFileNumber) {
+                    storedDates = Object.keys(storedDates).filter(storedKey => 
+                        !storedKey.includes(file.oldFileNumber)).reduce((newDates, key) =>
+                        {
+                            newDates[key] = storedDates[key];
+                            return newDates;
+                        }, {}
+                    );
+                    localStorage.setItem('dates', JSON.stringify(storedDates));
+
+                    delete storedFiles[file.oldFileNumber];
+                    delete storedFiles[file.fileNumber].oldFileNumber;
+                    localStorage.setItem('files', JSON.stringify(storedFiles));
                 }
-            })
-        } else { // else (if old file), PUT (update) file in database.
-            axiosInstance.put(`${process.env.REACT_APP_API_URL}/files`, file).then(() => {
-                setProfile(profile => {
-                    return {...profile, actions: profile.actions + 1 }
-                })
+                
                 console.info(`Successfully updated file ${props.fileNo}`);
                 props.toast({
                     title: 'Success!',
@@ -148,10 +259,67 @@ const FileClearAndSaveButtons = (props) => {
                     status: 'success',
                     duration: 2000,
                     isClosable: true,
-                })
+                });
                 props.onClose();
-            })
+            }
+            
+            return setProfile(profile => {
+                return {...profile, actions: profile.actions + 1 }
+            });
         }
+
+        // SAVING ON PRODUCTION ENVIRONMENT
+        // if new file, POST to database.
+        // else, PUT (update) existing file in database.
+        if(props.new) axiosInstance.post(`${process.env.REACT_APP_API_URL}/files`, file).then(() => {
+            setProfile(profile => {
+                return {...profile, actions: profile.actions + 1 }
+            })
+            console.info(`Successfully created file ${props.fileNo}`);
+            props.toast({
+                title: 'Success!',
+                description: `Successfully created file ${props.fileNo}`,
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+            });
+            props.onClose();
+            props.resetAllValues();
+        }).catch((err) => {
+            if(err.response && err.response.data.message === 'This file already exists.') {
+                console.warn('ERROR: This file number is already in use.');
+                props.toast({
+                    title: 'Error.',
+                    description: 'This file number is already in use.',
+                    status: 'error',
+                    duration: 2000,
+                    isClosable: true,
+                });
+            } else {
+                console.warn('ERROR: A problem occurred while trying to save this file. Please try again later.');
+                props.toast({
+                    title: 'Error.',
+                    description: 'An error occurred while trying to save this file. Try again later.',
+                    status: 'error',
+                    duration: 2500,
+                    isClosable: true,
+                });
+            }
+        })
+        else axiosInstance.put(`${process.env.REACT_APP_API_URL}/files`, file).then(() => {
+            setProfile(profile => {
+                return {...profile, actions: profile.actions + 1 }
+            });
+            console.info(`Successfully updated file ${props.fileNo}`);
+            props.toast({
+                title: 'Success!',
+                description: `Successfully updated file ${props.fileNo}`,
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+            });
+            props.onClose();
+        })
     }
     
     return (

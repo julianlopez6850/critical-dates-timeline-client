@@ -28,6 +28,25 @@ const Login = () => {
  
     // If a user is already authenticated, navigate to the main page.
     useEffect(() => {
+        // STAGING ENVIRONMENT - Login (automatically login the user as 'GUEST'), go to main page.
+        if(process.env.REACT_APP_ENV === 'staging') {
+            setTimeout(() => {
+                if(!toast.isActive(''))
+                    toast({
+                        position: 'top',
+                        id: '',
+                        title: 'SUCCESS',
+                        description: `You are now logged in as GUEST.`,
+                        status: 'success',
+                        duration: 2000,
+                        isClosable: false
+                    })
+                navigate('/');
+            }, 100);
+            return;
+        }
+        
+        // PRODUCTION ENVIRONMENT - If user is already logged in, go to main page.
         axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then(() => {
             setTimeout(() => navigate('/'), 100);
         }).catch(function (error) {
@@ -111,6 +130,7 @@ const Login = () => {
                         isRequired={true}
                         placeholder='Username'
                         onChange={(e) => {setUsername(e.target.value)}}
+                        isDisabled={process.env.REACT_APP_ENV === 'staging'}
                         autoFocus
                     />
                     
@@ -125,8 +145,9 @@ const Login = () => {
                             pr='4.5rem'
                             type={show ? 'text' : 'password'}
                             isRequired={true}
-                            onChange={(e) => {setPassword(e.target.value)}}
                             placeholder='Password'
+                            onChange={(e) => {setPassword(e.target.value)}}
+                            isDisabled={process.env.REACT_APP_ENV === 'staging'}
                         />
                         <InputRightElement width='4.5rem'>
                             <Button 
@@ -163,6 +184,7 @@ const Login = () => {
                             color: 'gray.200'
                         }}
                         onClick={() => {tryLogin()}}
+                        isDisabled={process.env.REACT_APP_ENV === 'staging'}
                     >
                         LOGIN
                     </Button>

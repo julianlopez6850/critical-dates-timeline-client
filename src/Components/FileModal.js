@@ -268,97 +268,184 @@ const FileModal = (props) => {
     const [isError, setIsError] = useState();
 
     useEffect(() => {
-        if(!props.isOpen)
+        if(!props.isOpen || props.new || !props.fileNo)
             return;
 
+        // STAGING ENVIRONMENT - Get the stored file and date info from localStorage.
+        if(process.env.REACT_APP_ENV === 'staging') {
+            resetAllValues();
+            setOldFileNo(props.fileNo);
+            setFileNo(props.fileNo);
+
+            // Get the stored file information for the chosen file; Set each state hook accordingly.
+            var storedFiles = JSON.parse(localStorage.getItem('files'));
+            var file = storedFiles[props.fileNo];
+
+            setFileRef(file.fileRef);
+            setPropertyAddress(file.address);
+            setCounty(file.county);
+            setFolioNo(file.folioNo);
+            setSeller(file.seller);
+            setBuyer(file.buyer);
+            setIsPurchase(file.isPurchase);
+            setWhoRepresenting(file.whoRepresenting);
+            setNotes(file.notes);
+            setStatus(file.status);
+
+            const responseRoles = JSON.parse(file.roles);
+            setIsSellerDocs(responseRoles.isSellerDocs);
+            setIsBuyerDocs(responseRoles.isBuyerDocs);
+            setIsEscrowAgent(responseRoles.isEscrowAgent);
+            setIsTitleAgent(responseRoles.isTitleAgent);
+            setIsClosingAgent(responseRoles.isClosingAgent);
+
+            const responseMilestones = JSON.parse(file.milestones);
+            setIsLienRequested(responseMilestones.isLienRequested);
+            setIsTitleOrdered(responseMilestones.isTitleOrdered);
+            setIsLienReceived(responseMilestones.isLienReceived);
+            setIsTitleReceived(responseMilestones.isTitleReceived);
+            setIsSellerDocsDrafted(responseMilestones.isSellerDocsDrafted);
+            setIsSellerDocsApproved(responseMilestones.isSellerDocsApproved);
+            setIsBuyerDocsDrafted(responseMilestones.isBuyerDocsDrafted);
+            setIsBuyerDocsApproved(responseMilestones.isBuyerDocsApproved);
+
+            // Get the stored dates for the chosen file; Set each state hook accordingly.
+            var storedDates = JSON.parse(localStorage.getItem('dates'));
+            file.Dates = [];
+
+            Object.entries(storedDates).forEach(date => {
+                date = date[1];
+                if(date.fileNumber === props.fileNo)
+                    file.Dates.push(date);
+            });
+            
+            for(const date of file.Dates) {
+                switch(date.type) {
+                    case 'Effective':
+                        setEffective(date.date);
+                        setIsClosedEffective(date.isClosed);
+                        break;
+                    case 'Escrow':
+                        switch(date.prefix) {
+                            case 'First ':
+                                setDepositInit(date.date);
+                                setIsClosedDepositInit(date.isClosed);
+                                setIsCalculatedDepositInit(date.calculatedDate);
+                                break;
+                            case 'Second ':
+                                setDepositSecond(date.date);
+                                setIsClosedDepositSecond(date.isClosed);
+                                setIsCalculatedDepositSecond(date.calculatedDate);
+                                break;
+                        }
+                        break;
+                    case 'Loan ✓':
+                        setLoanApproval(date.date);
+                        setIsClosedLoanApproval(date.isClosed);
+                        setIsCalculatedLoanApproval(date.calculatedDate);
+                        break;
+                    case 'Inspection':
+                        setInspection(date.date);
+                        setIsClosedInspection(date.isClosed);
+                        setIsCalculatedInspection(date.calculatedDate);
+                        break;
+                    case 'Closing':
+                        setClosing(date.date);
+                        setIsClosedClosing(date.isClosed);
+                        setIsCalculatedClosing(date.calculatedDate);
+                        break;
+                }
+            }
+
+            return;
+        }
+
+        // PRODUCTION ENVIRONMENT - Get the stored file and date info from database.
         axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then((response) => {
             setProfile(profile => {
                 return {...profile, loggedIn: true, user: response.data.username }
             });
 
-            if(!props.new && props.fileNo) {
-                axiosInstance.get(`${process.env.REACT_APP_API_URL}/files?fileNumber=${props.fileNo}`).then((response) => {
-                    resetAllValues();
-                    const file = response.data.file;
-                    setOldFileNo(file.fileNumber);
-                    setFileNo(file.fileNumber);
-                    setFileRef(file.fileRef);
-                    setPropertyAddress(file.address);
-                    setCounty(file.county);
-                    setFolioNo(file.folioNo);
-                    setSeller(file.seller);
-                    setBuyer(file.buyer);
-                    setIsPurchase(file.isPurchase);
-                    setWhoRepresenting(file.whoRepresenting);
-                    setNotes(file.notes);
-                    setStatus(file.status);
-    
-                    const responseRoles = JSON.parse(file.roles);
-                    setIsSellerDocs(responseRoles.isSellerDocs);
-                    setIsBuyerDocs(responseRoles.isBuyerDocs);
-                    setIsEscrowAgent(responseRoles.isEscrowAgent);
-                    setIsTitleAgent(responseRoles.isTitleAgent);
-                    setIsClosingAgent(responseRoles.isClosingAgent);
-    
-                    const responseMilestones = JSON.parse(file.milestones);
-                    setIsEscrowReceived(responseMilestones.isEscrowReceived);
-                    setIsLienRequested(responseMilestones.isLienRequested);
-                    setIsTitleOrdered(responseMilestones.isTitleOrdered);
-                    setIsLienReceived(responseMilestones.isLienReceived);
-                    setIsTitleReceived(responseMilestones.isTitleReceived);
-                    setIsSellerDocsDrafted(responseMilestones.isSellerDocsDrafted);
-                    setIsSellerDocsApproved(responseMilestones.isSellerDocsApproved);
-                    setIsBuyerDocsDrafted(responseMilestones.isBuyerDocsDrafted);
-                    setIsBuyerDocsApproved(responseMilestones.isBuyerDocsApproved);
-    
-                    for(const date of file.Dates) {
-                        switch(date.type) {
-                            case 'Effective':
-                                setEffective(date.date);
-                                setIsClosedEffective(date.isClosed);
-                                break;
-                            case 'Escrow':
-                                switch(date.prefix) {
-                                    case 'First ':
-                                        setDepositInit(date.date);
-                                        setIsClosedDepositInit(date.isClosed);
-                                        setIsCalculatedDepositInit(date.calculatedDate);
-                                        break;
-                                    case 'Second ':
-                                        setDepositSecond(date.date);
-                                        setIsClosedDepositSecond(date.isClosed);
-                                        setIsCalculatedDepositSecond(date.calculatedDate);
-                                        break;
-                                }
-                                break;
-                            case 'Loan ✓':
-                                setLoanApproval(date.date);
-                                setIsClosedLoanApproval(date.isClosed);
-                                setIsCalculatedLoanApproval(date.calculatedDate);
-                                break;
-                            case 'Inspection':
-                                setInspection(date.date);
-                                setIsClosedInspection(date.isClosed);
-                                setIsCalculatedInspection(date.calculatedDate);
-                                break;
-                            case 'Closing':
-                                setClosing(date.date);
-                                setIsClosedClosing(date.isClosed);
-                                setIsCalculatedClosing(date.calculatedDate);
-                                break;
-                        }
+            axiosInstance.get(`${process.env.REACT_APP_API_URL}/files?fileNumber=${props.fileNo}`).then((response) => {
+                resetAllValues();
+                const file = response.data.file;
+                setOldFileNo(file.fileNumber);
+                setFileNo(file.fileNumber);
+                setFileRef(file.fileRef);
+                setPropertyAddress(file.address);
+                setCounty(file.county);
+                setFolioNo(file.folioNo);
+                setSeller(file.seller);
+                setBuyer(file.buyer);
+                setIsPurchase(file.isPurchase);
+                setWhoRepresenting(file.whoRepresenting);
+                setNotes(file.notes);
+                setStatus(file.status);
+
+                const responseRoles = JSON.parse(file.roles);
+                setIsSellerDocs(responseRoles.isSellerDocs);
+                setIsBuyerDocs(responseRoles.isBuyerDocs);
+                setIsEscrowAgent(responseRoles.isEscrowAgent);
+                setIsTitleAgent(responseRoles.isTitleAgent);
+                setIsClosingAgent(responseRoles.isClosingAgent);
+
+                const responseMilestones = JSON.parse(file.milestones);
+                setIsLienRequested(responseMilestones.isLienRequested);
+                setIsTitleOrdered(responseMilestones.isTitleOrdered);
+                setIsLienReceived(responseMilestones.isLienReceived);
+                setIsTitleReceived(responseMilestones.isTitleReceived);
+                setIsSellerDocsDrafted(responseMilestones.isSellerDocsDrafted);
+                setIsSellerDocsApproved(responseMilestones.isSellerDocsApproved);
+                setIsBuyerDocsDrafted(responseMilestones.isBuyerDocsDrafted);
+                setIsBuyerDocsApproved(responseMilestones.isBuyerDocsApproved);
+
+                for(const date of file.Dates) {
+                    switch(date.type) {
+                        case 'Effective':
+                            setEffective(date.date);
+                            setIsClosedEffective(date.isClosed);
+                            break;
+                        case 'Escrow':
+                            switch(date.prefix) {
+                                case 'First ':
+                                    setDepositInit(date.date);
+                                    setIsClosedDepositInit(date.isClosed);
+                                    setIsCalculatedDepositInit(date.calculatedDate);
+                                    break;
+                                case 'Second ':
+                                    setDepositSecond(date.date);
+                                    setIsClosedDepositSecond(date.isClosed);
+                                    setIsCalculatedDepositSecond(date.calculatedDate);
+                                    break;
+                            }
+                            break;
+                        case 'Loan ✓':
+                            setLoanApproval(date.date);
+                            setIsClosedLoanApproval(date.isClosed);
+                            setIsCalculatedLoanApproval(date.calculatedDate);
+                            break;
+                        case 'Inspection':
+                            setInspection(date.date);
+                            setIsClosedInspection(date.isClosed);
+                            setIsCalculatedInspection(date.calculatedDate);
+                            break;
+                        case 'Closing':
+                            setClosing(date.date);
+                            setIsClosedClosing(date.isClosed);
+                            setIsCalculatedClosing(date.calculatedDate);
+                            break;
                     }
-                }).catch(() => {
-                    console.warn('ERROR: A problem occurred while trying to retrieve file info. Please try again later.');
-                    toast({
-                        title: 'Error.',
-                        description: 'An error occurred while trying to retrieve file info. Try again later',
-                        status: 'error',
-                        duration: 2000,
-                        isClosable: true,
-                    });
+                }
+            }).catch(() => {
+                console.warn('ERROR: A problem occurred while trying to retrieve file info. Please try again later.');
+                toast({
+                    title: 'Error.',
+                    description: 'An error occurred while trying to retrieve file info. Try again later',
+                    status: 'error',
+                    duration: 2000,
+                    isClosable: true,
                 });
-            }            
+            });
         }).catch(function (error) {
             setProfile(profile => {
                 return {...profile, loggedIn: false, user: '' }

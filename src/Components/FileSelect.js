@@ -9,6 +9,8 @@ const FileSelect = (props) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const validateUser = () => {
+        if(process.env.REACT_APP_ENV === 'staging')
+            return;
         axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then((response) => {
             setProfile(profile => {
                 return {...profile, loggedIn: true, user: response.data.username }

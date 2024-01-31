@@ -17,6 +17,8 @@ import FileSelect from './FileSelect';
 import FileModal from './FileModal';
 import SettingsMenu from './SettingsMenu';
 
+import stagingFiles from '../Helpers/Staging/stagingFiles'
+
 const Navbar = () => {
     
     const [styles, setStyles] = useState({});
@@ -82,10 +84,23 @@ const Navbar = () => {
     useEffect(() => {
         setFiles([]);
         setSelectedFile('')
-
-        if(profile.loggedIn === false)
+        if(!profile.loggedIn)
             return;
 
+        // STAGING ENVIRONMENT - Retrieving stored files from localStrorage
+        if(process.env.REACT_APP_ENV === 'staging') {
+            var storedFiles = JSON.parse(localStorage.getItem('files'));
+            return Object.entries(storedFiles).forEach(file => {
+                file = file[1];
+                setFiles((files) => [...files, {
+                    ...file,
+                    value: file.fileNumber,
+                    label: `${file.fileNumber}${file.status === 'Cancelled' ? 'CX' : file.status === 'Closed' ? '*' : ''} - ${file.fileRef}`
+                }])
+            });
+        }
+
+        // PRODUCTION ENVIRONMENT - Retrieving stored files from database.
         axiosInstance.get(`${process.env.REACT_APP_API_URL}/files/all`).then((response) => {
             response.data.files.map((file) => {
                 setFiles((files) => [...files, {
@@ -105,6 +120,19 @@ const Navbar = () => {
             })
         });
     }, [profile.loggedIn, profile.actions]);
+
+    useEffect(() => {
+        // STAGING ENVIRONMENT - Store default file(s) in localStorage if no files exist or all were deleted.
+        if(process.env.REACT_APP_ENV === 'staging') {
+            var storedFiles = JSON.parse(localStorage.getItem('files')) || {};
+            if(Object.keys(storedFiles).length === 0) {
+                stagingFiles.forEach(file => {
+                    storedFiles[file.fileNumber] = file;
+                })
+                localStorage.setItem('files', JSON.stringify(storedFiles));
+            }
+        }
+    }, [files])
 
     return (
         <Box w='full'>

@@ -19,6 +19,8 @@ import CustomDatePopover from '../Components/CustomDatePopover'
 import DatesTable from '../Components/DatesTable'
 import leadingZero from '../Helpers/leadingZero'
 
+import stagingCriticalDates from '../Helpers/Staging/stagingCriticalDates'
+
 function Main() {
 
     const [styles, setStyles] = useState({
@@ -33,6 +35,18 @@ function Main() {
     });
 
     useEffect(() => {
+        // STAGING ENVIRONMENT - Store default dates in localStorage if no dates exist or all were deleted.
+        if(process.env.REACT_APP_ENV === 'staging') {
+            var storedDates = JSON.parse(localStorage.getItem('dates')) || {};
+            if(Object.keys(storedDates).length === 0) {
+                storedDates = {};
+                stagingCriticalDates.forEach(date => {
+                    storedDates[date.fileNumber + date.type + date.prefix] = date;
+                })
+                localStorage.setItem('dates', JSON.stringify(storedDates));
+            }
+        }
+
         const windowListener = () => {
             if(window.innerWidth >= 1300) {
                 setStyles({
@@ -163,6 +177,27 @@ function Main() {
     const timeframes = ['All', 'Past Due', 'Today', 'This Week', 'Upcoming', 'Custom'];
 
     useEffect(() => {
+        // STAGING ENVIRONMENT - Save Profile Settings
+        if(process.env.REACT_APP_ENV === 'staging') {
+            const settings = {
+                "Mon":{"active":true,"time":"08:00"},
+                "Tue":{"active":true,"time":"08:00"},
+                "Wed":{"active":true,"time":"08:00"},
+                "Thu":{"active":true,"time":"08:00"},
+                "Fri":{"active":true,"time":"08:00"},
+                "Sat":{"active":false,"time":"08:00"},
+                "Sun":{"active":false,"time":"08:00"},
+            };
+            var storedSettings = JSON.parse(localStorage.getItem('settings')) || {};
+            var darkMode = Object.keys(storedSettings).length > 0 ? storedSettings.darkMode : false;
+            setProfile(profile => {
+                return {...profile, loggedIn: true, user: 'guest', actions: profile.actions + 1, darkMode: darkMode, notificationSettings: settings }
+            })
+            setLoading(false);
+            return;
+        }
+
+        // PRODUCTION ENVIRONMENT - Save Profile Settings
         axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then((response) => {
             const settings = response.data.settings;
             const darkMode = settings.darkMode;
@@ -184,30 +219,98 @@ function Main() {
     }, [startDate, endDate, dateType, dealType, isClosed, sort, pageNum, pageLimit]);
 
     useEffect(() => {
-        if(!profile.loggedIn) {
-            setCriticalDates([]);
-        } else {
-            axiosInstance.get(`${process.env.REACT_APP_API_URL}/dates?type=${dateType.value}&dealType=${dealType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}&sort=${sort.by},${sort.dir}&limit=${pageLimit}&pageNum=${pageNum}`).then((response) => {
-                const data = response.data;
-                if(data.start && data.start !== 1 && data.dates.length === 0) return;
-                setBounds([data.start, data.end]);
-                setTotal(data.total);
-                setCriticalDates(data.dates);
-                setLoading(false);
-            }).catch(() => {
-                setCriticalDates([]);
-                setError(true);
-                setLoading(false);
-                console.warn('ERROR: A problem occurred while trying to retrieve dates. Please try again later.');
-                toast({
-                    title: 'Error.',
-                    description: 'An error occurred while trying to retrieve dates. Try again later',
-                    status: 'error',
-                    duration: 2000,
-                    isClosable: true,
-                })
+        setCriticalDates([]);
+        if(!profile.loggedIn)
+            return;
+
+        // STAGING ENVIRONMENT - Filtering & Ordering Dates
+        if(process.env.REACT_APP_ENV === 'staging') {
+            var storedDates = JSON.parse(localStorage.getItem('dates'));
+            Object.entries(storedDates).forEach((date, index) => {
+                date = date[1];
+
+                // Filter by Date Type
+                if(date.type !== dateType.value && dateType.value !== '')
+                    return;
+
+                // Filter Deal Type (Refinances vs Purchases vs Sales)
+                var isRefinance = date.File.isPurchase == false;
+                var isPurchase = date.File.whoRepresenting === 'Buyer';
+                if((dealType.value === 'Refinance') != isRefinance && dealType.value !== '')
+                    return;
+                if(date.File.isPurchase && (dealType.value === 'Purchase') != isPurchase && date.File.whoRepresenting !== 'Both' && dealType.value !== '')
+                    return;
+                
+                // Filter by Date Status
+                if(isClosed !== '') {
+                    if(!isClosed && (date.isClosed || date.File.status != 'Open'))
+                        return;
+                    else if(isClosed && !date.isClosed && date.File.status === 'Open')
+                        return;
+                }
+
+                // If a custom date is selected, format startDate and endDate correctly.
+                var M, D, Y, customStart, customEnd;
+                if (when === 'Custom' && startDate) {
+                    M = startDate.slice(0,2);
+                    D = startDate.slice(3,5);
+                    Y = startDate.slice(6) >= 2000 && startDate.slice(6) < 2050 ? startDate.slice(6) : 'YYYY'
+
+                    customStart = `${Y}-${M}-${D}`;
+                }
+                if (when === 'Custom' && endDate) {
+                    M = endDate.slice(0,2);
+                    D = endDate.slice(3,5);
+                    Y = endDate.slice(6) >= 2000 && endDate.slice(6) < 2050 ? endDate.slice(6) : 'YYYY'
+
+                    customEnd = `${Y}-${M}-${D}`;
+                }
+                
+                // Filter by Date
+                if(startDate !== '' && date.date < (when === 'Custom' ? customStart : startDate))
+                    return;
+                if(endDate !== '' && date.date > (when === 'Custom' ? customEnd : endDate))
+                    return;
+
+                // Fill criticalDates hook array with filtered dates.
+                // Order criticalDates by sort.by & sort.dir when filled.
+                if(index === Object.entries(storedDates).length - 1)
+                    setCriticalDates((dates) => {
+                        dates = [...dates, date]
+                        return dates.sort((a, b) => {
+                            if(sort.by === 'Date')
+                                return sort.dir === 'ASC' ? a.date > b.date : a.date < b.date;
+                            else if(sort.by === 'FileNumber')
+                                return sort.dir === 'ASC' ? a.fileNumber > b.fileNumber : a.fileNumber < b.fileNumber;
+                            else {
+                                var by = (sort.by === 'Buyer') ? 'buyer' : (sort.by === 'Seller') ? 'seller' : 'address';
+                                return sort.dir === 'ASC' ? a.File[by] > b.File[by] : a.File[by] < b.File[by];
+                            }
+                        })
+                    });
+                else
+                    setCriticalDates((dates) => dates = [...dates, date]);
             });
-        }
+        } else axiosInstance.get(`${process.env.REACT_APP_API_URL}/dates?type=${dateType.value}&dealType=${dealType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}&sort=${sort.by},${sort.dir}&limit=${pageLimit}&pageNum=${pageNum}`).then((response) => {
+            const data = response.data;
+            if(data.start && data.start !== 1 && data.dates.length === 0) return;
+            setBounds([data.start, data.end]);
+            setTotal(data.total);
+            setCriticalDates(data.dates);
+            setLoading(false);
+        }).catch(() => {
+            setCriticalDates([]);
+            setError(true);
+            setLoading(false);
+            console.warn('ERROR: A problem occurred while trying to retrieve dates. Please try again later.');
+            toast({
+                title: 'Error.',
+                description: 'An error occurred while trying to retrieve dates. Try again later',
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
+        });
     }, [profile.loggedIn, profile.actions])
 
     useEffect(() => {
@@ -258,6 +361,29 @@ function Main() {
         <VStack w='full' h='max-content' alignItems='center' marginBlock={styles.pageMarginBlock}>
             {profile.loggedIn ? (
             <>
+                {process.env.REACT_APP_ENV === 'staging' ? 
+                    <Box
+                        w={styles.pageW}
+                        border='1px solid var(--navbar-seperator)'
+                        borderRadius='20px'
+                        backgroundColor='blackAlpha.500'
+                        display='flex'
+                        justifyContent='center'
+                        boxShadow='2px 3px var(--navbar-seperator)'
+                    >
+                        <Text whiteSpace='pre-line' textAlign='justify' w='90%' marginBlock='5px' fontSize={styles.fontSize}>
+                            Welcome to the Critical Dates Schedule web app! This web application was created to store
+                            and manage information for real estate transactions, and keep track of important upcoming
+                            deadlines for each file.
+                            {'\n\n'}
+                            Note: This is the staging environment used to test version updates of this web application.
+                            You have automatically been logged in as a guest. Feel free to play around with the app.
+                            All files, dates, and settings data that you create/update will be stored locally in your
+                            browser's localStorage.
+                        </Text>
+                    </Box>
+                    : <></>
+                }
                 {/* Filter Buttons */}
                 <Stack w={styles.pageW} justifyContent='space-between' direction={styles.stackDir} spacing={styles.buttonPadding}>
                     {/* Date Type Filter */}
