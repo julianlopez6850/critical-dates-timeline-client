@@ -73,7 +73,7 @@ function Main() {
                     buttonTitleW: '65px', buttonPadding: '6px', tableW: '600px', headerMargin: '4px', rowFontSize: '12px',
                     tableStyles: {
                         headers:{ dateHeaderW: '75px', fileNoHeaderW: '53px', eventHeaderW: '72px', infoHeaderW: '117px', statusHeaderW: '49px' },
-                        columns:{ dateColW: '65px', fileNoColW: '40px', eventColW: '60px', infoColW: '104px', statusColW: '49px',
+                        columns:{ dateColW: '65px', fileNoColW: '40px', eventColW: '61px', infoColW: '104px', statusColW: '49px',
                             dateColPadding: '5px', numLines:2, lineHeight:15, margin: '6px', iconSize: '14px' }
                     },
                     paginationFontSize: '12px', paginationH: '32px', paginationPadding: '4px'
