@@ -12,6 +12,7 @@ import {
     useDisclosure,
     Spinner,
     useToast,
+    Link,
 } from '@chakra-ui/react'
 
 import DateFilterButton from '../Components/DateFilterButton'
@@ -380,6 +381,21 @@ function Main() {
                             You have automatically been logged in as a guest. Feel free to play around with the app.
                             All files, dates, and settings data that you create/update will be stored locally in your
                             browser's localStorage.
+                            {'\n\n'}
+                            Feel free to{' '}
+                            <Link
+                                textDecor='underline'
+                                href={`mailto:${process.env.REACT_APP_OWNER_EMAIL}`}
+                            >
+                                contact me
+                            </Link> if you have any questions or suggestions, or{' '}
+                            <Link
+                                textDecor='underline'
+                                href={process.env.REACT_APP_OWNER_LINK}
+                                isExternal
+                            >
+                                visit my site
+                            </Link> to learn more about me and my work!
                         </Text>
                     </Box>
                     : <></>
