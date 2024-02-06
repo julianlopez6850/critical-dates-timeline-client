@@ -32,7 +32,7 @@ const FileClearAndSaveButtons = (props) => {
             var storedDates = JSON.parse(localStorage.getItem('dates')) || {};
             
             storedDates = Object.keys(storedDates).filter(storedKey => 
-                !storedKey.includes(props.fileNo)).reduce((newDates, key) =>
+                !storedKey.includes(props.oldFileNo)).reduce((newDates, key) =>
                 {
                     newDates[key] = storedDates[key];
                     return newDates;
@@ -40,13 +40,13 @@ const FileClearAndSaveButtons = (props) => {
             );
             localStorage.setItem('dates', JSON.stringify(storedDates));
 
-            delete storedFiles[props.fileNo];
+            delete storedFiles[props.oldFileNo];
             localStorage.setItem('files', JSON.stringify(storedFiles));
             
-            console.info(`Successfully deleted file ${props.fileNo}`);
+            console.info(`Successfully deleted file ${props.oldFileNo}`);
             props.toast({
                 title: 'Success!',
-                description: `Successfully deleted file ${props.fileNo}`,
+                description: `Successfully deleted file ${props.oldFileNo}`,
                 status: 'success',
                 duration: 2000,
                 isClosable: true,
@@ -58,14 +58,14 @@ const FileClearAndSaveButtons = (props) => {
         }
 
         // PRODUCTION ENVIRONMENT - Delete File (from database)
-        axiosInstance.delete(`${process.env.REACT_APP_API_URL}/files`, { data: {fileNumber: props.fileNo}}).then(() => {
+        axiosInstance.delete(`${process.env.REACT_APP_API_URL}/files`, { data: {fileNumber: props.oldFileNo}}).then(() => {
             setProfile(profile => {
                 return {...profile, actions: profile.actions + 1 }
             })
-            console.info(`Successfully deleted file ${props.fileNo}`);
+            console.info(`Successfully deleted file ${props.oldFileNo}`);
             props.toast({
                 title: 'Success!',
-                description: `Successfully deleted file ${props.fileNo}`,
+                description: `Successfully deleted file ${props.oldFileNo}`,
                 status: 'success',
                 duration: 2000,
                 isClosable: true,
