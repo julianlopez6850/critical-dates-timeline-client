@@ -1,5 +1,6 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, useContext, Fragment } from 'react';
 import { axiosInstance } from '../Helpers/axiosInstance';
+import { profileContext } from '../Helpers/profileContext'
 
 import {
     Box,
@@ -16,6 +17,7 @@ import FileModal from './FileModal';
 import leadingZero from '../Helpers/leadingZero';
 
 const TableRow = (props) => {
+    const { profile, setProfile } = useContext(profileContext);
     const dateInfo = props.dateInfo
     
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -167,6 +169,15 @@ const TableRow = (props) => {
                 onClick={(e)=>{
                     e.stopPropagation();
                     setIsClosed((isClosed) => !isClosed);
+                    if(!profile.updatesMade.some(date => (date.fileNumber === dateInfo.fileNumber && date.change === 'Date-isClosed'))) {
+                        setProfile(profile => {
+                            return {...profile, updatesMade: [...profile.updatesMade, { fileNumber: dateInfo.fileNumber, change: 'Date-isClosed' } ] }
+                        });
+                    } else {
+                        setProfile(profile => {
+                            return {...profile, updatesMade: profile.updatesMade.filter(date => !(date.fileNumber === dateInfo.fileNumber && date.change === 'Date-isClosed'))}
+                        });
+                    };
                     setUpdate(true);
                 }}
             >
@@ -180,7 +191,10 @@ const TableRow = (props) => {
             
             <FileModal
                 new={false}
-                onClose={onClose}
+                onClose={() => {
+                    setProfile(profile => { return {...profile, openModal: '' }});
+                    return onClose();
+                }}
                 isOpen={isOpen}
                 fileNo={dateInfo.fileNumber}
             />

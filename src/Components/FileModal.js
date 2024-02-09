@@ -35,10 +35,23 @@ const FileModal = (props) => {
 
     const [styles, setStyles] = useState({});
 
+    // Dialog Box Open/Close - Confirm Cancel Changes
     const {
-        isOpen: isOpenCancelChanges, 
+        isOpen: isOpenCancelChanges,
         onOpen: onOpenCancelChanges,
         onClose: onCloseCancelChanges
+    } = useDisclosure();
+    // Dialog Box Open/Close - Confirm Receive External Update to Currently Opened File Modal
+    const {
+        isOpen: isOpenReceiveUpdate,
+        onOpen: onOpenReceiveUpdate,
+        onClose: onCloseReceiveUpdate
+    } = useDisclosure();
+    // File Modal Open/Close - Update (Reopen) File Modal Upon Confirming to Receive External Changes
+    const {
+        isOpen: isOpenReopenedModal,
+        onOpen: onOpenReopenedModal,
+        onClose: onCloseReopenedModal
     } = useDisclosure();
 
     useEffect(() => {
@@ -109,8 +122,9 @@ const FileModal = (props) => {
         window.addEventListener('resize', windowListener);
         return () => window.removeEventListener('resize', windowListener);
     }, []);
-
     const { profile, setProfile } = useContext(profileContext);
+    const [storedFile, setStoredFile] = useState({});
+    const [externalChanges, setExternalChanges] = useState(props.externalChanges || false);
     
     const toast = useToast();
     
@@ -270,17 +284,20 @@ const FileModal = (props) => {
     useEffect(() => {
         if(!props.isOpen || props.new || !props.fileNo)
             return;
+        
+        setProfile(profile => { return {...profile, openModal: props.fileNo }});
 
         // STAGING ENVIRONMENT - Get the stored file and date info from localStorage.
         if(process.env.REACT_APP_ENV === 'staging') {
             resetAllValues();
-            setOldFileNo(props.fileNo);
-            setFileNo(props.fileNo);
 
             // Get the stored file information for the chosen file; Set each state hook accordingly.
             var storedFiles = JSON.parse(localStorage.getItem('files'));
             var file = storedFiles[props.fileNo];
+            setStoredFile(file);
 
+            setOldFileNo(file.fileNumber);
+            setFileNo(file.fileNumber);
             setFileRef(file.fileRef);
             setPropertyAddress(file.address);
             setCounty(file.county);
@@ -356,7 +373,6 @@ const FileModal = (props) => {
                         break;
                 }
             }
-
             return;
         }
 
@@ -369,6 +385,7 @@ const FileModal = (props) => {
             axiosInstance.get(`${process.env.REACT_APP_API_URL}/files?fileNumber=${props.fileNo}`).then((response) => {
                 resetAllValues();
                 const file = response.data.file;
+                setStoredFile(file);
                 setOldFileNo(file.fileNumber);
                 setFileNo(file.fileNumber);
                 setFileRef(file.fileRef);
@@ -456,6 +473,65 @@ const FileModal = (props) => {
                 console.warn('ERROR: Server is currently unavailable. Please try again later.');
         });
     }, [props.isOpen])
+
+    // Check if File Modal remains unchanged (return true if unchanged, false if changed).
+    const checkFileUnchanged = () => {
+        const file = storedFile;
+        const storedRoles = JSON.parse(file.roles);
+        const storedMilestones = JSON.parse(file.milestones);
+        const storedDates = file.Dates;
+
+        const checkDateEquivalence = (date, isClosedDate, isCalculatedDate, type, prefix) => {
+            const storedDate = storedDates.filter(storedDate => {
+                return storedDate.type === type && (prefix ? (storedDate.prefix === prefix) : true);
+            });
+            if(date === '' && storedDate.length === 0)
+                return true;
+            else if(storedDate.length > 0 && date === storedDate[0].date &&
+                isClosedDate === storedDate[0].isClosed &&
+                (type === 'Effective' ? true : (
+                    isCalculatedDate.isCalculated === storedDate[0].calculatedDate.isCalculated && 
+                    isCalculatedDate.numDays === storedDate[0].calculatedDate.numDays && 
+                    isCalculatedDate.direction === storedDate[0].calculatedDate.direction && 
+                    isCalculatedDate.from === storedDate[0].calculatedDate.from && 
+                    isCalculatedDate.otherDate === storedDate[0].calculatedDate.otherDate
+                ))
+            )
+                return true;
+            return false;
+        }
+
+        return fileNo === file.fileNumber &&
+            fileRef === file.fileRef &&
+            propertyAddress === file.address &&
+            county === file.county &&
+            folioNo === file.folioNo &&
+            seller === file.seller &&
+            buyer === file.buyer &&
+            isPurchase == file.isPurchase &&
+            whoRepresenting == file.whoRepresenting &&
+            notes === file.notes &&
+            status === file.status &&
+            isSellerDocs === storedRoles.isSellerDocs &&
+            isBuyerDocs === storedRoles.isBuyerDocs &&
+            isEscrowAgent === storedRoles.isEscrowAgent &&
+            isTitleAgent === storedRoles.isTitleAgent &&
+            isClosingAgent === storedRoles.isClosingAgent &&
+            isLienRequested === storedMilestones.isLienRequested &&
+            isTitleOrdered === storedMilestones.isTitleOrdered &&
+            isLienReceived === storedMilestones.isLienReceived &&
+            isTitleReceived === storedMilestones.isTitleReceived &&
+            isSellerDocsDrafted === storedMilestones.isSellerDocsDrafted &&
+            isSellerDocsApproved === storedMilestones.isSellerDocsApproved &&
+            isBuyerDocsDrafted === storedMilestones.isBuyerDocsDrafted &&
+            isBuyerDocsApproved === storedMilestones.isBuyerDocsApproved &&
+            checkDateEquivalence(effective, isClosedEffective, undefined, 'Effective', undefined) &&
+            checkDateEquivalence(depositInit, isClosedDepositInit, isCalculatedDepositInit, 'Escrow', 'First ') &&
+            checkDateEquivalence(depositSecond, isClosedDepositSecond, isCalculatedDepositSecond, 'Escrow', 'Second ') &&
+            checkDateEquivalence(loanApproval, isClosedLoanApproval, isCalculatedLoanApproval, 'Loan ✓', undefined) &&
+            checkDateEquivalence(inspection, isClosedInspection, isCalculatedInspection, 'Inspection', undefined) &&
+            checkDateEquivalence(closing, isClosedClosing, isCalculatedClosing, 'Closing', undefined);
+    }
 
     useEffect(() => {
         setRoles({
@@ -615,12 +691,51 @@ const FileModal = (props) => {
             setClosing('');
     }, [closing])
 
+    useEffect(() => {
+        if(!props.isOpen)
+            return;
+        // Currently opened file has been deleted by another user. Close the file and inform the user.
+        if(profile.updatesReceived && profile.updatesReceived.some(date => date.fileNumber === props.fileNo && date.change === 'File-deleted')) {
+            console.warn("The file you currently have opened was deleted by another user. Closing...");
+            toast({
+                title: 'File deleted.',
+                description: `The file you had open, ( File ${oldFileNo}) was deleted by another user.`,
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            });
+            props.onClose();
+            return setProfile(profile => {
+                return {...profile, actions: profile.actions + 1 }
+            });
+        }
+        // Currently opened file has been updated by another user. Open dialog box to inform user and ask user how to proceed.
+        if(profile.updatesReceived && profile.updatesReceived.some(date => date.fileNumber === props.fileNo) && !isOpenReopenedModal) {
+            console.info("The file you currently have opened has been updated by another user.");
+            onOpenReceiveUpdate();
+        }
+        // Other file(s) has/have been updated by another user. They will be updated when user exits the file modal.
+        console.info("Other files have been updated by another user.");
+        setExternalChanges(true);
+    }, [profile.externalActions]);
+
     return (
         <Modal
             isOpen={props.isOpen}
             onClose={() => {
-                if(!props.new)
-                    onOpenCancelChanges();
+                if(!props.new) {
+                    if(!checkFileUnchanged())
+                        onOpenCancelChanges();
+                    else {
+                        if(externalChanges) {
+                            setExternalChanges(false);
+                            setProfile(profile => {
+                                return {...profile, actions: profile.actions + 1 }
+                            });
+                        }
+                        props.onClose();
+                    }
+                }
                 else
                     props.onClose();
             }}
@@ -798,6 +913,7 @@ const FileModal = (props) => {
                                             toast={toast}
                                             onClose={props.onClose}
                                             resetAllValues={resetAllValues}
+                                            checkFileUnchanged={checkFileUnchanged}
                                             fontSize={styles.footerFontSize}
                                             saveButtonW={styles.saveButtonW}
                                             otherButtonsW={styles.otherFooterButtonsW}
@@ -823,9 +939,49 @@ const FileModal = (props) => {
                 buttonHeight={props.buttonH}
                 fontSize={props.fontSize}
                 header={`Close File ${props.new ? 'Creator' : 'Editor'}?`}
-                body={`Are you sure you want to close the File ${props.new ? 'Creator' : 'Editor'}?\nAny unsaved changes will be lost.`}
-                action={props.onClose}
+                body={`Are you sure you want to close the File ${props.new ? 'Creator' : 'Editor'}?\nThe unsaved changes you have made will be lost.`}
+                action={() => {
+                    props.onClose();                
+                    if(externalChanges) {
+                        setExternalChanges(false);
+                        setProfile(profile => {
+                            return {...profile, actions: profile.actions + 1 }
+                        });
+                    }
+                }}
+                cancelButton={'Cancel'}
                 confirmButton={'Close'}
+            />
+            <FileDialogBox
+                isOpen={isOpenReceiveUpdate}
+                onOpen={onOpenReceiveUpdate}
+                onClose={onCloseReceiveUpdate}
+                buttonHeight={props.buttonH}
+                fontSize={props.fontSize}
+                header={`Changes have been made to this file by another user.`}
+                body={`Would you like to cancel your editing and receive these changes, or forgo the changes to keep your own?`}
+                action={() => {
+                    onOpenReopenedModal();
+                }}
+                cancelButton={'Continue Editing'}
+                confirmButton={'Receive Changes'}
+            />
+            <FileModal
+                new={props.new}
+                onClose={() => {
+                    setProfile(profile => {
+                        return {...profile, openModal: '' }
+                    });
+                    props.onClose();
+                    return onCloseReopenedModal();
+                }}
+                isOpen={isOpenReopenedModal}
+                externalChanges={true}
+                fileNo={
+                    (profile.updatesReceived.length > 0 && profile.updatesReceived.filter(date => date.fileNumber === props.fileNo)[0]) ?
+                        profile.updatesReceived.filter(date => date.fileNumber === props.fileNo)[0].newFileNumber :
+                        props.fileNo
+                }
             />
         </Modal>
     )

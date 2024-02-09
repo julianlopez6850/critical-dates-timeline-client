@@ -119,7 +119,7 @@ const Navbar = () => {
                 isClosable: true,
             })
         });
-    }, [profile.loggedIn, profile.actions]);
+    }, [profile.loggedIn, profile.actions, profile.externalActions]);
 
     useEffect(() => {
         // STAGING ENVIRONMENT - Store default file(s) in localStorage if no files exist or all were deleted.

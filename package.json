@@ -1,6 +1,6 @@
 {
   "name": "critical-dates-schedule-client",
-  "version": "2.6.2",
+  "version": "3.0.0",
   "private": true,
   "dependencies": {
     "@chakra-ui/icons": "^2.0.18",
@@ -21,6 +21,7 @@
     "react-router-dom": "^6.12.1",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.2",
+    "socket.io-client": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

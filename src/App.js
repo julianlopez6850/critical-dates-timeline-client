@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import io from 'socket.io-client';
 import './App.css';
 
 import { 
@@ -26,12 +27,49 @@ const chakraTheme = chakraExtendTheme();
 const materialTheme = muiCreateTheme();
 
 function App() {
-
-    const [profile, setProfile] =  useState({ loggedIn: false, user: undefined, darkMode: false, actions: 0, notificationSettings: undefined });
+    const [socket, setSocket] = useState('');
+    const [profile, setProfile] =  useState({ loggedIn: false, user: undefined, darkMode: false, actions: 0, externalActions: 0, notificationSettings: undefined, updatesMade: [], updatesReceived: [], openModal: '' });
 
     useEffect(() => {
-        document.body.style.backgroundColor=profile.darkMode ? 'var(--background-dark)' : 'var(--background-light)';
+        document.body.style.backgroundColor = profile.darkMode ? 'var(--background-dark)' : 'var(--background-light)';
     }, [profile.darkMode])
+
+    useEffect(() => {
+        if(process.env.NODE_ENV === 'staging')
+            return;
+        if(profile.actions === 0)
+            return setSocket(io.connect(process.env.REACT_APP_API_URL));
+        else if(profile.actions === 1)
+            socket.emit('join_room', profile.user);
+        else if(profile.actions > 1 && profile.updatesMade.length > 0) {
+            socket.emit('update_others', profile.updatesMade);
+            setProfile(profile => {
+                return {...profile, updatesMade: [] }
+            });
+        }
+    }, [profile.actions])
+
+    useEffect(() => {
+        if(socket === '')
+            return;
+
+        socket.on('receive_update', (data) => {
+            if(data.length === 0)
+                return;
+            console.info('Data has been updated by another user:', data);
+            return setProfile(profile => {
+                return {...profile, externalActions: profile.externalActions + 1, updatesReceived: data }
+            });
+        });
+    }, [socket]);
+
+    useEffect(() => {
+        if(profile.openModal === '' && profile.externalActions > 0) {
+            return setProfile(profile => {
+                return {...profile, actions: profile.actions + 1 }
+            });
+        }
+    }, [profile.externalActions])
 
     return (
         <ChakraProvider theme={chakraTheme} resetCSS>

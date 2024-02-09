@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import {
     AlertDialog,
     AlertDialogOverlay,
@@ -7,8 +8,10 @@ import {
     AlertDialogFooter,
     Button,
 } from '@chakra-ui/react'
+import { profileContext } from '../../Helpers/profileContext';
 
 const FileDialogBox = (props) => {
+    const { profile, setProfile } = useContext(profileContext)
     return (
         <AlertDialog
             isOpen={props.isOpen}
@@ -29,14 +32,17 @@ const FileDialogBox = (props) => {
                             colorScheme='whiteAlpha'
                             onClick={props.onClose}
                         >
-                            Cancel
+                            {props.cancelButton}
                         </Button>
                         <Button
                             h={props.buttonHeight}
                             ml={3}
                             fontSize={props.fontSize}
                             colorScheme='red'
-                            onClick={()=>{props.onClose(); props.action()}}
+                            onClick={() => {
+                                props.onClose();
+                                props.action();
+                            }}
                         >
                             {props.confirmButton}
                         </Button>

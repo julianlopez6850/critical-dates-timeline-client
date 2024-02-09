@@ -50,7 +50,7 @@ const FileClearAndSaveButtons = (props) => {
                 status: 'success',
                 duration: 2000,
                 isClosable: true,
-            })
+            });
             
             return setProfile(profile => {
                 return {...profile, actions: profile.actions + 1 }
@@ -60,8 +60,14 @@ const FileClearAndSaveButtons = (props) => {
         // PRODUCTION ENVIRONMENT - Delete File (from database)
         axiosInstance.delete(`${process.env.REACT_APP_API_URL}/files`, { data: {fileNumber: props.oldFileNo}}).then(() => {
             setProfile(profile => {
-                return {...profile, actions: profile.actions + 1 }
-            })
+                return {...profile,
+                    actions: profile.actions + 1,
+                    updatesMade: [...profile.updatesMade, {
+                        fileNumber: props.oldFileNo,
+                        change: 'File-deleted' }
+                    ]
+                };
+            });
             console.info(`Successfully deleted file ${props.oldFileNo}`);
             props.toast({
                 title: 'Success!',
@@ -69,7 +75,7 @@ const FileClearAndSaveButtons = (props) => {
                 status: 'success',
                 duration: 2000,
                 isClosable: true,
-            })
+            });
             props.onClose();
         }).catch(() => {
             console.warn('ERROR: A problem occurred while trying to delete this file. Please try again later.');
@@ -79,21 +85,24 @@ const FileClearAndSaveButtons = (props) => {
                 status: 'error',
                 duration: 2000,
                 isClosable: true,
-            })
+            });
         })
     }
 
     const trySaveFile = () => {
+        if(!props.new && props.checkFileUnchanged())
+            return props.onClose();
+
         var error = props.isError
         if(error) {
-            console.warn('ERROR: Invalid or Missing Input.')
+            console.warn('ERROR: Invalid or Missing Input.');
             props.toast({
                 title: 'Error.',
                 description: error,
                 status: 'error',
                 duration: 2000,
                 isClosable: true,
-            })
+            });
             return;
         }
 
@@ -273,8 +282,14 @@ const FileClearAndSaveButtons = (props) => {
         // else, PUT (update) existing file in database.
         if(props.new) axiosInstance.post(`${process.env.REACT_APP_API_URL}/files`, file).then(() => {
             setProfile(profile => {
-                return {...profile, actions: profile.actions + 1 }
-            })
+                return {...profile,
+                    actions: profile.actions + 1,
+                    updatesMade: [...profile.updatesMade, {
+                        fileNumber: props.fileNo,
+                        change: 'File-created' }
+                    ]
+                };
+            });
             console.info(`Successfully created file ${props.fileNo}`);
             props.toast({
                 title: 'Success!',
@@ -308,7 +323,14 @@ const FileClearAndSaveButtons = (props) => {
         })
         else axiosInstance.put(`${process.env.REACT_APP_API_URL}/files`, file).then(() => {
             setProfile(profile => {
-                return {...profile, actions: profile.actions + 1 }
+                return {...profile,
+                    actions: profile.actions + 1,
+                    updatesMade: [...profile.updatesMade, {
+                        fileNumber: props.oldFileNo,
+                        newFileNumber: props.fileNo,
+                        change: 'File-updated' }
+                    ]
+                };
             });
             console.info(`Successfully updated file ${props.fileNo}`);
             props.toast({
@@ -326,14 +348,38 @@ const FileClearAndSaveButtons = (props) => {
         <HStack h='40px'>
             {/* If adding a new file, show Clear Fields Button. If updating an existing file, show Delete File Button */}
             {props.new &&
-                <Button w={props.otherButtonsW} height={props.buttonH} colorScheme='red' fontSize={props.fontSize} onClick={()=>{onOpenClearFields()}}>
+                <Button
+                    w={props.otherButtonsW}
+                    height={props.buttonH}
+                    colorScheme='red'
+                    fontSize={props.fontSize}
+                    onClick={() => {
+                        onOpenClearFields();
+                    }}
+                >
                     CLEAR FIELDS
                 </Button> ||
-                <Button w={props.otherButtonsW} height={props.buttonH} colorScheme='red' fontSize={props.fontSize} onClick={()=>{onOpenDeleteFile()}}>
+                <Button
+                    w={props.otherButtonsW}
+                    height={props.buttonH}
+                    colorScheme='red'
+                    fontSize={props.fontSize}
+                    onClick={() => {
+                        onOpenDeleteFile();
+                    }}
+                >
                     DELETE FILE
                 </Button>
             }
-            <Button w={props.saveButtonW} height={props.buttonH} colorScheme='blue' fontSize={props.fontSize} onClick={()=>{trySaveFile()}}>
+            <Button
+                w={props.saveButtonW}
+                height={props.buttonH}
+                colorScheme='blue'
+                fontSize={props.fontSize}
+                onClick={() => {
+                    trySaveFile();
+                }}
+            >
                 SAVE
             </Button>
 
@@ -346,6 +392,7 @@ const FileClearAndSaveButtons = (props) => {
                 header={`Delete File ${props.fileNo}?`}
                 body={`Are you sure you want to delete this file?\nThis action cannot be undone.`}
                 action={deleteFile}
+                cancelButton={'Cancel'}
                 confirmButton={'Delete'}
             />
             <FileDialogBox
@@ -357,6 +404,7 @@ const FileClearAndSaveButtons = (props) => {
                 header={`Clear All Fields?`}
                 body={`Are you sure you want to clear all fields?\nThis action cannot be undone.`}
                 action={props.resetAllValues}
+                cancelButton={'Cancel'}
                 confirmButton={'Clear'}
             />
         </HStack>

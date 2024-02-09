@@ -192,7 +192,7 @@ function Main() {
             var storedSettings = JSON.parse(localStorage.getItem('settings')) || {};
             var darkMode = Object.keys(storedSettings).length > 0 ? storedSettings.darkMode : false;
             setProfile(profile => {
-                return {...profile, loggedIn: true, user: 'guest', actions: profile.actions + 1, darkMode: darkMode, notificationSettings: settings }
+                return {...profile, loggedIn: true, user: 'guest', darkMode: darkMode, notificationSettings: settings }
             })
             setLoading(false);
             return;
