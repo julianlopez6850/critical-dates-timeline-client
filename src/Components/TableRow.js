@@ -117,7 +117,7 @@ const TableRow = (props) => {
                         dateInfo.prefix === 'Second ' && '2nd '
                     )
                 }
-                {dateInfo.type}
+                {dateInfo.type === 'Loan Approval' ? 'Loan ✓' : dateInfo.type}
             </Text>
 
             {/* Display Buyer, Seller, Address w/ Tooltip in case of overflow. */}

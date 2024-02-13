@@ -356,7 +356,7 @@ const FileModal = (props) => {
                                 break;
                         }
                         break;
-                    case 'Loan ✓':
+                    case 'Loan Approval':
                         setLoanApproval(date.date);
                         setIsClosedLoanApproval(date.isClosed);
                         setIsCalculatedLoanApproval(date.calculatedDate);
@@ -436,7 +436,7 @@ const FileModal = (props) => {
                                     break;
                             }
                             break;
-                        case 'Loan ✓':
+                        case 'Loan Approval':
                             setLoanApproval(date.date);
                             setIsClosedLoanApproval(date.isClosed);
                             setIsCalculatedLoanApproval(date.calculatedDate);
@@ -528,7 +528,7 @@ const FileModal = (props) => {
             checkDateEquivalence(effective, isClosedEffective, undefined, 'Effective', undefined) &&
             checkDateEquivalence(depositInit, isClosedDepositInit, isCalculatedDepositInit, 'Escrow', 'First ') &&
             checkDateEquivalence(depositSecond, isClosedDepositSecond, isCalculatedDepositSecond, 'Escrow', 'Second ') &&
-            checkDateEquivalence(loanApproval, isClosedLoanApproval, isCalculatedLoanApproval, 'Loan ✓', undefined) &&
+            checkDateEquivalence(loanApproval, isClosedLoanApproval, isCalculatedLoanApproval, 'Loan Approval', undefined) &&
             checkDateEquivalence(inspection, isClosedInspection, isCalculatedInspection, 'Inspection', undefined) &&
             checkDateEquivalence(closing, isClosedClosing, isCalculatedClosing, 'Closing', undefined);
     }
