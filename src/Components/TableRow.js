@@ -104,9 +104,24 @@ const TableRow = (props) => {
                 </Text>
             </Box>
 
-            <Text w={props.tableStyles.columns.fileNoColW} textAlign='center'>
-                {dateInfo.fileNumber.slice(0,5)}{dateInfo.fileNumber.slice(5)}
-            </Text>
+            <Tooltip
+                label={`${dateInfo.fileNumber.slice(0,2)}-${dateInfo.fileNumber.slice(2,5)}
+                    ${dateInfo.fileNumber.slice(5) && `(${dateInfo.fileNumber.slice(5)})`} || ` +
+                    dateInfo.File.fileRef
+                }
+                fontSize={props.tableStyles.rowFontSize}
+                maxW={`${props.tableStyles.tableW.slice(0,-2) - 
+                    (Number(props.tableStyles.headers.dateHeaderW.slice(0,-2)) + 
+                    Number(props.tableStyles.columns.margin.slice(0,-2))) * 2}px`
+                }
+                placement='bottom-start'
+                gutter='10'
+            >
+                <Text w={props.tableStyles.columns.fileNoColW} textAlign='center'>
+                    {dateInfo.fileNumber.slice(0,5)}{dateInfo.fileNumber.slice(5)}
+                </Text>
+            </Tooltip>
+
 
             <Divider orientation='vertical' h='70%'/>
 
