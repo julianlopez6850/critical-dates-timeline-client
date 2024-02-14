@@ -74,7 +74,7 @@ const FileModal = (props) => {
                     bodyInputHeight: '26px', inputPadding:'12px', spacing:'8px',
                     partiesStacksDir:'row', propertyStacksDir:'row', secondStacksDir: 'row', 
                     headerFontSize:'14px', headerInputHeight: '28px', headerStackDir:'row', 
-                    fileNoW:'60px', fileRefW:'400px', beginningMinW:'49px', secondMinW:'38px',
+                    fileNoW:'65px', fileRefW:'500px', beginningMinW:'49px', secondMinW:'38px',
                     sec3height:'210px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px',
                     clipboardIconSize:'18px', calculatorIconSize:'24px', lockIconSize:'14px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
@@ -86,7 +86,7 @@ const FileModal = (props) => {
                     bodyInputHeight: '22px', inputPadding:'10px', spacing:'8px',
                     partiesStacksDir:'column', propertyStacksDir:'row', secondStacksDir: 'row', 
                     headerFontSize:'14px', headerInputHeight: '24px', headerStackDir:'row', 
-                    fileNoW:'50px', fileRefW:'340px', beginningMinW:'49px', secondMinW:'30px',
+                    fileNoW:'65px', fileRefW:'340px', beginningMinW:'49px', secondMinW:'30px',
                     sec3height:'186px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px',
                     clipboardIconSize:'16px', calculatorIconSize:'22px', lockIconSize:'14px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
@@ -98,7 +98,7 @@ const FileModal = (props) => {
                     bodyInputHeight: '18px', inputPadding:'8px', spacing:'6px',
                     partiesStacksDir:'column', propertyStacksDir:'row', secondStacksDir: 'column',
                     headerFontSize:'12px', headerInputHeight: '20px', headerStackDir:'column',
-                    fileNoW:'40px', fileRefW:'full', beginningMinW:'41px', secondMinW:'22px',
+                    fileNoW:'60px', fileRefW:'full', beginningMinW:'41px', secondMinW:'22px',
                     sec3height:'159px', dateTypeW:'60px', dateW:'120px', datesSpacing:'6px',
                     clipboardIconSize:'16px', calculatorIconSize:'18px', lockIconSize:'12px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
@@ -110,7 +110,7 @@ const FileModal = (props) => {
                     bodyInputHeight: '18px', inputPadding:'8px', spacing:'4px',
                     partiesStacksDir:'column', propertyStacksDir:'row', secondStacksDir: 'column',
                     headerFontSize:'12px', headerInputHeight: '20px', headerStackDir:'column',
-                    fileNoW:'40px', fileRefW:'full', beginningMinW:'41px', secondMinW:'22px',
+                    fileNoW:'60px', fileRefW:'full', beginningMinW:'41px', secondMinW:'22px',
                     sec3height:'', dateTypeW:'60px', dateW:'120px', datesSpacing:'6px',
                     clipboardIconSize:'16px', calculatorIconSize:'18px', lockIconSize:'12px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
@@ -559,18 +559,22 @@ const FileModal = (props) => {
         isSellerDocsDrafted, isBuyerDocsDrafted, isSellerDocsApproved, isBuyerDocsApproved,]);
 
     useEffect(() => {
-        if(fileNo.length > 2)
+        if(fileNo.length > 5)
+            setDisplayedFileNo(`${fileNo.slice(0,2)} - ${fileNo.slice(2, 5)} (${fileNo.slice(5)})`);
+        else if(fileNo.length > 2)
             setDisplayedFileNo(`${fileNo.slice(0,2)} - ${fileNo.slice(2, fileNo.length)}`);
         else
             setDisplayedFileNo(fileNo);
 
-        const isNum = /^\d+$/.test(fileNo);
+        const isNum = /^\d+$/.test(fileNo.slice(0,5));
+        const isAlpha = /^[A-Z]+$/.test(fileNo.slice(5)) || fileNo.slice(5).length === 0;
+
+        const exFileNo = `${(new Date().getFullYear()).toString().slice(-2)}001`
         if(fileNo === '')
             setIsFileNoError('File Number must be entered.');
-        else if(!isNum)
-            setIsFileNoError('File Number must contain only digits.');
-        else if(fileNo.length < 5)
-            setIsFileNoError(`File Number must be 5 digits. ex. ${(new Date().getFullYear()).toString().slice(-2)}001`);
+        else if(fileNo.length < 5 || !isNum || !isAlpha)
+            setIsFileNoError(`File Number must begin with a 5-digit NUMBER (ex. ${exFileNo}), 
+            and optionally end with a 1-2 letter tag (${exFileNo}AB)`);
         else
             setIsFileNoError(false);
     }, [fileNo])

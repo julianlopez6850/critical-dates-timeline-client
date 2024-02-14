@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { profileContext } from '../Helpers/profileContext';
 
 import {
@@ -16,6 +16,70 @@ import TableRow from './TableRow';
 import PaginationButtons from './PaginationButtons';
 
 const DatesTable = (props) => {
+    const [tableStyles, setTableStyles] = useState({
+        tableW: '1082px', headerMargin: '8px', rowFontSize: '16px',
+        paginationFontSize: '16px', paginationH: '36px', paginationPadding: '8px',
+        headers:{ dateHeaderW: '110px', fileNoHeaderW: '88px', eventHeaderW: '98px', infoHeaderW: '242px', statusHeaderW: '62px' },
+        columns:{ dateColW: '90px', fileNoColW: '72px', eventColW: '81px', infoColW: '225px', statusColW: '59px',
+            dateColPadding: '10px', numLines:1, margin: '8px', iconSize: '16px' }
+    });
+
+    useEffect(() => {
+        const windowListener = () => {
+            if(window.innerWidth >= 1200) {
+                setTableStyles({
+                    tableW: '1082px', headerMargin: '8px', rowFontSize: '16px',
+                    paginationFontSize: '16px', paginationH: '36px', paginationPadding: '8px',
+                    headers:{ dateHeaderW: '110px', fileNoHeaderW: '88px', eventHeaderW: '98px', infoHeaderW: '242px', statusHeaderW: '62px' },
+                    columns:{ dateColW: '90px', fileNoColW: '72px', eventColW: '81px', infoColW: '225px', statusColW: '59px',
+                        dateColPadding: '10px', numLines:1, margin: '8px', iconSize: '16px' }
+                });
+            } else if(window.innerWidth >= 950) {
+                setTableStyles({
+                    tableW: '868px', headerMargin: '8px', rowFontSize: '14px',
+                    paginationFontSize: '14px', paginationH: '34px', paginationPadding: '6px',
+                    headers:{ dateHeaderW: '96px', fileNoHeaderW: '81px', eventHeaderW: '92px', infoHeaderW: '180px', statusHeaderW: '59px' },
+                    columns:{ dateColW: '80px', fileNoColW: '64px', eventColW: '76px', infoColW: '163px', statusColW: '59px',
+                        dateColPadding: '8px', numLines:1, margin: '8px', iconSize: '16px' }
+                });
+            } else if(window.innerWidth >= 650) {
+                setTableStyles({
+                    tableW: '615px', headerMargin: '4px', rowFontSize: '12px',
+                    paginationFontSize: '12px', paginationH: '32px', paginationPadding: '4px',
+                    headers:{ dateHeaderW: '75px', fileNoHeaderW: '67px', eventHeaderW: '73px', infoHeaderW: '117px', statusHeaderW: '49px' },
+                    columns:{ dateColW: '65px', fileNoColW: '55px', eventColW: '60px', infoColW: '104px', statusColW: '49px',
+                        dateColPadding: '5px', numLines:2, lineHeight:15, margin: '6px', iconSize: '14px' }
+                });
+            } else if(window.innerWidth >= 530) {
+                setTableStyles({
+                    tableW: '490px', headerMargin: '2px', rowFontSize: '10px',
+                    paginationFontSize: '12px', paginationH: '28px', paginationPadding: '4px',
+                    headers:{ dateHeaderW: '65px', fileNoHeaderW: '54px', eventHeaderW: '61px', infoHeaderW: '90px', statusHeaderW: '40px' },
+                    columns:{ dateColW: '55px', fileNoColW: '45px', eventColW: '53px', infoColW: '81px', statusColW: '40px',
+                        dateColPadding: '5px', numLines:2, lineHeight:15, margin: '4px', iconSize: '12px' }
+                });
+            } else if(window.innerWidth >= 420) {
+                setTableStyles({
+                    tableW: '400px', headerMargin: '0px', rowFontSize: '8px',
+                    paginationFontSize: '10px', paginationH: '24px', paginationPadding: '4px',
+                    headers:{ dateHeaderW: '52px', fileNoHeaderW: '44px', eventHeaderW: '48px', infoHeaderW: '72px', statusHeaderW: '40px' },
+                    columns:{ dateColW: '44px', fileNoColW: '37px', eventColW: '42px', infoColW: '65px', statusColW: '40px',
+                        dateColPadding: '4px', numLines:2, lineHeight:15, margin: '3px', iconSize: '12px' }
+                });
+            } else {
+                setTableStyles({
+                    tableW: '324px', headerMargin: '-2px', rowFontSize: '8px',
+                    paginationFontSize: '10px', paginationH: '24px', paginationPadding: '4px',
+                    headers:{ dateHeaderW: '50px', fileNoHeaderW: '43px', eventHeaderW: '48px', infoHeaderW: '50px', statusHeaderW: '33px' },
+                    columns:{ dateColW: '44px', fileNoColW: '36px', eventColW: '42px', infoColW: '43px', statusColW: '33px',
+                        dateColPadding: '3px', numLines:3, lineHeight:10, margin: '3px', iconSize: '10px' }
+                })
+            };
+        };
+        windowListener();
+        window.addEventListener('resize', windowListener);
+        return () => window.removeEventListener('resize', windowListener);
+    }, []);
     
     const { profile } = useContext(profileContext);
 
@@ -54,37 +118,37 @@ const DatesTable = (props) => {
             }>
                 <span>Date <InfoIcon/></span>
             </Tooltip>,
-            w:props.tableStyles.headers.dateHeaderW,
+            w:tableStyles.headers.dateHeaderW,
             sortable: true
         },
         {
             label: 'FileNumber',
             text:'File #',
-            w:props.tableStyles.headers.fileNoHeaderW,
+            w:tableStyles.headers.fileNoHeaderW,
             sortable: true
         },
         {
             label: 'Event',
             text:'Event',
-            w:props.tableStyles.headers.eventHeaderW,
+            w:tableStyles.headers.eventHeaderW,
             sortable: false
         },
         {
             label: 'Buyer',
             text:'Buyer',
-            w:props.tableStyles.headers.infoHeaderW,
+            w:tableStyles.headers.infoHeaderW,
             sortable: true
         },
         {
             label: 'Seller',
             text:'Seller',
-            w:props.tableStyles.headers.infoHeaderW,
+            w:tableStyles.headers.infoHeaderW,
             sortable: true
         },
         {
             label: 'Address',
             text:'Address',
-            w:props.tableStyles.headers.infoHeaderW,
+            w:tableStyles.headers.infoHeaderW,
             sortable: true
         },
         {
@@ -113,7 +177,7 @@ const DatesTable = (props) => {
                     <span>Status</span><InfoIcon/>
                 </HStack>
             </Tooltip>,
-            w:props.tableStyles.headers.statusHeaderW,
+            w:tableStyles.headers.statusHeaderW,
             sortable: false
         },
     ]
@@ -140,7 +204,7 @@ const DatesTable = (props) => {
 
     return (
         <VStack fontSize={props.fontSize}>
-            <VStack spacing={props.headerMargin}>
+            <VStack spacing={tableStyles.headerMargin}>
                 {/* Dates Table Title */}
                 <Text fontSize={props.titleFontSize} fontWeight='bold'>
                     {`${filterCount() === 0  ? 'All' :
@@ -150,9 +214,9 @@ const DatesTable = (props) => {
                 </Text>
                 <PaginationButtons
                     profile={profile}
-                    paginationH={props.paginationH}
-                    paginationFontSize={props.paginationFontSize}
-                    paginationPadding={props.paginationPadding}
+                    paginationH={tableStyles.paginationH}
+                    paginationFontSize={tableStyles.paginationFontSize}
+                    paginationPadding={tableStyles.paginationPadding}
                     popoverDir='bottom'
                     pageNum={props.pageNum}
                     setPageNum={props.setPageNum}
@@ -163,10 +227,10 @@ const DatesTable = (props) => {
                     setLoading={props.setLoading}
                 />
 
-                <Divider w={props.tableW} borderColor='red' marginTop='4px !important'/>
+                <Divider w={tableStyles.tableW} borderColor='red' marginTop='4px !important'/>
 
                 {/* Table Column Headers */}
-                <HStack w={`${parseInt(props.tableW.slice(0,-2)) + 10}px`} spacing='0' pl='5px'>
+                <HStack w={`${parseInt(tableStyles.tableW.slice(0,-2)) + 10}px`} spacing='0' pl='5px'>
                     {
                         columnHeaders.map((item, index) => 
                             <HStack
@@ -188,7 +252,7 @@ const DatesTable = (props) => {
                     }
                 </HStack>
 
-                <Divider w={props.tableW} borderColor='red'/>
+                <Divider w={tableStyles.tableW} borderColor='red'/>
             </VStack>
 
             <VStack>
@@ -198,7 +262,7 @@ const DatesTable = (props) => {
                             {props.dates.map((item) => {
                                 return (
                                     <TableRow
-                                        {...props}
+                                        tableStyles={tableStyles}
                                         key={item.fileNumber + item.prefix + item.type}
                                         dateInfo={item}
                                     />
@@ -206,9 +270,9 @@ const DatesTable = (props) => {
                             })}
                             <PaginationButtons
                                 profile={profile}
-                                paginationH={props.paginationH}
-                                paginationFontSize={props.paginationFontSize}
-                                paginationPadding={props.paginationPadding}
+                                paginationH={tableStyles.paginationH}
+                                paginationFontSize={tableStyles.paginationFontSize}
+                                paginationPadding={tableStyles.paginationPadding}
                                 popoverDir='top'
                                 pageNum={props.pageNum}
                                 setPageNum={props.setPageNum}

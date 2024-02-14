@@ -79,12 +79,12 @@ const TableRow = (props) => {
 
     return (
         <HStack
-            w={props.tableW}
+            w={props.tableStyles.tableW}
             h='30px'
             borderRadius='10px'
             bgColor={dateInfo.File.isPurchase ? '#0077cc' : '#0055aa'}
             color='white'
-            fontSize={props.rowFontSize}
+            fontSize={props.tableStyles.rowFontSize}
             textAlign='left'
             spacing={props.tableStyles.columns.margin}
             _hover={{cursor:'pointer'}} 
@@ -105,7 +105,7 @@ const TableRow = (props) => {
             </Box>
 
             <Text w={props.tableStyles.columns.fileNoColW} textAlign='center'>
-                {dateInfo.fileNumber}
+                {dateInfo.fileNumber.slice(0,5)}{dateInfo.fileNumber.slice(5)}
             </Text>
 
             <Divider orientation='vertical' h='70%'/>
@@ -131,9 +131,9 @@ const TableRow = (props) => {
                         <Divider orientation='vertical' h='70%'/>
                         <Tooltip
                             label={item}
-                            fontSize={props.rowFontSize}
+                            fontSize={props.tableStyles.rowFontSize}
                             // Max Width of Tooltip changes based on cell's numLines and fontSize.
-                            maxW={`${275 - (props.tableStyles.columns.numLines * 25) - ((14 - Math.min(parseInt(props.rowFontSize.slice(0,-2)), 14)) * 15)}px`}
+                            maxW={`${275 - (props.tableStyles.columns.numLines * 25) - ((14 - Math.min(parseInt(props.tableStyles.rowFontSize.slice(0,-2)), 14)) * 15)}px`}
                             gutter='2'
                         >
                             <Box h='100%' display='flex'>

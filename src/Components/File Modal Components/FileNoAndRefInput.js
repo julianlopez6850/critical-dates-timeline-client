@@ -21,10 +21,14 @@ const FileNoAndRefInput = (props) => {
                         fontSize='inherit'
                         textAlign='center'
                         value={props.fileNo}
-                        maxLength='5'
-                        onChange={(e)=>{props.setFileNo(e.target.value)}}
+                        maxLength='7'
+                        onChange={(e)=>{
+                            props.setFileNo(e.target.value.slice(0,5) + e.target.value.slice(5).toUpperCase());
+                        }}
                         isInvalid={props.isFileNoError}
                         autoFocus={true}
+                        placeholder='#####AA'
+                        style={{textTransform: 'uppercase'}}
                     />
                 </Tooltip>
             </HStack>
