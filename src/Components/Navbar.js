@@ -95,7 +95,7 @@ const Navbar = () => {
                 setFiles((files) => [...files, {
                     ...file,
                     value: file.fileNumber,
-                    label: `${file.fileNumber}${file.status === 'Cancelled' ? 'CX' : file.status === 'Closed' ? '*' : ''} - ${file.fileRef}`
+                    label: `${file.fileNumber} - ${file.fileRef}`
                 }])
             });
         }
@@ -106,7 +106,7 @@ const Navbar = () => {
                 setFiles((files) => [...files, {
                     ...file,
                     value: file.fileNumber,
-                    label: `${file.fileNumber}${file.status === 'Cancelled' ? 'CX' : file.status === 'Closed' ? '*' : ''} - ${file.fileRef}`
+                    label: `${file.fileNumber} - ${file.fileRef}`
                 }]);
             });
         }).catch(() => {

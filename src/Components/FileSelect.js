@@ -77,7 +77,7 @@ const FileSelect = (props) => {
                     ...baseStyles,
                     display: 'flex',
                     justifyContent: 'left',
-                    color: 'white',
+                    color: state.data.status === 'Cancelled' ? '#DD0000' : state.data.status === 'Closed' ? '#00BB00' : 'white',
                     backgroundColor: state.isFocused ? 'gray' : 'var(--navbar-seperator)',
                     borderTop:'1px solid gray',
                     '&:hover': {
