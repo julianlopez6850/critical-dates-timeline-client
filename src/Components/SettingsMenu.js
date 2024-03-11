@@ -12,6 +12,7 @@ import {
     MenuDivider,
     Box,
     useDisclosure,
+    MenuGroup,
 } from '@chakra-ui/react'
 import { SettingsIcon } from '@chakra-ui/icons';
 
@@ -55,16 +56,57 @@ const SettingsMenu = (props) => {
                     <MenuDivider marginInline='5px' marginBlock={props.menuMargin}/>
                     {profile.loggedIn ? 
                         <>
-                            <MenuItem bgColor={'gray.800'} _hover={{bgColor:'gray.600'}} onClick={onOpenSettingsModal}>
+                            <MenuItem
+                                bgColor={'gray.800'}
+                                _hover={{ bgColor:'gray.600' }}
+                                onClick={onOpenSettingsModal}
+                            >
                                 Settings
                             </MenuItem>
                             <MenuDivider marginInline='5px' marginBlock={props.menuMargin}/>
-                            <MenuItem bgColor={'gray.800'} _hover={{bgColor:'gray.600'}} onClick={()=>{logoutUser()}}>
+                            {/* Pages Menu Group */}
+                            <MenuGroup title='Pages' textAlign='left' textDecor='underline' m='2px 16px'>
+                                {/* Button to Navigate to Critical Dates Timeline */}
+                                <MenuItem
+                                    bgColor={window.location.pathname === '/' ? 'blue.600' : 'gray.800'}
+                                    _hover={window.location.pathname !== '/' && { bgColor:'gray.600' }}
+                                    onClick={() => {
+                                        navigate('/');
+                                    }}
+                                >
+                                    Critical Dates Timeline
+                                </MenuItem>
+                                {/* Button to Navigate to To-Do List */}
+                                <MenuItem
+                                    bgColor={window.location.pathname === '/tasks' ? 'blue.600' : 'gray.800'}
+                                    _hover={window.location.pathname !== '/tasks' && { bgColor:'gray.600' }}
+                                    onClick={() => {
+                                        navigate('/tasks');
+                                    }}
+                                >
+                                    Tasks To-Do List
+                                </MenuItem>
+
+                            </MenuGroup>
+                            <MenuDivider marginInline='5px' marginBlock={props.menuMargin}/>
+                            <MenuItem
+                                bgColor={'gray.800'}
+                                _hover={{bgColor:'gray.600'}}
+                                onClick={()=>{
+                                    logoutUser()
+                                }}
+                            >
                                 Logout
                             </MenuItem>
                         </> : 
                         <>
-                            <MenuItem bgColor={'gray.800'} _hover={{bgColor:'gray.600'}} onClick={()=>{navigate('/login')}}>
+                            <MenuItem
+                                bgColor={'gray.800'}
+                                _hover={{bgColor:'gray.600'}}
+                                onClick={()=>{
+                                    navigate('/login')
+                                }}
+                            >
                                 LOGIN
                             </MenuItem>
                         </>

@@ -18,8 +18,11 @@ import FileModal from './FileModal';
 import SettingsMenu from './SettingsMenu';
 
 import stagingFiles from '../Helpers/Staging/stagingFiles'
+import { useNavigate } from 'react-router-dom';
+import { AssignmentTurnedIn, CalendarMonth } from '@mui/icons-material';
 
 const Navbar = () => {
+    const navigate = useNavigate();
     
     const [styles, setStyles] = useState({});
 
@@ -29,31 +32,31 @@ const Navbar = () => {
                 setStyles({
                     navbarHeight: '60px', titleSize:'20px', buttonSize:'40px', iconSize:'16px',
                     fileSelectWidth:'200px', fileSelectFontSize:'16px', indicatorSize:'32px', placeholder: 'Select File...', isSearchable: true,
-                    menuWidth:'200px', menuFontSize:'16px', menuMargin:'5px'
+                    menuWidth:'200px', menuFontSize:'16px', menuMargin:'5px', showPageButtons:true
                 });
             } else if(window.innerWidth >= 650) {
                 setStyles({
                     navbarHeight: '40px', titleSize:'16px', buttonSize:'30px', iconSize:'14px',
                     fileSelectWidth:'140px', fileSelectFontSize:'14px', indicatorSize:'28px', placeholder: 'Select File...', isSearchable: true,
-                    menuWidth:'175px', menuFontSize:'14px', menuMargin:'2px'
+                    menuWidth:'175px', menuFontSize:'14px', menuMargin:'2px', showPageButtons:true
                 });
             } else if(window.innerWidth >= 530) {
                 setStyles({
                     navbarHeight: '40px', titleSize:'16px', buttonSize:'26px', iconSize:'12px',
                     fileSelectWidth:'90px', fileSelectFontSize:'14px', indicatorSize:'22px', placeholder: 'Select...', isSearchable: true,
-                    menuWidth:'175px', menuFontSize:'14px', menuMargin:'2px'
+                    menuWidth:'175px', menuFontSize:'14px', menuMargin:'2px', showPageButtons:true
                 });
             } else if(window.innerWidth >= 420) {
                 setStyles({
                     navbarHeight: '40px', titleSize:'16px', buttonSize:'26px', iconSize:'12px',
                     fileSelectWidth:'26px', fileSelectFontSize:'10px', indicatorSize:'22px', placeholder: '', isSearchable: false,
-                    menuWidth:'150px', menuFontSize:'14px', menuMargin:'0px'
+                    menuWidth:'150px', menuFontSize:'14px', menuMargin:'0px', showPageButtons:true
                 });
             }  else {
                 setStyles({
                     navbarHeight: '40px', titleSize:'16px', buttonSize:'26px    ', iconSize:'12px',
                     fileSelectWidth:'26px', fileSelectFontSize:'10px', indicatorSize:'22px', placeholder: '', isSearchable: false,
-                    menuWidth:'120px', menuFontSize:'12px', menuMargin:'0px'
+                    menuWidth:'120px', menuFontSize:'12px', menuMargin:'0px', showPageButtons:false
                 });
             }
         };
@@ -62,7 +65,7 @@ const Navbar = () => {
         return () => window.removeEventListener('resize', windowListener);
     }, []);
 
-    const { profile } = useContext(profileContext);
+    const { profile, setProfile } = useContext(profileContext);
 
     const toast = useToast();
 
@@ -178,11 +181,41 @@ const Navbar = () => {
                 {/* Navbar, Center */}
                 <HStack display='flex' justifyContent='center' minW='fit-content'>                
                     <Text fontSize={styles.titleSize} fontWeight='bold'>
-                        Critical Dates Schedule
+                        {window.location.pathname === '/tasks' ? 'To-Do List' : 'Critical Dates Timeline'}
                     </Text>
                 </HStack>
                 {/* Navbar, Right Side */}
                 <HStack display='flex' justifyContent='right' w='0px' minW='0px'>
+                    {/* Dates Timeline Page Button */}
+                    {styles.showPageButtons &&
+                        <Box minH='0' h='100%'>
+                            <NavbarButton
+                                onClick={() => {
+                                    navigate('/');
+                                }}
+                                icon={<CalendarMonth/>}
+                                size={styles.buttonSize}
+                                iconSize={styles.iconSize}
+                                borderColor={window.location.pathname === '/' ? 'blue.500' : ''}
+                                color={window.location.pathname === '/' ? 'blue.500' : ''}
+                            />
+                        </Box>
+                    }
+                    {/* Task To-Do List Page Button */}
+                    {styles.showPageButtons &&
+                        <Box minH='0' h='100%'>
+                            <NavbarButton
+                                onClick={() => {
+                                    navigate('/tasks');
+                                }}
+                                icon={<AssignmentTurnedIn/>}
+                                size={styles.buttonSize}
+                                iconSize={styles.iconSize}
+                                borderColor={window.location.pathname === '/tasks' ? 'blue.500' : ''}
+                                color={window.location.pathname === '/tasks' ? 'blue.500' : ''}
+                            />
+                        </Box>
+                    }
                     {/* Button: Open Settings */}
                     <SettingsMenu
                         {...styles}

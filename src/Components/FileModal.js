@@ -63,7 +63,7 @@ const FileModal = (props) => {
                     partiesStacksDir:'row', propertyStacksDir:'row', secondStacksDir: 'row',
                     headerFontSize:'16px', headerInputHeight: '32px', headerStackDir:'row',
                     fileNoW:'75px', fileRefW:'620px', beginningMinW:'57px', secondMinW:'43px',
-                    sec3height:'237px', dateTypeW:'68px', dateW:'150px', datesSpacing:'6px',
+                    sec3height:'240px', dateTypeW:'68px', dateW:'150px', datesSpacing:'6px',
                     clipboardIconSize:'20px', calculatorIconSize:'26px', lockIconSize:'16px',
                     fileTypeTabsW:'80px', fileRepTabsW:'50px', tabsPadding:'5px',
                     saveButtonW:'100px', otherFooterButtonsW:'120px', footerButtonH:'40px', footerFontSize:'16px', footerTooltipSize:'700px'
@@ -87,7 +87,7 @@ const FileModal = (props) => {
                     partiesStacksDir:'column', propertyStacksDir:'row', secondStacksDir: 'row', 
                     headerFontSize:'14px', headerInputHeight: '24px', headerStackDir:'row', 
                     fileNoW:'65px', fileRefW:'340px', beginningMinW:'49px', secondMinW:'30px',
-                    sec3height:'186px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px',
+                    sec3height:'188px', dateTypeW:'60px', dateW:'135px', datesSpacing:'6px',
                     clipboardIconSize:'16px', calculatorIconSize:'22px', lockIconSize:'14px',
                     fileTypeTabsW:'60px', fileRepTabsW:'44px', tabsPadding:'3px',
                     saveButtonW:'60px', otherFooterButtonsW:'90px', footerButtonH:'32px', footerFontSize:'12px', footerTooltipSize:'350px'
@@ -143,78 +143,112 @@ const FileModal = (props) => {
 
     const [isSellerDocs, setIsSellerDocs] = useState(false);
     const [isBuyerDocs, setIsBuyerDocs] = useState(false);
+    const [isLoanDocs, setIsLoanDocs] = useState(false);
     const [isEscrowAgent, setIsEscrowAgent] = useState(false);
     const [isTitleAgent, setIsTitleAgent] = useState(false);
     const [isClosingAgent, setIsClosingAgent] = useState(false);
+    const [needEstoppel, setNeedEstoppel] = useState(false);
+    const [needSurvey, setNeedSurvey] = useState(false);
 
     const[roles, setRoles] = useState({
         isSellerDocs: false,
         isBuyerDocs: false,
+        isLoanDocs: false,
         isEscrowAgent: false,
         isTitleAgent: false,
         isClosingAgent: false,
+        needEstoppel: false,
+        needSurvey: false,
     });
 
     const rolesButtons = [
         { label: 'Seller Docs', value: isSellerDocs, set: setIsSellerDocs },
         { label: 'Buyer Docs', value: isBuyerDocs, set: setIsBuyerDocs },
+        { label: 'Loan Docs', value: isLoanDocs, set: setIsLoanDocs },
         { label: 'Escrow Agent', value: isEscrowAgent, set: setIsEscrowAgent },
         { label: 'Title Agent', value: isTitleAgent, set: setIsTitleAgent },
         { label: 'Closing Agent', value: isClosingAgent, set: setIsClosingAgent },
+        { label: 'Estoppel Required', value: needEstoppel, set: setNeedEstoppel },
+        { label: 'Survey Required', value: needSurvey, set: setNeedSurvey },
     ];
 
     const [effective, setEffective] = useState('');
     const [depositInit, setDepositInit] = useState('');
     const [depositSecond, setDepositSecond] = useState('');
-    const [loanApproval, setLoanApproval] = useState('');
     const [inspection, setInspection] = useState('');
+    const [loanApproval, setLoanApproval] = useState('');
     const [closing, setClosing] = useState('');
 
     const [isEscrowReceived, setIsEscrowReceived] = useState(false);
-    const [isLienRequested, setIsLienRequested] = useState(false);
     const [isTitleOrdered, setIsTitleOrdered] = useState(false);
-    const [isLienReceived, setIsLienReceived] = useState(false);
     const [isTitleReceived, setIsTitleReceived] = useState(false);
+    const [isLienOrdered, setIsLienOrdered] = useState(false);
+    const [isLienReceived, setIsLienReceived] = useState(false);
     const [isSellerDocsDrafted, setIsSellerDocsDrafted] = useState(false);
     const [isSellerDocsApproved, setIsSellerDocsApproved] = useState(false);
     const [isBuyerDocsDrafted, setIsBuyerDocsDrafted] = useState(false);
     const [isBuyerDocsApproved, setIsBuyerDocsApproved] = useState(false);
+    const [isLoanDocsDrafted, setIsLoanDocsDrafted] = useState(false);
+    const [isLoanDocsApproved, setIsLoanDocsApproved] = useState(false);
+    const [isEstoppelOrdered, setIsEstoppelOrdered] = useState(false);
+    const [isEstoppelReceived, setIsEstoppelReceived] = useState(false);
+    const [isSurveyOrdered, setisSurveyOrdered] = useState(false);
+    const [isSurveyReceived, setisSurveyReceived] = useState(false);
+    const [areDocsRecorded, setAreDocsRecorded] = useState(false);
+    const [areFeesReceived, setAreFeesReceived] = useState(false);
     
     const [milestones, setMilestones] = useState({
         isEscrowReceived: false,
-        isLienRequested: false,
         isTitleOrdered: false,
-        isLienReceived: false,
         isTitleReceived: false,
+        isLienOrdered: false,
+        isLienReceived: false,
         isSellerDocsDrafted: false,
-        isBuyerDocsDrafted: false,
         isSellerDocsApproved: false,
+        isBuyerDocsDrafted: false,
         isBuyerDocsApproved: false,
+        isLoanDocsDrafted: false,
+        isLoanDocsApproved: false,
+        isEstoppelOrdered: false,
+        isEstoppelReceived: false,
+        isSurveyOrdered: false,
+        isSurveyReceived: false,
+        areDocsRecorded: false,
+        areFeesReceived: false,
     });
 
     const milestonesChecks = [
-        { label: 'Lien Search Requested?', role: isTitleAgent, value: isLienRequested, set: setIsLienRequested },
-        { label: 'Title Work Ordered?', role: isTitleAgent, value: isTitleOrdered, set: setIsTitleOrdered },
-        { label: 'Lien Search Received?', role: isTitleAgent, value: isLienReceived, set: setIsLienReceived },
-        { label: 'Title Work Received?', role: isTitleAgent, value: isTitleReceived, set: setIsTitleReceived },
-        { label: 'Seller Docs Drafted?', role: isSellerDocs, value: isSellerDocsDrafted, set: setIsSellerDocsDrafted },
-        { label: 'Buyer Docs Drafted?', role: isBuyerDocs, value: isBuyerDocsDrafted, set: setIsBuyerDocsDrafted },
-        { label: 'Seller Docs Approved?', role: isSellerDocs, value: isSellerDocsApproved, set: setIsSellerDocsApproved },
-        { label: 'Buyer Docs Approved?', role: isBuyerDocs, value: isBuyerDocsApproved, set: setIsBuyerDocsApproved },
+        { label: 'Escrow Fully Received?', role: isEscrowAgent, reqMilestone: undefined, value: isEscrowReceived, set: setIsEscrowReceived },
+        { label: 'Title Work Ordered?', role: isTitleAgent, reqMilestone: undefined, value: isTitleOrdered, set: setIsTitleOrdered },
+        { label: 'Title Work Received?', role: isTitleAgent, reqMilestone: isTitleOrdered, value: isTitleReceived, set: setIsTitleReceived },
+        { label: 'Lien Search Ordered?', role: isTitleAgent, reqMilestone: undefined, value: isLienOrdered, set: setIsLienOrdered },
+        { label: 'Lien Search Received?', role: isTitleAgent, reqMilestone: isLienOrdered, value: isLienReceived, set: setIsLienReceived },
+        { label: 'Seller Docs Drafted?', role: isSellerDocs, reqMilestone: undefined, value: isSellerDocsDrafted, set: setIsSellerDocsDrafted },
+        { label: 'Seller Docs Approved?', role: isSellerDocs, reqMilestone: isSellerDocsDrafted, value: isSellerDocsApproved, set: setIsSellerDocsApproved },
+        { label: 'Buyer Docs Drafted?', role: isBuyerDocs, reqMilestone: undefined, value: isBuyerDocsDrafted, set: setIsBuyerDocsDrafted },
+        { label: 'Buyer Docs Approved?', role: isBuyerDocs, reqMilestone: isBuyerDocsDrafted, value: isBuyerDocsApproved, set: setIsBuyerDocsApproved },
+        { label: 'Loan Docs Drafted?', role: isLoanDocs, reqMilestone: undefined, value: isLoanDocsDrafted, set: setIsLoanDocsDrafted },
+        { label: 'Loan Docs Approved?', role: isLoanDocs, reqMilestone: isLoanDocsDrafted, value: isLoanDocsApproved, set: setIsLoanDocsApproved },
+        { label: 'Estoppel Ordered?', role: needEstoppel, reqMilestone: undefined, value: isEstoppelOrdered, set: setIsEstoppelOrdered },
+        { label: 'Estoppel Received?', role: needEstoppel, reqMilestone: isEstoppelOrdered, value: isEstoppelReceived, set: setIsEstoppelReceived },
+        { label: 'Survey Ordered?', role: needSurvey, reqMilestone: undefined, value: isSurveyOrdered, set: setisSurveyOrdered },
+        { label: 'Survey Received?', role: needSurvey, reqMilestone: isSurveyOrdered, value: isSurveyReceived, set: setisSurveyReceived },
+        { label: 'Documents Recorded?', role: isClosingAgent, reqMilestone: undefined, value: areDocsRecorded, set: setAreDocsRecorded },
+        { label: 'Our Fees Received?', role: true, reqMilestone: undefined, value: areFeesReceived, set: setAreFeesReceived },
     ];
 
     const [status, setStatus] = useState('Open');
     const [isClosedEffective, setIsClosedEffective] = useState(props.new ? false : true);
     const [isClosedDepositInit, setIsClosedDepositInit] = useState(props.new ? false : true);
     const [isClosedDepositSecond, setIsClosedDepositSecond] = useState(props.new ? false : true);
-    const [isClosedLoanApproval, setIsClosedLoanApproval] = useState(props.new ? false : true);
     const [isClosedInspection, setIsClosedInspection] = useState(props.new ? false : true);
+    const [isClosedLoanApproval, setIsClosedLoanApproval] = useState(props.new ? false : true);
     const [isClosedClosing, setIsClosedClosing] = useState(props.new ? false : true);
 
     const [isCalculatedDepositInit, setIsCalculatedDepositInit] = useState({});
     const [isCalculatedDepositSecond, setIsCalculatedDepositSecond] = useState({});
-    const [isCalculatedLoanApproval, setIsCalculatedLoanApproval] = useState({});
     const [isCalculatedInspection, setIsCalculatedInspection] = useState({});
+    const [isCalculatedLoanApproval, setIsCalculatedLoanApproval] = useState({});
     const [isCalculatedClosing, setIsCalculatedClosing] = useState({});
 
     const dates = [
@@ -244,15 +278,6 @@ const FileModal = (props) => {
             setIsCalculated: setIsCalculatedDepositSecond
         },
         {
-            label: 'Loan ✓', 
-            value: loanApproval, 
-            setValue: setLoanApproval, 
-            isClosed: isClosedLoanApproval, 
-            setIsClosed: setIsClosedLoanApproval,
-            isCalculated: isCalculatedLoanApproval,
-            setIsCalculated: setIsCalculatedLoanApproval
-        },
-        {
             label: 'Inspection', 
             value: inspection, 
             setValue: setInspection, 
@@ -260,6 +285,15 @@ const FileModal = (props) => {
             setIsClosed: setIsClosedInspection,
             isCalculated: isCalculatedInspection,
             setIsCalculated: setIsCalculatedInspection
+        },
+        {
+            label: 'Loan ✓', 
+            value: loanApproval, 
+            setValue: setLoanApproval, 
+            isClosed: isClosedLoanApproval, 
+            setIsClosed: setIsClosedLoanApproval,
+            isCalculated: isCalculatedLoanApproval,
+            setIsCalculated: setIsCalculatedLoanApproval
         },
         {
             label: 'Closing', 
@@ -312,19 +346,31 @@ const FileModal = (props) => {
             const responseRoles = JSON.parse(file.roles);
             setIsSellerDocs(responseRoles.isSellerDocs);
             setIsBuyerDocs(responseRoles.isBuyerDocs);
+            setIsLoanDocs(responseRoles.isLoanDocs);
             setIsEscrowAgent(responseRoles.isEscrowAgent);
             setIsTitleAgent(responseRoles.isTitleAgent);
             setIsClosingAgent(responseRoles.isClosingAgent);
+            setNeedEstoppel(responseRoles.needEstoppel);
+            setNeedSurvey(responseRoles.needSurvey);
 
             const responseMilestones = JSON.parse(file.milestones);
-            setIsLienRequested(responseMilestones.isLienRequested);
+            setIsEscrowReceived(responseMilestones.isEscrowReceived);
             setIsTitleOrdered(responseMilestones.isTitleOrdered);
-            setIsLienReceived(responseMilestones.isLienReceived);
             setIsTitleReceived(responseMilestones.isTitleReceived);
+            setIsLienOrdered(responseMilestones.isLienOrdered);
+            setIsLienReceived(responseMilestones.isLienReceived);
             setIsSellerDocsDrafted(responseMilestones.isSellerDocsDrafted);
             setIsSellerDocsApproved(responseMilestones.isSellerDocsApproved);
             setIsBuyerDocsDrafted(responseMilestones.isBuyerDocsDrafted);
             setIsBuyerDocsApproved(responseMilestones.isBuyerDocsApproved);
+            setIsLoanDocsDrafted(responseMilestones.isLoanDocsDrafted);
+            setIsLoanDocsApproved(responseMilestones.isLoanDocsApproved);
+            setIsEstoppelOrdered(responseMilestones.isEstoppelOrdered);
+            setIsEstoppelReceived(responseMilestones.isEstoppelReceived);
+            setisSurveyOrdered(responseMilestones.isSurveyOrdered);
+            setisSurveyReceived(responseMilestones.isSurveyReceived);
+            setAreDocsRecorded(responseMilestones.areDocsRecorded);
+            setAreFeesReceived(responseMilestones.areFeesReceived);
 
             // Get the stored dates for the chosen file; Set each state hook accordingly.
             var storedDates = JSON.parse(localStorage.getItem('dates'));
@@ -356,15 +402,15 @@ const FileModal = (props) => {
                                 break;
                         }
                         break;
-                    case 'Loan Approval':
-                        setLoanApproval(date.date);
-                        setIsClosedLoanApproval(date.isClosed);
-                        setIsCalculatedLoanApproval(date.calculatedDate);
-                        break;
                     case 'Inspection':
                         setInspection(date.date);
                         setIsClosedInspection(date.isClosed);
                         setIsCalculatedInspection(date.calculatedDate);
+                        break;
+                    case 'Loan Approval':
+                        setLoanApproval(date.date);
+                        setIsClosedLoanApproval(date.isClosed);
+                        setIsCalculatedLoanApproval(date.calculatedDate);
                         break;
                     case 'Closing':
                         setClosing(date.date);
@@ -402,19 +448,31 @@ const FileModal = (props) => {
                 const responseRoles = JSON.parse(file.roles);
                 setIsSellerDocs(responseRoles.isSellerDocs);
                 setIsBuyerDocs(responseRoles.isBuyerDocs);
+                setIsLoanDocs(responseRoles.isLoanDocs);
                 setIsEscrowAgent(responseRoles.isEscrowAgent);
                 setIsTitleAgent(responseRoles.isTitleAgent);
                 setIsClosingAgent(responseRoles.isClosingAgent);
+                setNeedEstoppel(responseRoles.needEstoppel);
+                setNeedSurvey(responseRoles.needSurvey);
 
                 const responseMilestones = JSON.parse(file.milestones);
-                setIsLienRequested(responseMilestones.isLienRequested);
+                setIsEscrowReceived(responseMilestones.isEscrowReceived);
                 setIsTitleOrdered(responseMilestones.isTitleOrdered);
-                setIsLienReceived(responseMilestones.isLienReceived);
                 setIsTitleReceived(responseMilestones.isTitleReceived);
+                setIsLienOrdered(responseMilestones.isLienOrdered);
+                setIsLienReceived(responseMilestones.isLienReceived);
                 setIsSellerDocsDrafted(responseMilestones.isSellerDocsDrafted);
                 setIsSellerDocsApproved(responseMilestones.isSellerDocsApproved);
                 setIsBuyerDocsDrafted(responseMilestones.isBuyerDocsDrafted);
                 setIsBuyerDocsApproved(responseMilestones.isBuyerDocsApproved);
+                setIsLoanDocsDrafted(responseMilestones.isLoanDocsDrafted);
+                setIsLoanDocsApproved(responseMilestones.isLoanDocsApproved);
+                setIsEstoppelOrdered(responseMilestones.isEstoppelOrdered);
+                setIsEstoppelReceived(responseMilestones.isEstoppelReceived);
+                setisSurveyOrdered(responseMilestones.isSurveyOrdered);
+                setisSurveyReceived(responseMilestones.isSurveyReceived);
+                setAreDocsRecorded(responseMilestones.areDocsRecorded);
+                setAreFeesReceived(responseMilestones.areFeesReceived);
 
                 for(const date of file.Dates) {
                     switch(date.type) {
@@ -436,15 +494,15 @@ const FileModal = (props) => {
                                     break;
                             }
                             break;
-                        case 'Loan Approval':
-                            setLoanApproval(date.date);
-                            setIsClosedLoanApproval(date.isClosed);
-                            setIsCalculatedLoanApproval(date.calculatedDate);
-                            break;
                         case 'Inspection':
                             setInspection(date.date);
                             setIsClosedInspection(date.isClosed);
                             setIsCalculatedInspection(date.calculatedDate);
+                            break;
+                        case 'Loan Approval':
+                            setLoanApproval(date.date);
+                            setIsClosedLoanApproval(date.isClosed);
+                            setIsCalculatedLoanApproval(date.calculatedDate);
                             break;
                         case 'Closing':
                             setClosing(date.date);
@@ -514,17 +572,29 @@ const FileModal = (props) => {
             status === file.status &&
             isSellerDocs === storedRoles.isSellerDocs &&
             isBuyerDocs === storedRoles.isBuyerDocs &&
+            isLoanDocs === storedRoles.isLoanDocs &&
             isEscrowAgent === storedRoles.isEscrowAgent &&
             isTitleAgent === storedRoles.isTitleAgent &&
             isClosingAgent === storedRoles.isClosingAgent &&
-            isLienRequested === storedMilestones.isLienRequested &&
+            needEstoppel === storedRoles.needEstoppel &&
+            needSurvey === storedRoles.needSurvey &&
+            isEscrowReceived === storedMilestones.isEscrowReceived &&
             isTitleOrdered === storedMilestones.isTitleOrdered &&
-            isLienReceived === storedMilestones.isLienReceived &&
             isTitleReceived === storedMilestones.isTitleReceived &&
+            isLienOrdered === storedMilestones.isLienOrdered &&
+            isLienReceived === storedMilestones.isLienReceived &&
             isSellerDocsDrafted === storedMilestones.isSellerDocsDrafted &&
             isSellerDocsApproved === storedMilestones.isSellerDocsApproved &&
             isBuyerDocsDrafted === storedMilestones.isBuyerDocsDrafted &&
             isBuyerDocsApproved === storedMilestones.isBuyerDocsApproved &&
+            isLoanDocsDrafted === storedMilestones.isLoanDocsDrafted &&
+            isLoanDocsApproved === storedMilestones.isLoanDocsApproved &&
+            isEstoppelOrdered === storedMilestones.isEstoppelOrdered &&
+            isEstoppelReceived === storedMilestones.isEstoppelReceived &&
+            isSurveyOrdered === storedMilestones.isSurveyOrdered &&
+            isSurveyReceived === storedMilestones.isSurveyReceived &&
+            areDocsRecorded === storedMilestones.areDocsRecorded &&
+            areFeesReceived === storedMilestones.areFeesReceived &&
             checkDateEquivalence(effective, isClosedEffective, undefined, 'Effective', undefined) &&
             checkDateEquivalence(depositInit, isClosedDepositInit, isCalculatedDepositInit, 'Escrow', 'First ') &&
             checkDateEquivalence(depositSecond, isClosedDepositSecond, isCalculatedDepositSecond, 'Escrow', 'Second ') &&
@@ -537,26 +607,41 @@ const FileModal = (props) => {
         setRoles({
             isSellerDocs: isSellerDocs,
             isBuyerDocs: isBuyerDocs,
+            isLoanDocs: isLoanDocs,
             isEscrowAgent: isEscrowAgent,
             isTitleAgent: isTitleAgent,
             isClosingAgent: isClosingAgent,
+            needEstoppel: needEstoppel,
+            needSurvey: needSurvey,
         });
-    }, [isSellerDocs, isBuyerDocs, isEscrowAgent, isTitleAgent, isClosingAgent]);
+    }, [isSellerDocs, isBuyerDocs, isLoanDocs, isEscrowAgent, isTitleAgent, isClosingAgent, needEstoppel, needSurvey]);
 
     useEffect(() => {
         setMilestones({
             isEscrowReceived: isEscrowReceived,
-            isLienRequested: isLienRequested,
             isTitleOrdered: isTitleOrdered,
-            isLienReceived: isLienReceived,
             isTitleReceived: isTitleReceived,
+            isLienOrdered: isLienOrdered,
+            isLienReceived: isLienReceived,
             isSellerDocsDrafted: isSellerDocsDrafted,
-            isBuyerDocsDrafted: isBuyerDocsDrafted,
             isSellerDocsApproved: isSellerDocsApproved,
+            isBuyerDocsDrafted: isBuyerDocsDrafted,
             isBuyerDocsApproved: isBuyerDocsApproved,
+            isLoanDocsDrafted: isLoanDocsDrafted,
+            isLoanDocsApproved: isLoanDocsApproved,
+            isEstoppelOrdered: isEstoppelOrdered,
+            isEstoppelReceived: isEstoppelReceived,
+            isSurveyOrdered: isSurveyOrdered,
+            isSurveyReceived: isSurveyReceived,
+            areDocsRecorded: areDocsRecorded,
+            areFeesReceived: areFeesReceived,
         });
-    }, [isEscrowReceived, isLienRequested, isTitleOrdered, isLienReceived, isTitleReceived, 
-        isSellerDocsDrafted, isBuyerDocsDrafted, isSellerDocsApproved, isBuyerDocsApproved,]);
+    }, [
+        isEscrowReceived, isTitleOrdered, isTitleReceived, isLienOrdered, isLienReceived,
+        isSellerDocsDrafted, isSellerDocsApproved, isBuyerDocsDrafted, isBuyerDocsApproved,
+        isLoanDocsDrafted, isLoanDocsApproved, isEstoppelOrdered, isEstoppelReceived,
+        isSurveyOrdered, isSurveyReceived, areDocsRecorded, areFeesReceived,
+    ]);
 
     useEffect(() => {
         if(fileNo.length > 5)
@@ -638,35 +723,46 @@ const FileModal = (props) => {
         setNotes('');
         setIsSellerDocs(false);
         setIsBuyerDocs(false);
+        setIsLoanDocs(false);
         setIsEscrowAgent(false);
         setIsTitleAgent(false);
         setIsClosingAgent(false);
+        setNeedEstoppel(false);
+        setNeedSurvey(false);
         setEffective('00-00-0000');
         setDepositInit('00-00-0000');
         setDepositSecond('00-00-0000');
-        setLoanApproval('00-00-0000');
         setInspection('00-00-0000');
+        setLoanApproval('00-00-0000');
         setClosing('00-00-0000');
         setIsClosedEffective(props.new ? false : true);
         setIsClosedDepositInit(props.new ? false : true);
         setIsClosedDepositSecond(props.new ? false : true);
-        setIsClosedLoanApproval(props.new ? false : true);
         setIsClosedInspection(props.new ? false : true);
+        setIsClosedLoanApproval(props.new ? false : true);
         setIsClosedClosing(props.new ? false : true);
         setIsCalculatedDepositInit({});
         setIsCalculatedDepositSecond({});
-        setIsCalculatedLoanApproval({});
         setIsCalculatedInspection({});
+        setIsCalculatedLoanApproval({});
         setIsCalculatedClosing({});
         setIsEscrowReceived(false);
-        setIsLienRequested(false);
         setIsTitleOrdered(false);
-        setIsLienReceived(false);
         setIsTitleReceived(false);
+        setIsLienOrdered(false);
+        setIsLienReceived(false);
         setIsSellerDocsDrafted(false);
         setIsSellerDocsApproved(false);
         setIsBuyerDocsDrafted(false);
         setIsBuyerDocsApproved(false);
+        setIsLoanDocsDrafted(false);
+        setIsLoanDocsApproved(false);
+        setIsEstoppelOrdered(false);
+        setIsEstoppelReceived(false);
+        setisSurveyOrdered(false);
+        setisSurveyReceived(false);
+        setAreDocsRecorded(false);
+        setAreFeesReceived(false);
         setStatus('Open');
     }
 
@@ -683,13 +779,13 @@ const FileModal = (props) => {
             setDepositSecond('');
     }, [depositSecond])
     useEffect(() => {
-        if(loanApproval === '00-00-0000')
-            setLoanApproval('');
-    }, [loanApproval])
-    useEffect(() => {
         if(inspection === '00-00-0000')
             setInspection('');
     }, [inspection])
+    useEffect(() => {
+        if(loanApproval === '00-00-0000')
+            setLoanApproval('');
+    }, [loanApproval])
     useEffect(() => {
         if(closing === '00-00-0000')
             setClosing('');
@@ -816,35 +912,29 @@ const FileModal = (props) => {
 
                                     <Stack
                                         direction={styles.partiesStacksDir}
-                                        w='full' h={styles.partiesStacksDir === 'row' ? styles.sec3height : ''}
+                                        w='full' h='100%'
                                         m='0px !important'
                                         spacing='0px'
                                     >
                                         <Stack
-                                            direction={styles.secondStacksDir}
-                                            h={styles.secondStacksDir === 'row' ? styles.sec3height : ''}
+                                            direction={styles.secondStacksDir} h='auto'
                                         >
-                                            <HStack
-                                                w={styles.partiesStacksDir === 'column' ? '50%' : ''}
-                                                h={styles.sec3height}
-                                            >
-                                                <FileDates
-                                                    dates={dates}
-                                                    isEffectiveError={isEffectiveError}
-                                                    isClosingError={isClosingError}
-                                                    status={status}
-                                                    {...styles}
-                                                />
-                                            </HStack>
+                                            <FileDates
+                                                dates={dates}
+                                                isEffectiveError={isEffectiveError}
+                                                isClosingError={isClosingError}
+                                                status={status}
+                                                {...styles}
+                                            />
 
                                             <Divider
                                                 orientation={styles.secondStacksDir === 'row' ? 'vertical' : 'horizontal'}
-                                                h={styles.secondStacksDir === 'row' ? parseInt(styles.sec3height.slice(0,-2) - 8 + 'px') : 'full'}
+                                                h='auto'
                                                 margin={styles.secondStacksDir === 'row' ? '0px !important' : '8px !important'}
-                                                alignSelf='end'
                                             />
 
                                             <FileMilestones
+                                                stackDir={styles.secondStacksDir}
                                                 milestonesChecks={milestonesChecks}
                                                 fontSize={styles.bodyFontSize}
                                             />
@@ -852,16 +942,16 @@ const FileModal = (props) => {
 
                                         <Divider
                                             orientation={styles.partiesStacksDir === 'row' ? 'vertical' : 'horizontal'}
-                                            h={styles.partiesStacksDir === 'row' ? parseInt(styles.sec3height.slice(0,-2) - 8 + 'px') : 'full'}
+                                            h='auto'
                                             marginBlock={styles.partiesStacksDir === 'row' ? '0px !important' : '8px !important'}
                                             marginInline={styles.partiesStacksDir === 'row' ? '8px !important' : '0px !important'}
-                                            alignSelf='end'
                                         />
 
                                         <FileNotes
                                             notes={notes}
                                             setNotes={setNotes}
-                                            height={styles.sec3height}
+                                            minHeight={styles.partiesStacksDir === 'row' ? '0px' : styles.sec3height}
+                                            height='auto'
                                         />
                                     </Stack>
                                     
@@ -895,19 +985,19 @@ const FileModal = (props) => {
                                             effective={effective}
                                             depositInit={depositInit}
                                             depositSecond={depositSecond}
-                                            loanApproval={loanApproval}
                                             inspection={inspection}
+                                            loanApproval={loanApproval}
                                             closing={closing}
                                             isClosedEffective={isClosedEffective}
                                             isClosedDepositInit={isClosedDepositInit}
                                             isClosedDepositSecond={isClosedDepositSecond}
-                                            isClosedLoanApproval={isClosedLoanApproval}
                                             isClosedInspection={isClosedInspection}
+                                            isClosedLoanApproval={isClosedLoanApproval}
                                             isClosedClosing={isClosedClosing}
                                             isCalculatedDepositInit={isCalculatedDepositInit}
                                             isCalculatedDepositSecond={isCalculatedDepositSecond}
-                                            isCalculatedLoanApproval={isCalculatedLoanApproval}
                                             isCalculatedInspection={isCalculatedInspection}
+                                            isCalculatedLoanApproval={isCalculatedLoanApproval}
                                             isCalculatedClosing={isCalculatedClosing}
                                             status={status}
                                             roles={roles}

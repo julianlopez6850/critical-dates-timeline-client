@@ -22,7 +22,7 @@ import leadingZero from '../Helpers/leadingZero'
 
 import stagingCriticalDates from '../Helpers/Staging/stagingCriticalDates'
 
-function Main() {
+function Dates() {
 
     const [styles, setStyles] = useState({
         pageW: '1200px', pageMarginBlock: '25px', fontSize: '16px', stackDir: 'row', titleFontSize: '20px', inputHeight: '30px',
@@ -503,4 +503,4 @@ function Main() {
     )
 }
 
-export default Main;
+export default Dates;

@@ -11,9 +11,9 @@ const NavbarButton = forwardRef((props, ref) => {
         <Button
             ref={ref}
             border='2px solid'
-            borderColor={'var(--navbar-seperator)'}
+            borderColor={props.borderColor || 'var(--navbar-seperator)'}
             bgColor='black'
-            color='var(--background-light)'
+            color={props.color || 'var(--background-light)'}
             transition='0s'
             _hover={''}
             _active={''}

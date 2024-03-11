@@ -10,7 +10,7 @@ const FileNotes = (props) => {
             <Text fontWeight='bold'>
                 Notes:
             </Text>
-            <Textarea h='full' fontSize='12px' resize='none'
+            <Textarea minH={props.minHeight} h='full' fontSize='12px' resize='none'
                 value={props.notes}
                 onChange={(e) => {props.setNotes(e.target.value)}}
             />

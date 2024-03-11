@@ -20,7 +20,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { profileContext } from './Helpers/profileContext';
 import Navbar from './Components/Navbar';
 import Footer from './Components/Footer';
-import Main from './Pages/Main';
+import Dates from './Pages/Dates';
+import Tasks from './Pages/Tasks';
 import Login from './Pages/Login';
 
 const chakraTheme = chakraExtendTheme();
@@ -85,14 +86,26 @@ function App() {
                         >
                             <Router>
                                 <Routes>
-                                    <Route exact path='/' element={<>
-                                        <VStack w='full'>
+                                    <Route
+                                        exact path='/'
+                                        element={ <>
                                             <Navbar/>
-                                            <Main/>
-                                        </VStack>
-                                        <Footer/>
-                                    </>} />
-                                    <Route exact path='/login' element={<Login/>} />
+                                            <Dates/>
+                                            <Footer/>
+                                        </> }
+                                    />
+                                    <Route
+                                        exact path='/tasks'
+                                        element={ <>
+                                            <Navbar/>
+                                            <Tasks/>
+                                            <Footer/>
+                                        </> }
+                                    />
+                                    <Route
+                                        exact path='/login'
+                                        element={ <Login/> }
+                                    />
                                 </Routes>
                             </Router>
                         </VStack>
