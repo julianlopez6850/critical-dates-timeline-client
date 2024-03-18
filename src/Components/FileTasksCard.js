@@ -40,7 +40,10 @@ function FileTasksCard(props) {
     const { profile, setProfile} = useContext(profileContext);
     const { isOpen, onOpen, onClose } = useDisclosure();
     
-    const [styles, setStyles] = useState({});
+    const [styles, setStyles] = useState({
+        cardW:'720px', fontSize:'16px', paddingInline:'40px',
+        spacing:'20px', rolesW:'40%', milestonesW:'60%', milestoneHeaderW:'130px',
+    });
 
     useEffect(() => {
         const windowListener = () => {

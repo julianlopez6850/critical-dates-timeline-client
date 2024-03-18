@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from 'react'
-import { useNavigate } from 'react-router-dom';
 import { profileContext } from '../Helpers/profileContext'
 import { axiosInstance } from '../Helpers/axiosInstance'
 
@@ -21,6 +20,7 @@ import DatesTable from '../Components/DatesTable'
 import leadingZero from '../Helpers/leadingZero'
 
 import stagingCriticalDates from '../Helpers/Staging/stagingCriticalDates'
+import LoginMessage from '../Components/LoginMessage';
 
 function Dates() {
 
@@ -85,7 +85,6 @@ function Dates() {
         return () => window.removeEventListener('resize', windowListener);
     }, []);
 
-    const navigate = useNavigate();
     const { profile, setProfile } = useContext(profileContext);
 
     const toast = useToast();
@@ -145,7 +144,7 @@ function Dates() {
             var darkMode = Object.keys(storedSettings).length > 0 ? storedSettings.darkMode : false;
             setProfile(profile => {
                 return {...profile, loggedIn: true, user: 'guest', darkMode: darkMode, notificationSettings: settings }
-            })
+            });
             setLoading(false);
             return;
         }
@@ -157,11 +156,11 @@ function Dates() {
             delete settings.darkMode;
             setProfile(profile => {
                 return {...profile, loggedIn: true, user: response.data.username, actions: profile.actions + 1, darkMode: darkMode, notificationSettings: settings }
-            })
+            });
         }).catch((error) => {
             setProfile(profile => {
                 return {...profile, loggedIn: false, user: '' }
-            })
+            });
             setCriticalDates([]);
             setLoading(false);
             if (error.response)
@@ -486,19 +485,7 @@ function Dates() {
                     </Box>
                 </HStack>
             </>
-            ) : !loading && (
-                <>
-                    <Text>
-                        {`Welcome Guest! Please Login to View This Page.`}
-                    </Text>
-                    <DateFilterButton
-                        text={'Login'}
-                        onClick={() => {navigate('/login')}}
-                        active={false}
-                        fontSize={`${parseInt(styles.fontSize.slice(0,-2)) * 1.5}px`}
-                    />
-                </>
-            )}
+            ) : !loading && <LoginMessage/>}
         </VStack>
     )
 }

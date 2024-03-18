@@ -8,11 +8,13 @@ import {
 
 import { profileContext } from '../Helpers/profileContext';
 import FileTasksCard from '../Components/FileTasksCard';
+import LoginMessage from '../Components/LoginMessage';
 
 function Tasks() {
     const { profile, setProfile} = useContext(profileContext);
     const toast = useToast();
     
+    const [loading, setLoading] = useState(true);    
     const [closings, setClosings] = useState([]);
 
     useEffect(() => {
@@ -32,7 +34,9 @@ function Tasks() {
             var darkMode = Object.keys(storedSettings).length > 0 ? storedSettings.darkMode : false;
             setProfile(profile => {
                 return {...profile, loggedIn: true, user: 'guest', darkMode: darkMode, notificationSettings: settings }
-            })
+            });
+            setLoading(false);
+            return;
         } else {
             // PRODUCTION ENVIRONMENT - Save Profile Settings
             axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then((response) => {
@@ -41,11 +45,12 @@ function Tasks() {
                 delete settings.darkMode;
                 setProfile(profile => {
                     return {...profile, loggedIn: true, user: response.data.username, darkMode: darkMode, notificationSettings: settings }
-                })
+                });
             }).catch((error) => {
                 setProfile(profile => {
                     return {...profile, loggedIn: false, user: '' }
-                })
+                });
+                setLoading(false);
                 if (error.response)
                     console.warn('You are not logged in. Please log in to view this content.');
                 else
@@ -105,20 +110,22 @@ function Tasks() {
 
     return (
         <VStack w='full' h='max-content' alignItems='center'>
-            <VStack
-                w='100%' 
-                spacing='8px'
-            >
-                {closings.length > 0 && closings.map((closing) => {
-                    if(closing.File.status !== 'Open')
-                        return;
-
-                    return <FileTasksCard
-                        key={closing.fileNumber + 'TasksCard'}
-                        closing={closing}
-                    />
-                })}
-            </VStack>
+            {profile.loggedIn ? (
+                <VStack
+                    w='100%' 
+                    spacing='8px'
+                >
+                    {closings.length > 0 && closings.map((closing) => {
+                        if(closing.File.status !== 'Open')
+                            return;
+                        
+                        return <FileTasksCard
+                            key={closing.fileNumber + 'TasksCard'}
+                            closing={closing}
+                        />
+                    })}
+                </VStack>
+            ) : !loading && <LoginMessage/>}
         </VStack>
     );
 }
