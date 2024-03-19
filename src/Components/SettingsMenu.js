@@ -32,6 +32,9 @@ const SettingsMenu = (props) => {
     } = useDisclosure()
 
     const logoutUser = () => {
+        if(process.env.REACT_APP_ENV === 'staging')
+            return;
+        
         axiosInstance.post(`${process.env.REACT_APP_API_URL}/auth/logout`).then(() => {
             console.info('You have been logged out successfully.');
             setProfile(profile => {
@@ -95,6 +98,7 @@ const SettingsMenu = (props) => {
                                 onClick={()=>{
                                     logoutUser()
                                 }}
+                                isDisabled={process.env.REACT_APP_ENV === 'staging'}
                             >
                                 Logout
                             </MenuItem>

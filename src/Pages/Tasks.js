@@ -36,7 +36,6 @@ function Tasks() {
                 return {...profile, loggedIn: true, user: 'guest', darkMode: darkMode, notificationSettings: settings }
             });
             setLoading(false);
-            return;
         } else {
             // PRODUCTION ENVIRONMENT - Save Profile Settings
             axiosInstance.get(`${process.env.REACT_APP_API_URL}/auth/profile`).then((response) => {

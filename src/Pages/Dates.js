@@ -143,7 +143,7 @@ function Dates() {
             var storedSettings = JSON.parse(localStorage.getItem('settings')) || {};
             var darkMode = Object.keys(storedSettings).length > 0 ? storedSettings.darkMode : false;
             setProfile(profile => {
-                return {...profile, loggedIn: true, user: 'guest', darkMode: darkMode, notificationSettings: settings }
+                return {...profile, loggedIn: true, user: 'guest', actions: profile.actions + 1, darkMode: darkMode, notificationSettings: settings }
             });
             setLoading(false);
             return;
@@ -179,26 +179,50 @@ function Dates() {
         if(process.env.REACT_APP_ENV === 'staging') {
             var storedDates = JSON.parse(localStorage.getItem('dates'));
             Object.entries(storedDates).forEach((date, index) => {
+                const order = (filter) => {
+                    return setCriticalDates((dates) => {
+                        if(filter === false)
+                            dates = [...dates, date];
+                        return dates.sort((a, b) => {
+                            if(sort.by === 'Date')
+                                return sort.dir === 'ASC' ? a.date > b.date : a.date < b.date;
+                            else if(sort.by === 'FileNumber')
+                                return sort.dir === 'ASC' ? a.fileNumber > b.fileNumber : a.fileNumber < b.fileNumber;
+                            else {
+                                var by = (sort.by === 'Buyer') ? 'buyer' : (sort.by === 'Seller') ? 'seller' : 'address';
+                                return sort.dir === 'ASC' ? a.File[by] > b.File[by] : a.File[by] < b.File[by];
+                            }
+                        })
+                    });
+                }
+
+                const filter = () => {
+                    if(index === Object.entries(storedDates).length - 1)
+                        return order(true);
+                    else
+                        return;
+                };
+
                 date = date[1];
 
                 // Filter by Date Type
                 if(date.type !== dateType.value && dateType.value !== '')
-                    return;
+                    return filter();
 
                 // Filter Deal Type (Refinances vs Purchases vs Sales)
                 var isRefinance = date.File.isPurchase == false;
                 var isPurchase = date.File.whoRepresenting === 'Buyer';
                 if((dealType.value === 'Refinance') != isRefinance && dealType.value !== '')
-                    return;
+                    return filter();
                 if(date.File.isPurchase && (dealType.value === 'Purchase') != isPurchase && date.File.whoRepresenting !== 'Both' && dealType.value !== '')
-                    return;
+                    return filter();
                 
                 // Filter by Date Status
                 if(isClosed !== '') {
                     if(!isClosed && (date.isClosed || date.File.status != 'Open'))
-                        return;
+                        return filter();
                     else if(isClosed && !date.isClosed && date.File.status === 'Open')
-                        return;
+                        return filter();
                 }
 
                 // If a custom date is selected, format startDate and endDate correctly.
@@ -220,28 +244,16 @@ function Dates() {
                 
                 // Filter by Date
                 if(startDate !== '' && date.date < (when === 'Custom' ? customStart : startDate))
-                    return;
+                    return filter();
                 if(endDate !== '' && date.date > (when === 'Custom' ? customEnd : endDate))
-                    return;
+                    return filter();
 
                 // Fill criticalDates hook array with filtered dates.
                 // Order criticalDates by sort.by & sort.dir when filled.
                 if(index === Object.entries(storedDates).length - 1)
-                    setCriticalDates((dates) => {
-                        dates = [...dates, date]
-                        return dates.sort((a, b) => {
-                            if(sort.by === 'Date')
-                                return sort.dir === 'ASC' ? a.date > b.date : a.date < b.date;
-                            else if(sort.by === 'FileNumber')
-                                return sort.dir === 'ASC' ? a.fileNumber > b.fileNumber : a.fileNumber < b.fileNumber;
-                            else {
-                                var by = (sort.by === 'Buyer') ? 'buyer' : (sort.by === 'Seller') ? 'seller' : 'address';
-                                return sort.dir === 'ASC' ? a.File[by] > b.File[by] : a.File[by] < b.File[by];
-                            }
-                        })
-                    });
+                    return order(false);
                 else
-                    setCriticalDates((dates) => dates = [...dates, date]);
+                    return setCriticalDates((dates) => dates = [...dates, date]);
             });
         } else axiosInstance.get(`${process.env.REACT_APP_API_URL}/dates?type=${dateType.value}&dealType=${dealType.value}&startDate=${startDate || ''}&endDate=${endDate || ''}&isClosed=${isClosed}&sort=${sort.by},${sort.dir}&limit=${pageLimit}&pageNum=${pageNum}`).then((response) => {
             const data = response.data;
