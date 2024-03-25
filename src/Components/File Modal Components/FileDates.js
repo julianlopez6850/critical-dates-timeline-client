@@ -33,8 +33,9 @@ const FileDates = (props) => {
 
     const forceResetDate = (value, setValue) => {
         if(value === '') {
-            setValue('00-00-0000')
-        }
+            setValue('0000-00-00');
+        } else if(parseInt(value.substring(0,4)) < 100)
+            setValue(`20${value.substring(2)}`);
     }
 
     return (
