@@ -66,29 +66,54 @@ function Tasks() {
             var storedClosings = JSON.parse(localStorage.getItem('dates'));
             storedClosings = Object.values(Object.fromEntries(Object.entries(storedClosings).filter(([key]) => key.includes('Closing'))));
             
-            return Object.entries(storedClosings).forEach(closing => {
+            return Object.entries(storedClosings).forEach((closing, index) => {
                 closing = closing[1];
 
                 var storedFile = JSON.parse(localStorage.getItem('files'));
                 storedFile = Object.values(Object.fromEntries(Object.entries(storedFile).filter(([key]) => key.includes(closing.fileNumber))))[0];
 
-                setClosings((closings) => [...closings, {
-                    ...closing,
-                    File: {
-                        address: storedFile.address,
-                        seller: storedFile.seller,
-                        buyer: storedFile.buyer,
-                        county: storedFile.county,
-                        fileRef: storedFile.fileRef,
-                        folioNo: storedFile.folio,
-                        isPurchase: storedFile.isPurchase,
-                        milestones: storedFile.milestones,
-                        roles: storedFile.roles,
-                        status: storedFile.status,
-                        whoRepresenting: storedFile.whoRepresenting
-                    },
-                    calculatedDate: JSON.stringify(closing.calculatedDate)
-                }])
+                if(index === Object.entries(storedClosings).length - 1)
+                    return setClosings((closings) => {
+                        closings = [...closings, {
+                            ...closing,
+                            File: {
+                                address: storedFile.address,
+                                seller: storedFile.seller,
+                                buyer: storedFile.buyer,
+                                county: storedFile.county,
+                                fileRef: storedFile.fileRef,
+                                folioNo: storedFile.folio,
+                                isPurchase: storedFile.isPurchase,
+                                milestones: storedFile.milestones,
+                                roles: storedFile.roles,
+                                status: storedFile.status,
+                                whoRepresenting: storedFile.whoRepresenting
+                            },
+                            calculatedDate: JSON.stringify(closing.calculatedDate)
+                        }];
+                        return closings.sort((a, b) => {
+                            console.log(a.date, b.date)
+                            return a.date > b.date;
+                        })
+                    });
+                else
+                    return setClosings((closings) => [...closings, {
+                        ...closing,
+                        File: {
+                            address: storedFile.address,
+                            seller: storedFile.seller,
+                            buyer: storedFile.buyer,
+                            county: storedFile.county,
+                            fileRef: storedFile.fileRef,
+                            folioNo: storedFile.folio,
+                            isPurchase: storedFile.isPurchase,
+                            milestones: storedFile.milestones,
+                            roles: storedFile.roles,
+                            status: storedFile.status,
+                            whoRepresenting: storedFile.whoRepresenting
+                        },
+                        calculatedDate: JSON.stringify(closing.calculatedDate)
+                    }])
             });
         } else {
             // PRODUCTION ENVIRONMENT - Retrieving stored closings from database.
