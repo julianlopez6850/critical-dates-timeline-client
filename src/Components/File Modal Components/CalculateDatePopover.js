@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import {
     Popover,
@@ -35,6 +35,7 @@ import calculateNewDate from '../../Helpers/calculateNewDate';
 import trySetDate from '../../Helpers/trySetDate';
 
 const CalculateDatePopover = (props) => {
+    const initialFocusRef = useRef();
     
     const { onOpen, onClose, isOpen } = useDisclosure()
 
@@ -58,9 +59,25 @@ const CalculateDatePopover = (props) => {
     useEffect(() => {
         const isCalculated = props.isCalculated;
         if(isCalculated === undefined || Object.keys(isCalculated).length === 0) {
-            setNumDays(3);
+            switch(props.type) {
+                case 'Deposit 1':
+                    setNumDays(3);
+                    break;
+                case 'Deposit 2':
+                    setNumDays(10);
+                    break;
+                case 'Inspection':
+                    setNumDays(15);
+                    break;
+                case 'Loan ✓':
+                    setNumDays(30);
+                    break;
+                case 'Closing':
+                    setNumDays();
+                    break;
+            }
             setDirection(1);
-            setBaseDate('');
+            setBaseDate({label: 'Effective', value: props.dates[0].value});
             return;
         }
         
@@ -148,6 +165,7 @@ const CalculateDatePopover = (props) => {
             isOpen={isOpen}
             onOpen={onOpen}
             onClose={onClose}
+            initialFocusRef={initialFocusRef}
         >
             <PopoverTrigger>
                 <Button
@@ -157,7 +175,11 @@ const CalculateDatePopover = (props) => {
                     minH='unset'
                     boxSize={props.calculatorIconSize}
                     isDisabled={props.status !== 'Open' || props.isDateClosed || (props.type === 'Effective')}
-                    color={(props.status !== 'Open' || props.isDateClosed) ? 'red' : (props.isCalculated && props.isCalculated.isCalculated) ? '#EECC33' : '#B1B1B1'}
+                    color={
+                        (props.status !== 'Open' || props.isDateClosed) ? 'red' :
+                        (props.isCalculated && props.isCalculated.isCalculated) ? '#EECC33' :
+                        '#B1B1B1'
+                    }
                     bg='transparent'
                     _hover={{bg:'#FFFFFF15'}}
                     transition='0s'
@@ -179,7 +201,15 @@ const CalculateDatePopover = (props) => {
                     </Tooltip>
                 </Button>
             </PopoverTrigger>
-            <PopoverContent w='fit-content' h='fit-content' fontSize={props.textFontSize} color='white' bg='blue.800' borderColor='blue.800' justifyContent='space-between'>
+            <PopoverContent
+                w='fit-content'
+                h='fit-content'
+                fontSize={props.textFontSize}
+                color='white'
+                bg='blue.800'
+                borderColor='blue.800'
+                justifyContent='space-between'
+            >
                 <Box>
                     <PopoverHeader fontWeight='bold'>
                         Calculate Your Date
@@ -189,11 +219,35 @@ const CalculateDatePopover = (props) => {
                     <PopoverBody>
                         <VStack>
                             <HStack>
-                                <NumberInput w='70px' value={numDays} min={0} onChange={(e) => {setNumDays(e)}}>
-                                    <NumberInputField h={props.bodyInputHeight} pl='15px' pr='25px'/>
-                                    <NumberInputStepper border='none' minH='unset' h={props.bodyInputHeight} margin='0px'>
-                                        <NumberIncrementStepper border='transparent' bg='#FFFFFF08' _hover={{bg:'#FFFFFF20'}} h='50%'/>
-                                        <NumberDecrementStepper border='transparent' bg='#FFFFFF08' _hover={{bg:'#FFFFFF20'}} h='50%'/>
+                                <NumberInput
+                                    w='70px'
+                                    value={numDays}
+                                    min={0}
+                                    onChange={(e) => {setNumDays(e)}}
+                                >
+                                    <NumberInputField
+                                        h={props.bodyInputHeight}
+                                        pl='15px' pr='25px'
+                                        ref={initialFocusRef}
+                                    />
+                                    <NumberInputStepper
+                                        border='none'
+                                        minH='unset'
+                                        h={props.bodyInputHeight}
+                                        margin='0px'
+                                    >
+                                        <NumberIncrementStepper
+                                            h='50%'
+                                            border='transparent'
+                                            bg='#FFFFFF08'
+                                            _hover={{bg:'#FFFFFF20'}}
+                                        />
+                                        <NumberDecrementStepper
+                                            h='50%'
+                                            border='transparent'
+                                            bg='#FFFFFF08'
+                                            _hover={{bg:'#FFFFFF20'}}
+                                        />
                                     </NumberInputStepper>
                                 </NumberInput>
                                 <Text>
@@ -201,7 +255,11 @@ const CalculateDatePopover = (props) => {
                                 </Text>
                                 <Tabs index={direction === 1 ? 1 : 0}>
                                     <TabList border='none'>
-                                        <Tab borderBottom='2px solid transparent' bg='none' color='blackAlpha.700' p='5px'
+                                        <Tab
+                                            borderBottom='2px solid transparent'
+                                            bg='none'
+                                            color='blackAlpha.700'
+                                            p='5px'
                                             _hover={{color:'whiteAlpha.700'}}
                                             _selected={{color:'white', borderBottom:'2px solid white' }}
                                             onClick={() => {setDirection(-1)}}
@@ -210,7 +268,11 @@ const CalculateDatePopover = (props) => {
                                                 Before
                                             </Text>
                                         </Tab>
-                                        <Tab borderBottom='2px solid transparent' bg='none' color='blackAlpha.700' p='5px'
+                                        <Tab
+                                            borderBottom='2px solid transparent'
+                                            bg='none'
+                                            color='blackAlpha.700'
+                                            p='5px'
                                             _hover={{color:'whiteAlpha.700'}}
                                             _selected={{color:'white', borderBottom:'2px solid white' }}
                                             onClick={() => {setDirection(1)}}
@@ -224,7 +286,8 @@ const CalculateDatePopover = (props) => {
                             </HStack>
                             <HStack w='full'>
                                 <Text w='84px' textAlign='left'>Select Date:</Text>
-                                <DateSelect w='125px' h='30px'
+                                <DateSelect
+                                    w='125px' h='30px'
                                     options={dateTypes}
                                     value={baseDate}
                                     onChange={(selection) => {
