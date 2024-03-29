@@ -864,6 +864,7 @@ const FileModal = (props) => {
                         <>
                             <ModalBody paddingInline={styles.modalInlinePadding} paddingBottom='0px'>
                                 <FileNoAndRefInput
+                                    newFile={props.new}
                                     fileNo={fileNo}
                                     setFileNo={setFileNo}
                                     isFileNoError={isFileNoError}

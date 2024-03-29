@@ -26,7 +26,7 @@ const FileNoAndRefInput = (props) => {
                             props.setFileNo(e.target.value.slice(0,5) + e.target.value.slice(5).toUpperCase());
                         }}
                         isInvalid={props.isFileNoError}
-                        autoFocus={true}
+                        autoFocus={props.newFile ? true : false}
                         placeholder='#####AA'
                         style={{textTransform: 'uppercase'}}
                     />
