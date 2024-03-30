@@ -1,70 +1,9 @@
-# Getting Started with Create React App
+# Welcome to Critical Dates Timeline!
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the repository for the client-side of Critical Dates Timeline. You can find the repository for the server-side of Critical Dates Timeline [here](https://github.com/julianlopez6850/critical-dates-timeline-server)!
 
-## Available Scripts
+Critical Dates Timeline is a web application used to keep track of critical dates, or important deadlines, and key milestones in real estate transactions, for title agents. It allows the agent to save 'files', which hold vital information for each real estate transaction that they are handling. It will then create a timeline for the agent of all the critical dates across all their active files in order to easily keep track of, and ensure smooth closings for, each of their real estate transactions. The agent is also able to set up automated email reminders that will detail the important deadlines that fall on the current day. Further, the application also features a To-Do List page, which tracks crucial milestones for tasks that must be completed in order to close each transaction successfully.
 
-In the project directory, you can run:
+The web application was created for the sole use of Gary Silberman, P.A., a boutique lawfirm based in Coconut Grove, FL that specializes primarily in real estate law. The web app has proved to be very beneficial to the firm, and has increased producitvity, replacing the need to use two outdated software that were previously used by the office. As a result, the live production version of this web app is not accessible; however, you may test a 'staging environment' of the web app by visiting [https://critical-dates-schedule.web.app](https://critical-dates-schedule.web.app). Feel free to mess around with it and create your own files and dates! Keep in mind that this 'staging environment' of the application will have some notable differences from the production environment. For example, files and dates data will be stored in your browser's localStorage, rather than in a hosted database like the production version. Also, you will not have login credentials; instead you will automatically be logged in as 'GUEST'. Lastly, you will not be able to set up the automated email reminders.
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project was built using JavaScript, ReactJS, NodeJS, and MySQL, and was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

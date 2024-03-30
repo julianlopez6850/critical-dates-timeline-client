@@ -13,11 +13,13 @@ import {
     Box,
     useDisclosure,
     MenuGroup,
+    Link,
 } from '@chakra-ui/react'
 import { SettingsIcon } from '@chakra-ui/icons';
 
 import NavbarButton from './NavbarButton';
 import SettingsModal from './SettingsModal';
+import UserManual from '../Assets/Critical_Dates_Timeline_User_Manual.pdf'
 
 const SettingsMenu = (props) => {
     
@@ -59,6 +61,15 @@ const SettingsMenu = (props) => {
                     <MenuDivider marginInline='5px' marginBlock={props.menuMargin}/>
                     {profile.loggedIn ? 
                         <>
+                            <MenuItem
+                                as='a'
+                                target='_blank'
+                                href={UserManual}
+                                bgColor={'gray.800'}
+                                _hover={{ bgColor:'gray.600' }}
+                            >
+                                <text textDecor='none'>User Manual</text>
+                            </MenuItem>
                             <MenuItem
                                 bgColor={'gray.800'}
                                 _hover={{ bgColor:'gray.600' }}
