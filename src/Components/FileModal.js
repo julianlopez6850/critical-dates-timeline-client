@@ -729,12 +729,12 @@ const FileModal = (props) => {
         setIsClosingAgent(false);
         setNeedEstoppel(false);
         setNeedSurvey(false);
-        setEffective('00-00-0000');
-        setDepositInit('00-00-0000');
-        setDepositSecond('00-00-0000');
-        setInspection('00-00-0000');
-        setLoanApproval('00-00-0000');
-        setClosing('00-00-0000');
+        setEffective('');
+        setDepositInit('');
+        setDepositSecond('');
+        setInspection('');
+        setLoanApproval('');
+        setClosing('');
         setIsClosedEffective(props.new ? false : true);
         setIsClosedDepositInit(props.new ? false : true);
         setIsClosedDepositSecond(props.new ? false : true);
